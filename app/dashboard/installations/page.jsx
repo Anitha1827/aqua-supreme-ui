@@ -9,22 +9,32 @@ import { deleteInstallation, getInstallationDetails } from "@/service";
 import EditInstallationModal from "@/container/EditInstallationModal";
 // icons
 import { FaRegEdit } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IoPersonAddOutline } from "react-icons/io5";
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import AssignInstallationModal from "@/container/AssignInstallationModal";
+import { useRouter } from "next/navigation";
+
 
 const Installations = () => {
+  let router = useRouter();
   const [open, setOpen] = useState(false);
   const [install, setInstall] = useState([]);
   const [edit, setEdit] = useState(false);
   const [editdata, setEditData] = useState({});
+  const [assign, setAssign] = useState(false)
+  const [status,setStatus] = useState([])
 
   const handleEdit = (inst) => {
     setEdit(true);
     setEditData(inst);
-    console.log("pageline20", inst);
+    // console.log("pageline20", inst);
   };
 
   const handleOpen = () => setOpen(true);
-
+  const handleAssign = () => setAssign(true)
+  
   useEffect(() => {
     getInstallation();
   }, []);
@@ -33,6 +43,7 @@ const Installations = () => {
     let response = await getInstallationDetails();
     console.log("page23", response);
     setInstall(response.getAllCustomerDetails);
+    setStatus(response.getAllCustomerDetails)
   };
 
   // Delete Functionalities
@@ -41,6 +52,7 @@ const Installations = () => {
     console.log(res);
     getInstallation();
   };
+ 
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -58,7 +70,6 @@ const Installations = () => {
             <td>Phone Number</td>
             <td>Created At</td>
             <td>Installation Date</td>
-            {/* <td>Tech Name</td> */}
             <td>Action</td>
           </tr>
         </thead>
@@ -75,23 +86,32 @@ const Installations = () => {
                     ? inst.lastServicedAt.split("").slice(0, 10).join("")
                     : "24-05-2024"}
                 </td>
-                {/* <td>Anitha</td> */}
                 <td>
-                  <div className={styles.buttons}>
+                  <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+                    {/* Edit button */}
                     <Button
                       onClick={() => handleEdit(inst)}
-                      // variant="contained"
-                      className={`${styles.button} ${styles.view}`}
                     >
-                     <FaRegEdit />
+                      <FaRegEdit />
+                    </Button >
+                      {/* Assign person button */}
+                    <Button onClick={handleAssign} >
+                    <IoPersonAddOutline />
                     </Button>
 
-                    <Button
+                    {/* status update button */}
+                    <Button status={status} setStatus={setStatus} onClick={() => router.push(`/dashboard/installations/${inst._id}`)}>
+                      <TaskAltIcon />
+                    </Button>
+                    {/* Delete button */}
+                    <IconButton
+                      aria-label="delete"
+                      size="large"
                       className={`${styles.button} ${styles.delete}`}
                       onClick={() => handleDelete(inst)}
                     >
-                     <MdDelete />
-                    </Button>
+                      <DeleteIcon fontSize="inherit" />
+                    </IconButton>
                   </div>
                 </td>
               </tr>
@@ -107,12 +127,18 @@ const Installations = () => {
         setInstall={setInstall}
       />
       {/* Edit Installation data */}
-      <EditInstallationModal
+      {editdata.customerName && (
+        <EditInstallationModal
         edit={edit}
         setEdit={setEdit}
         editdata={editdata}
         setInstall={setInstall}
       />
+      )}
+
+      {/* Assign TO Modal */}
+
+      <AssignInstallationModal assign={assign} setAssign={setAssign}/>
     </div>
   );
 };

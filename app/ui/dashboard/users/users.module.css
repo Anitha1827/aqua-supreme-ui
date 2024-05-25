@@ -40,7 +40,8 @@ margin-top: 20px;
 }
 
 .view{
-    background-color: teal;
+    background-color: transparent;
+    color: aliceblue;
 }
 
 .delete{

@@ -37,7 +37,7 @@ const style = {
 };
 
 export default function EditInstallationModal({ edit, setEdit, editdata, setInstall}) {
-  console.log(editdata, "editdata");
+  console.log(editdata, "editdataline40");
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -50,7 +50,7 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
   
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
-      name:` ${editdata.customerName}`,
+      name:editdata.customerName,
       phone: editdata.customerPhone,
       date: editdata.lastServicedAt,
     },

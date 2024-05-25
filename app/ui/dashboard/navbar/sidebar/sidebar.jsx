@@ -79,11 +79,6 @@ const menuItems = [
         path: "/dashboard/settings",
         icon: <MdOutlineSettings />,
       },
-      // {
-      //   title: "Help",
-      //   path: "/dashboard/help",
-      //   icon: <MdHelpCenter />,
-      // }
     ],
   },
 ];
@@ -100,7 +95,7 @@ const logout = () => {
 
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} >
       <div className={styles.user}>
         <Image
           className={styles.userImage}

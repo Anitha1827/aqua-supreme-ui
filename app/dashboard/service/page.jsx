@@ -7,13 +7,23 @@ import { Button } from "@mui/material";
 import AddServiceModal from "@/container/AddServiceModal";
 import EditServiceModal from "@/container/EditServiceModal";
 import { deleteService, getService } from "@/service";
+import { useRouter } from "next/navigation";
+import { IoPersonAddOutline } from "react-icons/io5";
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import AssignServiceModal from "@/container/AssignServiceModal";
+import { FaRegEdit } from "react-icons/fa";
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const ServiceCalls = () => {
+  const router = useRouter()
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editdata, setEditData] = useState({});
   const [service, setService] = useState([]);
   const handleOpen = () => setOpen(true);
+  const [assign, setAssign] = useState(false)
+  const handleAssign = () => setAssign(true)
 
   const handleEdit = (item) => {
     setEditData(item);
@@ -78,13 +88,22 @@ const ServiceCalls = () => {
                       onClick={() => handleEdit(item)}
                       className={`${styles.button} ${styles.view}`}
                     >
-                      Edit
+                       <FaRegEdit />
+                    </Button>
+                     {/* Assign person button */}
+                     <Button onClick={handleAssign} >
+                    <IoPersonAddOutline />
+                    </Button>
+
+                    {/* status update button */}
+                    <Button onClick={() => router.push(`/dashboard/service/${item._id}`)}>
+                      <TaskAltIcon />
                     </Button>
                     <button
                       className={`${styles.button} ${styles.delete}`}
                       onClick={() => handleDelete(item)}
                     >
-                      Delete
+                       <DeleteIcon fontSize="inherit" />
                     </button>
                   </div>
                 </td>
@@ -102,6 +121,9 @@ const ServiceCalls = () => {
           setService={setService}
         />
       )}
+
+      {/* Assign Technician modal */}
+      <AssignServiceModal assign={assign} setAssign={setAssign}/>
     </div>
   );
 };
