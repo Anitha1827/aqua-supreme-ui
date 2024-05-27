@@ -4,6 +4,7 @@ import TextField from "@mui/material/TextField";
 import Textarea from "@mui/joy/Textarea";
 import Button from "@mui/joy/Button";
 import SvgIcon from "@mui/joy/SvgIcon";
+import "@/app/ui/dashboard/installation/Installation.css"
 // import { styled } from '@mui/joy';
 
 // const VisuallyHiddenInput = styled('input')`
@@ -18,18 +19,17 @@ import SvgIcon from "@mui/joy/SvgIcon";
 //   width: 1px;
 // `;
 
-const ServiceStatus = ({status,setStatus}) => {
-  console.log(status,"status22")
+const ServiceStatus = () => {
   return (
     <form>
       <TextField
         label="Name"
         variant="outlined"
         margin="normal"
-        className="p-3"
+        className="Input"
         disabled
       />
-      <TextField label="Phone" variant="outlined" margin="normal" disabled />
+      <TextField label="Phone" variant="outlined" margin="normal" disabled className="Input"/>
 
       <Textarea
         color="primary"
@@ -38,9 +38,11 @@ const ServiceStatus = ({status,setStatus}) => {
         placeholder="Remarks"
         size="md"
         variant="outlined"
+        className="textArea"
       />
       {/* Upload button */}
       <Button
+      className="upload"
         component="label"
         role={undefined}
         tabIndex={-1}
@@ -68,7 +70,7 @@ const ServiceStatus = ({status,setStatus}) => {
         {/* <VisuallyHiddenInput type="file" /> */}
       </Button>
 
-      <Button variant="contained" color="primary" type="submit">
+      <Button variant="contained" color="primary" type="submit" className="Input">
         Submit
       </Button>
     </form>

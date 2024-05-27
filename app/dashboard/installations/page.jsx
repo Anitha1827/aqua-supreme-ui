@@ -9,13 +9,12 @@ import { deleteInstallation, getInstallationDetails } from "@/service";
 import EditInstallationModal from "@/container/EditInstallationModal";
 // icons
 import { FaRegEdit } from "react-icons/fa";
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { IoPersonAddOutline } from "react-icons/io5";
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AssignInstallationModal from "@/container/AssignInstallationModal";
 import { useRouter } from "next/navigation";
-
 
 const Installations = () => {
   let router = useRouter();
@@ -23,8 +22,8 @@ const Installations = () => {
   const [install, setInstall] = useState([]);
   const [edit, setEdit] = useState(false);
   const [editdata, setEditData] = useState({});
-  const [assign, setAssign] = useState(false)
-  const [status,setStatus] = useState([])
+  const [assign, setAssign] = useState(false);
+  const [id, setId] = useState("");
 
   const handleEdit = (inst) => {
     setEdit(true);
@@ -33,8 +32,11 @@ const Installations = () => {
   };
 
   const handleOpen = () => setOpen(true);
-  const handleAssign = () => setAssign(true)
-  
+  const handleAssign = (id) => {
+    setAssign(true);
+    setId(id);
+  };
+
   useEffect(() => {
     getInstallation();
   }, []);
@@ -43,7 +45,6 @@ const Installations = () => {
     let response = await getInstallationDetails();
     console.log("page23", response);
     setInstall(response.getAllCustomerDetails);
-    setStatus(response.getAllCustomerDetails)
   };
 
   // Delete Functionalities
@@ -52,7 +53,7 @@ const Installations = () => {
     console.log(res);
     getInstallation();
   };
- 
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -87,20 +88,24 @@ const Installations = () => {
                     : "24-05-2024"}
                 </td>
                 <td>
-                  <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+                  <div
+                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                  >
                     {/* Edit button */}
-                    <Button
-                      onClick={() => handleEdit(inst)}
-                    >
+                    <Button onClick={() => handleEdit(inst)}>
                       <FaRegEdit />
-                    </Button >
-                      {/* Assign person button */}
-                    <Button onClick={handleAssign} >
-                    <IoPersonAddOutline />
+                    </Button>
+                    {/* Assign person button */}
+                    <Button onClick={() => handleAssign(inst._id)}>
+                      <IoPersonAddOutline />
                     </Button>
 
                     {/* status update button */}
-                    <Button status={status} setStatus={setStatus} onClick={() => router.push(`/dashboard/installations/${inst._id}`)}>
+                    <Button
+                      onClick={() =>
+                        router.push(`/dashboard/installations/${inst._id}`)
+                      }
+                    >
                       <TaskAltIcon />
                     </Button>
                     {/* Delete button */}
@@ -129,16 +134,22 @@ const Installations = () => {
       {/* Edit Installation data */}
       {editdata.customerName && (
         <EditInstallationModal
-        edit={edit}
-        setEdit={setEdit}
-        editdata={editdata}
-        setInstall={setInstall}
-      />
+          edit={edit}
+          setEdit={setEdit}
+          editdata={editdata}
+          setInstall={setInstall}
+        />
       )}
 
       {/* Assign TO Modal */}
 
-      <AssignInstallationModal assign={assign} setAssign={setAssign}/>
+      {id && (
+        <AssignInstallationModal
+          assign={assign}
+          setAssign={setAssign}
+          id={id}
+        />
+      )}
     </div>
   );
 };

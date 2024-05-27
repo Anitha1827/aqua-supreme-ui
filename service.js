@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -52,6 +52,30 @@ const getCustomer = async () => {
     alert("Try again later!..");
   }
 };
+
+// Get details by id
+const getCustomerDetailsById = async (id) => {
+  try {
+    let response = await axios.get(`${api_url}/customer/get-by-id/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.lor(error)
+    alert("try again later")
+  }
+}
+
+// Assign technician 
+const assignTechnician = async (id,isInstallationAssignTo) =>{
+  try {
+    let response = await axios.put(`${api_url}/customer/assign-technician/${id}`,{isInstallationAssignTo});
+    console.log(response.data);
+    return response.data
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+}
 
 // Get Installation
 const getInstallationDetails = async() => {
@@ -217,6 +241,8 @@ export {
   deleteCustomer,
   addNewInstallation,
   getInstallationDetails,
+  assignTechnician,
+  getCustomerDetailsById,
   editInstallation,
   deleteInstallation,
   addNewUser,
