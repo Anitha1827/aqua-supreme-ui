@@ -6,23 +6,23 @@ import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 import "@/app/ui/settings/settings.css";
-import styles from "@/app/ui/dashboard/users/users.module.css"
-// Tab import
-import Box from "@mui/material/Box";
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import Button from "@mui/joy/Button";
-import TextField from "@mui/material/TextField";
-import DeleteIcon from '@mui/icons-material/Delete';
+// import styles from "@/app/ui/dashboard/users/users.module.css"
+// // Tab import
+// import Box from "@mui/material/Box";
+// import Tab from "@mui/material/Tab";
+// import TabContext from "@mui/lab/TabContext";
+// import TabList from "@mui/lab/TabList";
+// import TabPanel from "@mui/lab/TabPanel";
+// import Button from "@mui/joy/Button";
+// import TextField from "@mui/material/TextField";
+// import DeleteIcon from '@mui/icons-material/Delete';
 
 const Settings = () => {
-  const [value, setValue] = useState("1");
+  // const [value, setValue] = useState("1");
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+  // const handleChange = (event, newValue) => {
+  //   setValue(newValue);
+  // };
   
   return (
     <div className="container">
@@ -58,7 +58,7 @@ const Settings = () => {
         </CardContent>
       </Card>
       {/* Tab content */}
-      <Box sx={{ width: "100%", typography: "body1" }}>
+      {/* <Box sx={{ width: "100%", typography: "body1" }}>
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList
@@ -71,7 +71,7 @@ const Settings = () => {
             >
               <Tab label="Change Password" value="1" />
               <Tab label="Sessions" value="2" />
-              {/* <Tab label="Item Three" value="3" /> */}
+             
             </TabList>
           </Box>
           <TabPanel value="1">
@@ -127,9 +127,9 @@ const Settings = () => {
             </tbody>
            </table>
           </TabPanel>
-          {/* <TabPanel value="3">Item Three</TabPanel> */}
+          
         </TabContext>
-      </Box>
+      </Box> */}
     </div>
   );
 };
