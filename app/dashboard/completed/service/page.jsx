@@ -1,60 +1,61 @@
-import React from 'react'
-import styles from "@/app/ui/dashboard/users/users.module.css"
-import Search from '@/app/ui/dashboard/search/search'
-import Link from 'next/link'
-import Pagination from '@/app/ui/dashboard/pagination/pagination'
-
+"use client";
+import React, { useEffect, useState } from "react";
+import styles from "@/app/ui/dashboard/users/users.module.css";
+import Search from "@/app/ui/dashboard/search/search";
+import Pagination from "@/app/ui/dashboard/pagination/pagination";
+import { getServiceCompleted } from "@/service";
 
 const ServiceCompletedPage = () => {
+  const [data, setData] = useState([]);
+
+  let getCompletedData = async () => {
+    let response = await getServiceCompleted();
+    setData(response.getAllServiceDetails);
+    console.log("completedpage14", response.getAllServiceDetails);
+  };
+
+  useEffect(() => {
+    getCompletedData();
+  }, []);
+  console.log("responsedata23", data);
   return (
     <div className={styles.container}>
-    <div className={styles.top}>
-      <Search placeholder="Search a user..."/>
-      <Link href="/dashboard/users/add">
-      <button className={styles.addbutton}>Add New</button>
-      </Link>
-      
+      <div className={styles.top}>
+        <Search placeholder="Search a user..." />
+      </div>
+      <table className={styles.table}>
+        <thead>
+          <tr style={{fontWeight:"bolder"}}>
+            <td>Sl.No</td>
+            <td>Name</td>
+            <td>Contact</td>
+            <td>CreatedAt</td>
+            <td>CompletedAt</td>
+            <td>Technician</td>
+            <td>Status</td>
+          </tr>
+        </thead>
+        <tbody>
+          {data &&
+            data.map((item, idx) => (
+              <tr key={idx}>
+                <td>{idx+1}</td>
+                <td>{item.customerName}</td>
+                <td>{item.customerPhone}</td>
+                <td>{item.createdAt}</td>
+                <td>{item.serviceDate.split("").slice(0,10).join("")}</td>
+                <td>{item.serviceAssignTo}</td>
+                <td>
+                  <button className={styles.compbutton}>Completed</button>
+                </td>
+              </tr>
+            ))}
+          <tr></tr>
+        </tbody>
+      </table>
+      <Pagination />
     </div>
-    <table className={styles.table}>
-      <thead >
-        <tr>
-          <td>Sl.No</td>
-          <td>Name</td>
-          <td>Contact</td>
-          <td>Created At</td>
-          <td>Date</td>
-          <td>Assign-To</td>
-          <td>Status</td>
-          <td>Action</td>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>1</td>
-          <td>
-            Anitha
-          </td>
-          <td>1234567890</td>
-          <td>18-05-2024</td>
-          <td>23-05-2024</td>
-          <td>Anitha</td>
-          <td>
-            <button className={styles.compbutton}>Completed</button>
-          </td>
-          <td>
-            <div className={styles.buttons}>
-            <Link href="/">
-            <button className={`${styles.button} ${styles.view}`}>Edit</button>
-            </Link>
-            <button className={`${styles.button} ${styles.delete}`}>Delete</button>
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <Pagination/>
-  </div>
-  )
-}
+  );
+};
 
-export default ServiceCompletedPage
+export default ServiceCompletedPage;

@@ -30,17 +30,40 @@ const addNewCustomer = async (data) => {
   }
 };
 
+// Edit Customer
+const editCustomer = async (data) => {
+  try {
+    let response = await axios.put(`${api_url}/customer/update`, data);
+    console.log("service47", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+// Delete Customer
+const deleteCustomer = async (id) => {
+  try {
+    let response = await axios.delete(`${api_url}/customer/cust-delete/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try later");
+  }
+};
+
 // Add new Installation
 const addNewInstallation = async (data) => {
   try {
     let res = await axios.post(`${api_url}/customer/create`, data);
     console.log(res.data);
-    return res.data
+    return res.data;
   } catch (error) {
     console.log(error);
-    alert("try again later")
+    alert("try again later");
   }
-}
+};
 // Get Customer Details
 const getCustomer = async () => {
   try {
@@ -60,85 +83,89 @@ const getCustomerDetailsById = async (id) => {
     console.log(response.data);
     return response.data;
   } catch (error) {
-    console.lor(error)
-    alert("try again later")
+    console.log(error);
+    alert("try again later");
   }
-}
+};
 
-// Assign technician 
-const assignTechnician = async (id,isInstallationAssignTo) =>{
+// Assign technician
+const assignTechnician = async (id, isInstallationAssignTo) => {
   try {
-    let response = await axios.put(`${api_url}/customer/assign-technician/${id}`,{isInstallationAssignTo});
+    let response = await axios.put(
+      `${api_url}/customer/assign-technician/${id}`,
+      { isInstallationAssignTo }
+    );
     console.log(response.data);
-    return response.data
+    return response.data;
   } catch (error) {
     console.error(error);
-    alert("try again later")
+    alert("try again later");
   }
-}
+};
 
 // Get Installation
-const getInstallationDetails = async() => {
+const getInstallationDetails = async () => {
   try {
     let response = await axios.get(`${api_url}/customer/get`);
     console.log(response.data, "responsefromservice59");
     return response.data;
   } catch (error) {
-    console.lor(error)
-    alert("try again later")
+    console.log(error);
+    alert("try again later");
   }
-}
-
-// Edit Customer
-const editCustomer = async (data) => {
-  try {
-    let response = await axios.put(`${api_url}/customer/update`,data);
-    console.log("service47", response.data);
-    return response.data
-
-  } catch (error) {
-    console.error(error)
-    alert("try again later")
-  }
-}
+};
 
 // Edit Installation
 const editInstallation = async (data) => {
   try {
-    let response = await axios.put(`${api_url}/customer/update`,data);
+    let response = await axios.put(`${api_url}/customer/update`, data);
     console.log("service84", response.data);
-    return response.data
-  } catch (error) {
-    console.error(error)
-    alert("try again later")
-  }
-}
-// Delete Customer
-const deleteCustomer = async (id) => {
-  try {
-   let response = await axios.delete(`${api_url}/customer/cust-delete/${id}`);
-   console.log(response.data);
     return response.data;
-  
   } catch (error) {
     console.error(error);
-    alert("try later")
+    alert("try again later");
   }
-}
+};
 
+// Update Installation data
+const updateInstallationData = async (id, data) => {
+  let response = await axios.put(
+    `${api_url}/customer/installation-status/${id}`,
+    data
+  );
+  console.log("service133", response.data);
+  return response.data;
+};
+
+// get Installtion completed data
+const installationCompleted = async () => {
+  let response = await axios.get(
+    `${api_url}/customer/installation-completed-data`
+  );
+  console.log("serviceline143", response.data);
+  return response.data;
+};
+
+// Get Installation Pending data
+const installationPending = async () => {
+  let response = await axios.get(
+    `${api_url}/customer/installation-pending-data`
+  );
+  console.log("servicepending150", response.data);
+  return response.data;
+};
 
 // Delete Installation
-const deleteInstallation = async(id) => {
+const deleteInstallation = async (id) => {
   try {
     let response = await axios.delete(`${api_url}/customer/cust-delete/${id}`);
     console.log(response.data);
-     return response.data;
-   
-   } catch (error) {
-     console.error(error);
-     alert("try later")
-   }
-}
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try later");
+  }
+};
 // Add new user
 const addNewUser = async (data) => {
   try {
@@ -197,41 +224,105 @@ const addService = async (data) => {
 };
 
 // Get Service details
-const getService = async() => {
+const getService = async () => {
   try {
     let response = await axios.get(`${api_url}/service/get`);
-    console.log("serv106", response)
-    return response.data
+    console.log("serv106", response);
+    return response.data;
   } catch (error) {
     console.error(error);
-    alert("try again later")
+    alert("try again later");
+  }
+};
+
+// Get Service details by id
+const getServiceDetailsById = async (id) => {
+  try {
+    let response = await axios.get(`${api_url}/service/get-by-id/${id}`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert("try again later");
+  }
+};
+
+// Assign technician
+const assignServiceTechnician = async (id, serviceAssignTo) => {
+  try {
+    let response = await axios.put(
+      `${api_url}/service/assign-technician/${id}`,
+      { serviceAssignTo }
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// update service status
+const updateServiceStatus = async (id, data) => {
+  try {
+    let response = await axios.put(
+      `${api_url}/service/service-status/${id}`,
+      data
+    );
+    console.log("serviceline241", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// Get service Completed details
+const getServiceCompleted = async () => {
+  try {
+    let response = await axios.get(`${api_url}/service/get-completed`);
+    console.log("getcompleted253", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// Get Service Pending Details
+const getServicePendingData = async () => {
+  try {
+    let response = await axios.get(`${api_url}/service/get-pending`);
+    console.log("getpendingdata", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
   }
 };
 
 // Edit Service Details
-const editService = async(data) => {
+const editService = async (data) => {
   try {
-    let response = await axios.put(`${api_url}/service/edit`,data);
-    console.log("sesrvice143", response.data)
-    return response.data
+    let response = await axios.put(`${api_url}/service/edit`, data);
+    console.log("sesrvice143", response.data);
+    return response.data;
   } catch (error) {
-    console.log(error)
-    alert("try again later")
+    console.log(error);
+    alert("try again later");
   }
-}
+};
 
-const deleteService = async(id) =>{
+const deleteService = async (id) => {
   try {
     let res = await axios.delete(`${api_url}/service/delete/${id}`);
-    console.log("service153", res.data)
+    console.log("service153", res.data);
     return res.data;
-
   } catch (error) {
-    console.error(error)
-    alert("try again later")
+    console.error(error);
+    alert("try again later");
   }
-}
-
+};
 
 export {
   login,
@@ -245,6 +336,9 @@ export {
   getCustomerDetailsById,
   editInstallation,
   deleteInstallation,
+  updateInstallationData,
+  installationCompleted,
+  installationPending,
   addNewUser,
   getNewUser,
   editUser,
@@ -253,4 +347,9 @@ export {
   getService,
   editService,
   deleteService,
+  getServiceDetailsById,
+  assignServiceTechnician,
+  updateServiceStatus,
+  getServiceCompleted,
+  getServicePendingData,
 };

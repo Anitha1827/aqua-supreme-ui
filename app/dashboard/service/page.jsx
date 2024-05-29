@@ -9,21 +9,24 @@ import EditServiceModal from "@/container/EditServiceModal";
 import { deleteService, getService } from "@/service";
 import { useRouter } from "next/navigation";
 import { IoPersonAddOutline } from "react-icons/io5";
-import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AssignServiceModal from "@/container/AssignServiceModal";
 import { FaRegEdit } from "react-icons/fa";
-import DeleteIcon from '@mui/icons-material/Delete';
-
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const ServiceCalls = () => {
-  const router = useRouter()
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const [editdata, setEditData] = useState({});
   const [service, setService] = useState([]);
   const handleOpen = () => setOpen(true);
-  const [assign, setAssign] = useState(false)
-  const handleAssign = () => setAssign(true)
+  const [assign, setAssign] = useState(false);
+  const [id, setId] = useState("");
+  const handleAssign = (id) => {
+    setAssign(true);
+    setId(id);
+  };
 
   const handleEdit = (item) => {
     setEditData(item);
@@ -42,9 +45,7 @@ const ServiceCalls = () => {
     let res = await deleteService(item._id);
     console.log(res);
     getservicemodal();
-
   };
-
 
   return (
     <div className={styles.container}>
@@ -83,27 +84,40 @@ const ServiceCalls = () => {
                     : "23-05-2024"}
                 </td>
                 <td>
-                  <div className={styles.buttons}>
+                  <div
+                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                  >
                     <Button
                       onClick={() => handleEdit(item)}
                       className={`${styles.button} ${styles.view}`}
+                      title="Edit"
+                      color="primary"
                     >
-                       <FaRegEdit />
+                      <FaRegEdit sx={{ fontSize: "20px" }} />
                     </Button>
-                     {/* Assign person button */}
-                     <Button onClick={handleAssign} >
-                    <IoPersonAddOutline />
+                    {/* Assign person button */}
+                    <Button
+                      onClick={() => handleAssign(item._id)}
+                      title="Assign technician"
+                    >
+                      <IoPersonAddOutline sx={{ fontSize: "20px" }} />
                     </Button>
 
                     {/* status update button */}
-                    <Button onClick={() => router.push(`/dashboard/service/${item._id}`)}>
-                      <TaskAltIcon />
+                    <Button
+                      onClick={() =>
+                        router.push(`/dashboard/service/${item._id}`)
+                      }
+                      title="Status Update"
+                    >
+                      <TaskAltIcon sx={{ fontSize: "20px" }} />
                     </Button>
                     <button
                       className={`${styles.button} ${styles.delete}`}
                       onClick={() => handleDelete(item)}
+                      title="Delete"
                     >
-                       <DeleteIcon fontSize="inherit" />
+                      <DeleteIcon sx={{ fontSize: "20px", color:"crimson" }} />
                     </button>
                   </div>
                 </td>
@@ -123,7 +137,9 @@ const ServiceCalls = () => {
       )}
 
       {/* Assign Technician modal */}
-      <AssignServiceModal assign={assign} setAssign={setAssign}/>
+      {id && (
+        <AssignServiceModal assign={assign} setAssign={setAssign} id={id} />
+      )}
     </div>
   );
 };

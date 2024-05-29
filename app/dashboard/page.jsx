@@ -9,7 +9,7 @@ import AddCustomerModel from "@/container/AddCustomerModal";
 import { deleteCustomer, getCustomer } from "@/service";
 import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
-import { MdOutlineDelete } from "react-icons/md";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
 
 const Dashboard = () => {
@@ -56,11 +56,11 @@ const Dashboard = () => {
       </div>
       <table className={styles.table}>
         <thead>
-          <tr>
+          <tr style={{fontWeight:"bold"}}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
-            <td>Service/Installed At</td>
+            <td>Service/InstalledAt</td>
             <td>Due Date</td>
             <td>Action</td>
           </tr>
@@ -79,20 +79,23 @@ const Dashboard = () => {
                 </td>
                 <td>{item.duedate}</td>
                 <td>
-                  <div className={styles.buttons}>
+                  <div  className={`${styles.buttons} ${styles.button} ${styles.view}`}>
                     <Button
                       onClick={() => handleEdit(item)}
                       className={`${styles.button} ${styles.view}`}
+                      title="Edit"
+                      color="primary"
                     >
-                      <FaRegEdit />
+                       <FaRegEdit sx={{fontSize:"20px"}} />
                     </Button>
 
-                    <button
+                    <Button
                       className={`${styles.button} ${styles.delete}`}
                       onClick={() => handleDelete(item)}
+                      title="Delete"
                     >
-                      <MdOutlineDelete />
-                    </button>
+                       <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
+                    </Button>
                   </div>
                 </td>
               </tr>

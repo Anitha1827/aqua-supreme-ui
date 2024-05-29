@@ -30,6 +30,7 @@ const AssignInstallationModal = ({assign,setAssign,id}) => {
 
     const handleSubmit = async() => {
       let response = await assignTechnician(id,tech)
+      console.log("modal33", response)
       handleClose();
     }
     console.log("assigntechni", tech)

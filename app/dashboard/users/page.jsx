@@ -7,6 +7,8 @@ import Button from "@mui/material/Button";
 import AddUserModel from "@/container/AddUserModel";
 import { deleteUser, getNewUser } from "@/service";
 import EditUserModal from "@/container/EditUserModal";
+import { FaRegEdit } from "react-icons/fa";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 const UserPage = () => {
   const [open, setOpen] = useState(false);
@@ -49,7 +51,7 @@ const UserPage = () => {
         </div>
         <table className={styles.table}>
           <thead>
-            <tr>
+            <tr style={{fontWeight:"bold"}}>
               <td>Sl.No</td>
               <td>Name</td>
               <td>Phone Number</td>
@@ -66,20 +68,23 @@ const UserPage = () => {
                   <td>{item.phone}</td>
                   <td>Active</td>
                   <td>
-                    <div className={styles.buttons}>
+                    <div  className={`${styles.buttons} ${styles.button} ${styles.view}`}>
                       <Button
                         onClick={() => handleEdit(item)}
-                        // variant="contained"
-                        className={`${styles.button} ${styles.view}`}
+                        variant="contained"
+                        className={`${styles.buttons} ${styles.view}`}
+                          title="Edit"
                       >
-                        Edit
+                        <FaRegEdit sx={{fontSize:"20px"}} />
                       </Button>
 
                       <Button
                         className={`${styles.button} ${styles.delete}`}
                         onClick={() => handleDelete(item)}
+                        title="Delete"
+                        variant="contained"
                       >
-                        Delete
+                        <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
                       </Button>
                     </div>
                   </td>

@@ -25,7 +25,7 @@ const menuItems = [
         icon: <MdDashboard />,
       },
       {
-        title: "Users",
+        title: "Technician/Staff",
         path: "/dashboard/users",
         icon: <MdSupervisedUserCircle />,
       },
@@ -75,8 +75,8 @@ const menuItems = [
     title: "User",
     list: [
       {
-        title: "Settings",
-        path: "/dashboard/settings",
+        title: "Account",
+        path: "/dashboard/account",
         icon: <MdOutlineSettings />,
       },
     ],

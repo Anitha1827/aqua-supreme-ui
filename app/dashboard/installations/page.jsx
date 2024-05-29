@@ -9,7 +9,6 @@ import { deleteInstallation, getInstallationDetails } from "@/service";
 import EditInstallationModal from "@/container/EditInstallationModal";
 // icons
 import { FaRegEdit } from "react-icons/fa";
-import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { IoPersonAddOutline } from "react-icons/io5";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -65,7 +64,7 @@ const Installations = () => {
       </div>
       <table className={styles.table}>
         <thead>
-          <tr>
+          <tr style={{fontWeight:"bold"}}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
@@ -92,12 +91,12 @@ const Installations = () => {
                     className={`${styles.buttons} ${styles.button} ${styles.view}`}
                   >
                     {/* Edit button */}
-                    <Button onClick={() => handleEdit(inst)}>
-                      <FaRegEdit />
+                    <Button onClick={() => handleEdit(inst)} title="Edit Data">
+                      <FaRegEdit sx={{fontSize:"20px"}} />
                     </Button>
                     {/* Assign person button */}
-                    <Button onClick={() => handleAssign(inst._id)}>
-                      <IoPersonAddOutline />
+                    <Button onClick={() => handleAssign(inst._id)} title="Assign technician">
+                      <IoPersonAddOutline sx={{fontSize:"20px"}} />
                     </Button>
 
                     {/* status update button */}
@@ -105,18 +104,20 @@ const Installations = () => {
                       onClick={() =>
                         router.push(`/dashboard/installations/${inst._id}`)
                       }
+                      title="Update Status"
                     >
-                      <TaskAltIcon />
+                      <TaskAltIcon sx={{fontSize:"20px"}}/>
                     </Button>
                     {/* Delete button */}
-                    <IconButton
+                    <Button
                       aria-label="delete"
-                      size="large"
+                      // size="large"
                       className={`${styles.button} ${styles.delete}`}
                       onClick={() => handleDelete(inst)}
+                      title="Delete"
                     >
-                      <DeleteIcon fontSize="inherit" />
-                    </IconButton>
+                      <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
+                    </Button>
                   </div>
                 </td>
               </tr>

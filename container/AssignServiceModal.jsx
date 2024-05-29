@@ -11,8 +11,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
+import { assignServiceTechnician } from '@/service';
 
-const AssignServiceModal = ({assign,setAssign}) => {
+const AssignServiceModal = ({assign,setAssign, id}) => {
 
     // Dropdown
     const [tech, setTech] = useState('');
@@ -25,6 +26,14 @@ const AssignServiceModal = ({assign,setAssign}) => {
     const handleClose = () => {
         setAssign(false);
     };
+
+    const handleSubmit = async() => {
+      let res = await assignServiceTechnician(id, tech)
+      console.log("modal32", res);
+      handleClose();
+    }
+
+    console.log("assign tech in service", tech)
 
   return (
     <React.Fragment>
@@ -58,7 +67,7 @@ const AssignServiceModal = ({assign,setAssign}) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleSubmit} autoFocus>
             Submit
           </Button>
         </DialogActions>
