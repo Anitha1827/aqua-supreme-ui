@@ -11,37 +11,40 @@ import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
+import SettingsAccessibilityIcon from "@mui/icons-material/SettingsAccessibility";
+import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const handleOpen = () => setOpen(true);
+  let router = useRouter();
 
+  // Edit Functionalities
   const handleEdit = (customer) => {
     setEdit(true);
     setEditData(customer);
-    console.log("customer20", customer);
   };
 
   const [editdata, setEditData] = useState({});
   const [customer, setCustomer] = useState([]);
 
+  // To get Customer details from DB
   let getCustomerDetails = async () => {
     let res = await getCustomer();
-    console.log(res.getAllCustomerDetails, "custmodal26");
     setCustomer(res.getAllCustomerDetails);
   };
   useEffect(() => {
     getCustomerDetails();
   }, []);
 
+  // Delete functionalities
   const handleDelete = async (item) => {
     let res = await deleteCustomer(item._id);
     console.log(res);
     getCustomerDetails();
   };
 
-  console.log("customer35", customer);
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -56,7 +59,7 @@ const Dashboard = () => {
       </div>
       <table className={styles.table}>
         <thead>
-          <tr style={{fontWeight:"bold"}}>
+          <tr style={{ fontWeight: "bold" }}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
@@ -79,14 +82,26 @@ const Dashboard = () => {
                 </td>
                 <td>{item.duedate}</td>
                 <td>
-                  <div  className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+                  <div
+                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                  >
                     <Button
                       onClick={() => handleEdit(item)}
                       className={`${styles.button} ${styles.view}`}
                       title="Edit"
                       color="primary"
                     >
-                       <FaRegEdit sx={{fontSize:"20px"}} />
+                      <FaRegEdit sx={{ fontSize: "20px" }} />
+                    </Button>
+
+                    {/* Details */}
+                    <Button
+                      title="Customer Details"
+                      onClick={() =>
+                        router.push(`/dashboard/customerdetails/${item._id}`)
+                      }
+                    >
+                      <SettingsAccessibilityIcon sx={{ fontSize: "20px" }} />
                     </Button>
 
                     <Button
@@ -94,7 +109,7 @@ const Dashboard = () => {
                       onClick={() => handleDelete(item)}
                       title="Delete"
                     >
-                       <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
+                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
                     </Button>
                   </div>
                 </td>

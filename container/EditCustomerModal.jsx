@@ -22,6 +22,7 @@ const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
   phone: yup.string().required("please Enter Phone Number"),
   date: yup.string().required("Please Select Service completed date"),
+  address:yup.string().required("Please Enter your Address"),
 });
 
 const style = {
@@ -29,7 +30,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "50%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -53,6 +54,7 @@ export default function EditCustomerModal({ edit, setEdit, editdata, setCustomer
       name:` ${editdata.customerName}`,
       phone: editdata.customerPhone,
       date: editdata.lastServicedAt,
+      address:editdata.address,
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
@@ -87,15 +89,17 @@ export default function EditCustomerModal({ edit, setEdit, editdata, setCustomer
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
+              <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
+              <div style={{width:"100%", margin:"10px"}}>
               <TextField
                 id="outlined-basic"
                 label="Name"
                 variant="outlined"
-                sx={{ width: "100%" }}
                 type="name"
                 name="name"
                 value={values.name}
                 onChange={handleChange}
+                fullWidth
               />
               {errors.name ? (
                 <div style={{ color: "crimson", padding: "5px" }}>
@@ -104,8 +108,9 @@ export default function EditCustomerModal({ edit, setEdit, editdata, setCustomer
               ) : (
                 ""
               )}
-              <br />
-              <br />
+              </div>
+             
+             <div style={{width:"100%", margin:"10px"}}>
               <TextField
                 id="outlined-basic"
                 label="phone Number"
@@ -123,11 +128,34 @@ export default function EditCustomerModal({ edit, setEdit, editdata, setCustomer
               ) : (
                 ""
               )}
-              <br />
-              <br />
+              </div>
+              </div>
+              <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
+              <div style={{width:"100%", margin:"10px"}}>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Address"
+                type="address"
+                name="address"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.address}
+                onChange={handleChange}
+              />
+              {errors.phone ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.phone}
+                </div>
+              ) : (
+                ""
+              )}
+              </div>
+              <div style={{width:"100%", margin:"10px"}}>
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
+                  fullWidth
                     label="Service/Install At"
                     name="date"
                     value={dayjs(values.date)}
@@ -144,8 +172,9 @@ export default function EditCustomerModal({ edit, setEdit, editdata, setCustomer
               ) : (
                 ""
               )}
-              <br/>
-              <br/>
+              </div>
+              </div>
+              
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update
               </Button>

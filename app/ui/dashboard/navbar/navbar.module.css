@@ -38,3 +38,12 @@ color: var(--text);
     display: flex;
     gap: 20px;
 }
+
+/* popover styles */
+.popovercontainer{
+    display: flex;
+    justify-content: space-evenly;
+    gap: 10px;
+    cursor: pointer;
+}
+

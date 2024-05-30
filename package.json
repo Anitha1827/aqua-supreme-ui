@@ -1,5 +1,5 @@
 {
-  "name": "nextadmingithubstarter",
+  "name": "aqua-supreme",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -20,6 +20,9 @@
     "@mui/x-data-grid": "^6.20.0",
     "@mui/x-date-pickers": "^7.5.0",
     "@next/eslint-plugin-next": "14.0.1",
+    "@nextui-org/popover": "^2.1.22",
+    "@nextui-org/react": "^2.4.0",
+    "@nextui-org/tabs": "^2.0.30",
     "axios": "^1.7.0",
     "dayjs": "^1.11.11",
     "formik": "^2.4.6",

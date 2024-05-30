@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 const InstallationPendingPage = () => {
   const [data, setData] = useState([]);
 
-  let router = useRouter()
+  let router = useRouter();
 
   const getPendingData = async () => {
     let response = await installationPending();
@@ -46,7 +46,7 @@ const InstallationPendingPage = () => {
                 <td>{idx + 1}</td>
                 <td>{data.customerName}</td>
                 <td>{data.customerPhone}</td>
-                <td>{data.lastServicedAt.split("").slice(0,10).join("")}</td>
+                <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
                 <td>{data.duedate}</td>
                 <td>{data.isInstallationAssignTo}</td>
                 <td>
@@ -54,7 +54,14 @@ const InstallationPendingPage = () => {
                 </td>
                 <td>
                   <div className={styles.buttons}>
-                    <button className={styles.addbutton} onClick={()=> router.push(`/dashboard/installations/${data._id}`)}>Update</button>
+                    <button
+                      className={styles.addbutton}
+                      onClick={() =>
+                        router.push(`/dashboard/installations/${data._id}`)
+                      }
+                    >
+                      Update
+                    </button>
                   </div>
                 </td>
               </tr>

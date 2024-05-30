@@ -84,16 +84,6 @@ const menuItems = [
 ];
 
 const Sidebar = () => {
-
-  let router = useRouter()
-
-// Logout Functionality
-const logout = () => {
-  localStorage.removeItem("token");
-  router.push("/login");
-}
-
-
   return (
     <div className={styles.container} >
       <div className={styles.user}>
@@ -115,10 +105,6 @@ const logout = () => {
           </li>
         ))}
       </ul>
-      <button className={styles.logout} onClick={logout}>
-        <MdLogout />
-        Logout
-      </button>
     </div>
   );
 };
