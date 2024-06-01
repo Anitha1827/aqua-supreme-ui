@@ -57,6 +57,8 @@ const InstallationStatus = () => {
     console.log("formdata57", formdata);
   };
 
+  console.log("pending",pending);
+  
   return (
     <>
       {data && (

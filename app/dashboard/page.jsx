@@ -6,7 +6,7 @@ import Pagination from "../ui/dashboard/pagination/pagination";
 // modal
 import Button from "@mui/material/Button";
 import AddCustomerModel from "@/container/AddCustomerModal";
-import { deleteCustomer, getCustomer } from "@/service";
+import { deleteCustomer, getAllCustomer } from "@/service";
 import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -32,7 +32,7 @@ const Dashboard = () => {
 
   // To get Customer details from DB
   let getCustomerDetails = async () => {
-    let res = await getCustomer();
+    let res = await getAllCustomer();
     setCustomer(res.getAllCustomerDetails);
   };
   useEffect(() => {

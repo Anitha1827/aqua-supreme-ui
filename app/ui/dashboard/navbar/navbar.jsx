@@ -60,8 +60,8 @@ const Navbar = () => {
               height="50"
             />
             <div className={styles2.userDetail}>
-              <span className={styles2.username}>Anitha</span>
-              <span className={styles2.userTitle}>Administrator</span>
+              <span className={styles2.username}>Admin</span>
+              {/* <span className={styles2.userTitle}>Administrator</span> */}
             </div>
           </div>
           <Popover
@@ -85,8 +85,8 @@ const Navbar = () => {
                   height="50"
                 />
                 <div className={styles2.userDetail}>
-                  <span className={styles2.username}>Anitha</span>
-                  <span className={styles2.userTitle}>Administrator</span>
+                  <span className={styles2.username}>Admin</span>
+                  {/* <span className={styles2.userTitle}>Administrator</span> */}
                 </div>
               </div>
               <hr />

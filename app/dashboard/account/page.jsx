@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
+// import CardContent from "@mui/material/CardContent";
+// import Typography from "@mui/material/Typography";
+// import Avatar from "@mui/material/Avatar";
+// import Stack from "@mui/material/Stack";
 import "@/app/ui/settings/settings.css";
-import styles from "@/app/ui/dashboard/users/users.module.css";
+// import styles from "@/app/ui/dashboard/users/users.module.css";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -19,7 +19,7 @@ const validataionSchema = yup.object({
 // Tabs
 import { Tabs, Tab, Button } from "@nextui-org/react";
 import TextField from "@mui/material/TextField";
-import DeleteIcon from "@mui/icons-material/Delete";
+// import DeleteIcon from "@mui/icons-material/Delete";
 import { resetPassword } from "@/service";
 
 const Settings = () => {

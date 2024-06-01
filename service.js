@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let api_url = "http://localhost:7000/api";
-// let api_url = "https://aqua-supreme-api.vercel.app/api"
+// let api_url = "http://localhost:7000/api";
+let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -87,6 +87,17 @@ const getCustomer = async () => {
     alert("Try again later!..");
   }
 };
+
+const getAllCustomer = async () => {
+  try {
+    let response = await axios.get(`${api_url}/customer/getAll`);
+    console.log(response.data,"respservice94");
+      return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("Try again later!")
+  }
+}
 
 // Get details by id
 const getCustomerDetailsById = async (id) => {
@@ -341,6 +352,7 @@ export {
   resetPassword,
   addNewCustomer,
   getCustomer,
+  getAllCustomer,
   editCustomer,
   deleteCustomer,
   addNewInstallation,
