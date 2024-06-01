@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -17,6 +17,18 @@ const login = async (data) => {
     alert("Try again Later!");
   }
 };
+
+// Reset password  // data = {newpassword,oldpassword}
+const resetPassword = async(data) => {
+try {
+  let response = await axios.put(`${api_url}/auth/reset-password`, data);
+  console.log("response", response)
+  return response.data;
+} catch (error) {
+  console.log(error);
+  alert("try again later")
+}
+}
 
 // Add New Customer
 const addNewCustomer = async (data) => {
@@ -326,6 +338,7 @@ const deleteService = async (id) => {
 
 export {
   login,
+  resetPassword,
   addNewCustomer,
   getCustomer,
   editCustomer,

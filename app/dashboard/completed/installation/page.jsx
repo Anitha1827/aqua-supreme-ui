@@ -1,12 +1,13 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import Search from "@/app/ui/dashboard/search/search";
+import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { installationCompleted } from "@/service";
 
 const InstallationCompletedPage = () => {
   const [data, setData] = useState([]);
+  const [search, setSearch] = useState("");
 
   const getCompletedData = async () => {
     let response = await installationCompleted();
@@ -20,11 +21,19 @@ const InstallationCompletedPage = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search a user..." />
+        <div className={styles.searchcontainer}>
+          <SearchIcon className={styles.searchicon} />
+          <input
+            className={styles.searchfield}
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
       </div>
       <table className={styles.table}>
         <thead>
-          <tr style={{fontWeight:"bold"}}>
+          <tr style={{ fontWeight: "bold" }}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Contact</td>
@@ -35,20 +44,41 @@ const InstallationCompletedPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data &&
-            data.map((data, idx) => (
-              <tr key={idx}>
-                <td>{idx+1}</td>
-                <td>{data.customerName}</td>
-                <td>{data.customerPhone}</td>
-                <td>{data.lastServicedAt.split("").slice(0,10).join("")}</td>
-                <td>{data.duedate}</td>
-                <td>{data.isInstallationAssignTo}</td>
-                <td>
-                  <button className={styles.compbutton}>Completed</button>
-                </td>
-              </tr>
-            ))}
+          {data && search.length <= 0
+            ? data.map((data, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  <td>{data.customerName}</td>
+                  <td>{data.customerPhone}</td>
+                  <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
+                  <td>{data.duedate}</td>
+                  <td>{data.isInstallationAssignTo}</td>
+                  <td>
+                    <button className={styles.compbutton}>Completed</button>
+                  </td>
+                </tr>
+              ))
+            : data.map(
+                (data, idx) =>
+                  (data.customerName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    data.customerPhone.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{data.customerName}</td>
+                      <td>{data.customerPhone}</td>
+                      <td>
+                        {data.lastServicedAt.split("").slice(0, 10).join("")}
+                      </td>
+                      <td>{data.duedate}</td>
+                      <td>{data.isInstallationAssignTo}</td>
+                      <td>
+                        <button className={styles.compbutton}>Completed</button>
+                      </td>
+                    </tr>
+                  )
+              )}
         </tbody>
       </table>
       <Pagination />

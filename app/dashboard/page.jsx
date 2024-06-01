@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import Search from "../ui/dashboard/search/search";
+import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "../ui/dashboard/pagination/pagination";
 // modal
 import Button from "@mui/material/Button";
@@ -28,6 +28,7 @@ const Dashboard = () => {
 
   const [editdata, setEditData] = useState({});
   const [customer, setCustomer] = useState([]);
+  const [search, setSearch] = useState("");
 
   // To get Customer details from DB
   let getCustomerDetails = async () => {
@@ -35,7 +36,13 @@ const Dashboard = () => {
     setCustomer(res.getAllCustomerDetails);
   };
   useEffect(() => {
-    getCustomerDetails();
+    let token = localStorage.getItem("token")
+    if(!token){
+      router.push("/login")
+    }else{
+      getCustomerDetails();
+    }
+   
   }, []);
 
   // Delete functionalities
@@ -48,7 +55,16 @@ const Dashboard = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search a user..." />
+        <div className={styles.searchcontainer}>
+        <SearchIcon className={styles.searchicon} />
+          <input
+          placeholder="Search..."
+            className={styles.searchfield}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
         <Button
           onClick={handleOpen}
           variant="contained"
@@ -69,52 +85,111 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {customer.length > 0 &&
-            customer.map((item, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{item.customerName}</td>
-                <td>{item.customerPhone}</td>
-                <td>
-                  {item.lastServicedAt
-                    ? item.lastServicedAt.split("").splice(0, 10).join("")
-                    : "24-05-2024"}
-                </td>
-                <td>{item.duedate}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    <Button
-                      onClick={() => handleEdit(item)}
-                      className={`${styles.button} ${styles.view}`}
-                      title="Edit"
-                      color="primary"
+          {customer.length > 0 && search.length <= 0
+            ? customer.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  <td>{item.customerName}</td>
+                  <td>{item.customerPhone}</td>
+                  <td>
+                    {item.lastServicedAt
+                      ? item.lastServicedAt.split("").splice(0, 10).join("")
+                      : "24-05-2024"}
+                  </td>
+                  <td>{item.duedate}</td>
+                  <td>
+                    <div
+                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
+                      <Button
+                        onClick={() => handleEdit(item)}
+                        className={`${styles.button} ${styles.view}`}
+                        title="Edit"
+                        color="primary"
+                      >
+                        <FaRegEdit sx={{ fontSize: "20px" }} />
+                      </Button>
 
-                    {/* Details */}
-                    <Button
-                      title="Customer Details"
-                      onClick={() =>
-                        router.push(`/dashboard/customerdetails/${item._id}`)
-                      }
-                    >
-                      <SettingsAccessibilityIcon sx={{ fontSize: "20px" }} />
-                    </Button>
+                      {/* Details */}
+                      <Button
+                        title="Customer Details"
+                        onClick={() =>
+                          router.push(`/dashboard/customerdetails/${item._id}`)
+                        }
+                      >
+                        <SettingsAccessibilityIcon sx={{ fontSize: "20px" }} />
+                      </Button>
 
-                    <Button
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(item)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      <Button
+                        className={`${styles.button} ${styles.delete}`}
+                        onClick={() => handleDelete(item)}
+                        title="Delete"
+                      >
+                        <DeleteIcon
+                          sx={{ fontSize: "20px", color: "crimson" }}
+                        />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            : customer.map(
+                (item, idx) =>
+                  (item.customerName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    item.customerPhone.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{item.customerName}</td>
+                      <td>{item.customerPhone}</td>
+                      <td>
+                        {item.lastServicedAt
+                          ? item.lastServicedAt.split("").splice(0, 10).join("")
+                          : "24-05-2024"}
+                      </td>
+                      <td>{item.duedate}</td>
+                      <td>
+                        <div
+                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                        >
+                          <Button
+                            onClick={() => handleEdit(item)}
+                            className={`${styles.button} ${styles.view}`}
+                            title="Edit"
+                            color="primary"
+                          >
+                            <FaRegEdit sx={{ fontSize: "20px" }} />
+                          </Button>
+
+                          {/* Details */}
+                          <Button
+                            title="Customer Details"
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/customerdetails/${item._id}`
+                              )
+                            }
+                          >
+                            <SettingsAccessibilityIcon
+                              sx={{ fontSize: "20px" }}
+                            />
+                          </Button>
+
+                          <Button
+                            className={`${styles.button} ${styles.delete}`}
+                            onClick={() => handleDelete(item)}
+                            title="Delete"
+                          >
+                            <DeleteIcon
+                              sx={{ fontSize: "20px", color: "crimson" }}
+                            />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+              )}
         </tbody>
       </table>
       <Pagination />

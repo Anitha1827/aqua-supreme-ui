@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import Search from "@/app/ui/dashboard/search/search";
+import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { Button } from "@mui/material";
 import AddInstallationModal from "@/container/AddInstallationModal.jsx";
@@ -23,6 +23,7 @@ const Installations = () => {
   const [editdata, setEditData] = useState({});
   const [assign, setAssign] = useState(false);
   const [id, setId] = useState("");
+  const [search, setSearch] = useState("")
 
   const handleEdit = (inst) => {
     setEdit(true);
@@ -56,7 +57,15 @@ const Installations = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search a user..." />
+      <div className={styles.searchcontainer}>
+      <SearchIcon className={styles.searchicon} />
+        <input
+            className={styles.searchfield}
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
 
         <Button onClick={handleOpen} variant="contained">
           Add
@@ -75,7 +84,8 @@ const Installations = () => {
         </thead>
         <tbody>
           {install.length > 0 &&
-            install.map((inst, idx) => (
+            search.length <= 0 ? (
+              install.map((inst, idx) => (
               <tr key={idx}>
                 <td>{idx + 1}</td>
                 <td>{inst.customerName}</td>
@@ -121,7 +131,55 @@ const Installations = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+            ) : (install.map((inst, idx) => (
+              ( inst.customerName.toLowerCase().includes(search.toLowerCase()) ||  inst.customerPhone.includes(search))&&
+             ( <tr key={idx}>
+              <td>{idx + 1}</td>
+              <td>{inst.customerName}</td>
+              <td>{inst.customerPhone}</td>
+              <td>{inst.duedate}</td>
+              <td>
+                {inst.lastServicedAt
+                  ? inst.lastServicedAt.split("").slice(0, 10).join("")
+                  : "24-05-2024"}
+              </td>
+              <td>
+                <div
+                  className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                >
+                  {/* Edit button */}
+                  <Button onClick={() => handleEdit(inst)} title="Edit Data">
+                    <FaRegEdit sx={{fontSize:"20px"}} />
+                  </Button>
+                  {/* Assign person button */}
+                  <Button onClick={() => handleAssign(inst._id)} title="Assign technician">
+                    <IoPersonAddOutline sx={{fontSize:"20px"}} />
+                  </Button>
+
+                  {/* status update button */}
+                  <Button
+                    onClick={() =>
+                      router.push(`/dashboard/installations/${inst._id}`)
+                    }
+                    title="Update Status"
+                  >
+                    <TaskAltIcon sx={{fontSize:"20px"}}/>
+                  </Button>
+                  {/* Delete button */}
+                  <Button
+                    aria-label="delete"
+                    // size="large"
+                    className={`${styles.button} ${styles.delete}`}
+                    onClick={() => handleDelete(inst)}
+                    title="Delete"
+                  >
+                    <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
+                  </Button>
+                </div>
+              </td>
+            </tr>)
+            )))}
         </tbody>
       </table>
       <Pagination />

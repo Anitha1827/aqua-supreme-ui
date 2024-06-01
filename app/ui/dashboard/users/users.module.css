@@ -66,3 +66,24 @@ margin-top: 20px;
     border: none;
     cursor: pointer;
 }
+
+.searchcontainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #2e374a;
+    padding: 10px;
+    border-radius: 10px;
+    width: 22%;
+    height: 35px;
+  
+}
+.searchfield {
+   background: transparent;
+   border: none;
+   outline: none;
+   color: white;
+  }
+  .searchicon {
+    color: #aaa;
+  }

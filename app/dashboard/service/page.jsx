@@ -1,9 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import Search from "@/app/ui/dashboard/search/search";
+import { Button} from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import { Button } from "@mui/material";
 import AddServiceModal from "@/container/AddServiceModal";
 import EditServiceModal from "@/container/EditServiceModal";
 import { deleteService, getService } from "@/service";
@@ -22,6 +22,7 @@ const ServiceCalls = () => {
   const [service, setService] = useState([]);
   const handleOpen = () => setOpen(true);
   const [assign, setAssign] = useState(false);
+  const [search, setSearch] = useState("");
   const [id, setId] = useState("");
   const handleAssign = (id) => {
     setAssign(true);
@@ -50,7 +51,15 @@ const ServiceCalls = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <Search placeholder="Search a user..." />
+        <div className={styles.searchcontainer}>
+        <SearchIcon className={styles.searchicon} />
+          <input
+            className={styles.searchfield}
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
         <Button
           onClick={handleOpen}
           variant="contained"
@@ -71,58 +80,119 @@ const ServiceCalls = () => {
           </tr>
         </thead>
         <tbody>
-          {service.length > 0 &&
-            service.map((item, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{item.customerName}</td>
-                <td>{item.customerPhone}</td>
-                <td>{item.createdAt}</td>
-                <td>
-                  {item.serviceDate
-                    ? item.serviceDate.split("").slice(0, 10).join("")
-                    : "23-05-2024"}
-                </td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    <Button
-                      onClick={() => handleEdit(item)}
-                      className={`${styles.button} ${styles.view}`}
-                      title="Edit"
-                      color="primary"
+          {service.length > 0 && search.length <= 0
+            ? service.map((item, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  <td>{item.customerName}</td>
+                  <td>{item.customerPhone}</td>
+                  <td>{item.createdAt}</td>
+                  <td>
+                    {item.serviceDate
+                      ? item.serviceDate.split("").slice(0, 10).join("")
+                      : "23-05-2024"}
+                  </td>
+                  <td>
+                    <div
+                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
-                    {/* Assign person button */}
-                    <Button
-                      onClick={() => handleAssign(item._id)}
-                      title="Assign technician"
-                    >
-                      <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                    </Button>
+                      <Button
+                        onClick={() => handleEdit(item)}
+                        className={`${styles.button} ${styles.view}`}
+                        title="Edit"
+                        color="primary"
+                      >
+                        <FaRegEdit sx={{ fontSize: "20px" }} />
+                      </Button>
+                      {/* Assign person button */}
+                      <Button
+                        onClick={() => handleAssign(item._id)}
+                        title="Assign technician"
+                      >
+                        <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+                      </Button>
 
-                    {/* status update button */}
-                    <Button
-                      onClick={() =>
-                        router.push(`/dashboard/service/${item._id}`)
-                      }
-                      title="Status Update"
-                    >
-                      <TaskAltIcon sx={{ fontSize: "20px" }} />
-                    </Button>
-                    <button
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(item)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color:"crimson" }} />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      {/* status update button */}
+                      <Button
+                        onClick={() =>
+                          router.push(`/dashboard/service/${item._id}`)
+                        }
+                        title="Status Update"
+                      >
+                        <TaskAltIcon sx={{ fontSize: "20px" }} />
+                      </Button>
+                      <button
+                        className={`${styles.button} ${styles.delete}`}
+                        onClick={() => handleDelete(item)}
+                        title="Delete"
+                      >
+                        <DeleteIcon
+                          sx={{ fontSize: "20px", color: "crimson" }}
+                        />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            : service.map(
+                (item, idx) =>
+                  (item.customerName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    item.customerPhone.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{item.customerName}</td>
+                      <td>{item.customerPhone}</td>
+                      <td>{item.createdAt}</td>
+                      <td>
+                        {item.serviceDate
+                          ? item.serviceDate.split("").slice(0, 10).join("")
+                          : "23-05-2024"}
+                      </td>
+                      <td>
+                        <div
+                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                        >
+                          <Button
+                            onClick={() => handleEdit(item)}
+                            className={`${styles.button} ${styles.view}`}
+                            title="Edit"
+                            color="primary"
+                          >
+                            <FaRegEdit sx={{ fontSize: "20px" }} />
+                          </Button>
+                          {/* Assign person button */}
+                          <Button
+                            onClick={() => handleAssign(item._id)}
+                            title="Assign technician"
+                          >
+                            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+                          </Button>
+
+                          {/* status update button */}
+                          <Button
+                            onClick={() =>
+                              router.push(`/dashboard/service/${item._id}`)
+                            }
+                            title="Status Update"
+                          >
+                            <TaskAltIcon sx={{ fontSize: "20px" }} />
+                          </Button>
+                          <button
+                            className={`${styles.button} ${styles.delete}`}
+                            onClick={() => handleDelete(item)}
+                            title="Delete"
+                          >
+                            <DeleteIcon
+                              sx={{ fontSize: "20px", color: "crimson" }}
+                            />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+              )}
         </tbody>
       </table>
       <Pagination />
