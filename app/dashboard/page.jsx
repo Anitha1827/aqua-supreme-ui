@@ -22,8 +22,8 @@ const Dashboard = () => {
 
   // Edit Functionalities
   const handleEdit = (customer) => {
-    setEdit(true);
     setEditData(customer);
+    setEdit(true);
   };
 
   const [editdata, setEditData] = useState({});

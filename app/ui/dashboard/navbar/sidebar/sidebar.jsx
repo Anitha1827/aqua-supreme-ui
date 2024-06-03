@@ -26,7 +26,7 @@ const menuItems = [
       },
       {
         title: "Technician/Staff",
-        path: "/dashboard/users",
+        path: "/dashboard/technicians",
         icon: <MdSupervisedUserCircle />,
       },
       {

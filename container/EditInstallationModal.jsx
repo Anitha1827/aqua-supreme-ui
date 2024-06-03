@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -11,18 +11,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-
-// formik
-import * as yup from "yup";
-import { useFormik } from "formik";
 import { editInstallation, getInstallationDetails } from "@/service";
-
-
-const validataionSchema = yup.object({
-  name: yup.string().required("Please Enter Name"),
-  phone: yup.string().required("please Enter Phone Number"),
-  date: yup.string().required("Please Select Service completed date"),
-});
 
 const style = {
   position: "absolute",
@@ -37,8 +26,16 @@ const style = {
 };
 
 export default function EditInstallationModal({ edit, setEdit, editdata, setInstall}) {
-  console.log(editdata, "editdataline40");
-  //   Modal
+  const [name, setName] = useState(editdata.customerName);
+  const [phone, setPhone] = useState(editdata.customerPhone);
+  const [date, setDate] = useState(editdata.lastServicedAt);
+
+  useEffect(()=>{
+    setName(editdata.customerName);
+    setPhone(editdata.customerPhone)
+    setDate(editdata.lastServicedAt)
+  },[editdata])
+
   const handleClose = () => setEdit(false);
 
   const getInstallation = async () => {
@@ -47,24 +44,19 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
     setInstall(response.getAllCustomerDetails);
   };
 
-  
-  let { values, handleChange, handleSubmit, errors } = useFormik({
-    initialValues: {
-      name:editdata.customerName,
-      phone: editdata.customerPhone,
-      date: editdata.lastServicedAt,
-    },
-    validationSchema: validataionSchema,
-    onSubmit: async (data) => {
-      data["id"] = editdata._id;
+  const handleSubmit = async() => {
+    if(!name || !phone || !date){
+      return alert("Please fill all the fields")
+    }
+    let data = {name,phone,date}
+    data["id"] = editdata._id;
       let res = await editInstallation(data);
       if (res.message !== "Customer Updated Succesfully!") {
         alert("try again later");
       }
       handleClose();
       getInstallation();
-    },
-  });
+  }
 
   return (
     <div>
@@ -94,16 +86,10 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
                 sx={{ width: "100%" }}
                 type="name"
                 name="name"
-                value={values.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e)=>{setName(e.target.value)}}
               />
-              {errors.name ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.name}
-                </div>
-              ) : (
-                ""
-              )}
+             
               <br />
               <br />
               <TextField
@@ -113,16 +99,10 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
                 sx={{ width: "100%" }}
                 type="phone"
                 name="phone"
-                value={values.phone}
-                onChange={handleChange}
+                value={phone}
+                onChange={(e)=>{setPhone(e.target.value)}}
               />
-              {errors.phone ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.phone}
-                </div>
-              ) : (
-                ""
-              )}
+              
               <br />
               <br />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -130,20 +110,14 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
                   <DatePicker
                     label="Service/Install At"
                     name="date"
-                    value={dayjs(values.date)}
-                    onChange={(date)=>{
-                      handleChange({target:{name:"date",value:date.format()}})
+                    value={dayjs(date)}
+                    onChange={(e)=>{
+                     setDate(e.target.value)
                     }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              {errors.date ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.date}
-                </div>
-              ) : (
-                ""
-              )}
+             
               <br/>
               <br/>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">

@@ -1,20 +1,11 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
-
-// formik
-import * as yup from "yup";
-import { useFormik } from "formik";
 import { editUser, getNewUser } from "@/service";
-
-const validataionSchema = yup.object({
-  name: yup.string().required("Please Enter Name"),
-  phone: yup.string().required("please Enter Phone Number"),
-});
 
 const style = {
   position: "absolute",
@@ -28,8 +19,14 @@ const style = {
   p: 4,
 };
 
-export default function EditUserModal({ edit, setEdit, editdata, setTech}) {
-  console.log(editdata, "editdata");
+export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
+  const [name, setName] = useState(editdata.name);
+  const [phone, setPhone] = useState(editdata.phone);
+
+  useEffect(()=>{
+    setName(editdata.name);
+    setPhone(editdata.phone)
+  },[editdata])
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -37,27 +34,21 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech}) {
     let res = await getNewUser();
     console.log("res", res);
     setTech(res.getuser);
-    
   };
 
-  
-  let { values, handleChange, handleSubmit, errors } = useFormik({
-    initialValues: {
-      name: editdata.name,
-      phone: editdata.phone,
-    },
-    validationSchema: validataionSchema,
-    onSubmit: async (data) => {
-      data["id"] = editdata._id;
-      let res = await editUser(data);
-      if (res.message !== "User Details edited successfully!") {
-        alert("try again later");
-      }
-      handleClose();
-      getusesr();
-    },
-  });
-
+  const handleSubmit = async () => {
+    if (!name || !phone) {
+      return alert("Please fill all the fields");
+    }
+    let data = { name, phone };
+    data["id"] = editdata._id;
+    let res = await editUser(data);
+    if (res.message !== "User Details edited successfully!") {
+      alert("try again later");
+    }
+    handleClose();
+    getusesr();
+  };
   return (
     <div>
       <Modal
@@ -86,16 +77,9 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech}) {
                 sx={{ width: "100%" }}
                 type="name"
                 name="name"
-                value={values.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
-              {errors.name ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.name}
-                </div>
-              ) : (
-                ""
-              )}
               <br />
               <br />
               <TextField
@@ -105,16 +89,9 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech}) {
                 sx={{ width: "100%" }}
                 type="phone"
                 name="phone"
-                value={values.phone}
-                onChange={handleChange}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
-              {errors.phone ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.phone}
-                </div>
-              ) : (
-                ""
-              )}
               <br />
               <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">

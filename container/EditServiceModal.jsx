@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -10,18 +10,8 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-
-// formik
-import * as yup from "yup";
-import { useFormik } from "formik";
 import { editService, getService } from "@/service";
 import dayjs from "dayjs";
-
-const validataionSchema = yup.object({
-  name: yup.string().required("Please Enter Name"),
-  phone: yup.string().required("please Enter Phone Number"),
-  date: yup.string().required("please select service date"),
-});
 
 const style = {
   position: "absolute",
@@ -35,8 +25,22 @@ const style = {
   p: 4,
 };
 
-export default function EditServiceModal({ edit, setEdit, editdata, setService }) {
-  console.log(editdata, "editdata");
+export default function EditServiceModal({
+  edit,
+  setEdit,
+  editdata,
+  setService,
+}) {
+  const [name, setName] = useState(editdata.customerName);
+  const [phone, setPhone] = useState(editdata.customerPhone);
+  const [date, setDate] = useState(editdata.lastServicedAt);
+
+  useEffect(()=>{
+    setName(editdata.customerName)
+    setPhone(editdata.customerPhone)
+    setDate(editdata.lastServicedAt)
+  },[editdata])
+  
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -46,25 +50,19 @@ export default function EditServiceModal({ edit, setEdit, editdata, setService }
     setService(res.getAllServiceDetails);
   };
 
-  let { values, handleChange, handleSubmit, errors } = useFormik({
-    initialValues: {
-      name: editdata.customerName,
-      phone: editdata.customerPhone,
-      date: editdata.serviceDate,
-    },
-    validationSchema: validataionSchema,
-    onSubmit: async (data) => {
-      data["id"] = editdata._id;
-      let res = await editService(data);
-      if (res.message !== "Service Updated Successfully!") {
-        alert("try again later");
-      }
-      handleClose();
-      getservice();
-    },
-  });
-
-
+  const handleSubmit = async () => {
+    if (!name || !phone || !date) {
+      return alert("Please Fill the fields");
+    }
+    let data = { name, phone, date };
+    data["id"] = editdata._id;
+    let res = await editService(data);
+    if (res.message !== "Service Updated Successfully!") {
+      alert("try again later");
+    }
+    handleClose();
+    getservice();
+  };
   return (
     <div>
       <Modal
@@ -93,16 +91,10 @@ export default function EditServiceModal({ edit, setEdit, editdata, setService }
                 sx={{ width: "100%" }}
                 type="name"
                 name="name"
-                value={values.name}
-                onChange={handleChange}
+                value={name}
+                onChange={(e) => setName(e.target.name)}
               />
-              {errors.name ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.name}
-                </div>
-              ) : (
-                ""
-              )}
+
               <br />
               <br />
               <TextField
@@ -112,16 +104,9 @@ export default function EditServiceModal({ edit, setEdit, editdata, setService }
                 sx={{ width: "100%" }}
                 type="phone"
                 name="phone"
-                value={values.phone}
-                onChange={handleChange}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
               />
-              {errors.phone ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.phone}
-                </div>
-              ) : (
-                ""
-              )}
               <br />
               <br />
               <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -129,22 +114,14 @@ export default function EditServiceModal({ edit, setEdit, editdata, setService }
                   <DatePicker
                     label="Service Date"
                     name="date"
-                    value={dayjs(values.date)}
-                    onChange={(date) => {
-                      handleChange({
-                        target: { name: "date", value: date.format() },
-                      });
+                    value={dayjs(date)}
+                    onChange={(e) => {
+                      setDate(e.target.value);
                     }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-              {errors.date ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.date}
-                </div>
-              ) : (
-                ""
-              )}
+
               <br />
               <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
