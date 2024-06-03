@@ -30,7 +30,8 @@ margin-top: 20px;
 
 .buttons{
     display: flex;
-    /* gap: 10px; */
+    justify-content: center;
+    align-items: center;
 }
 .button{
     /* padding: 2px 5px; */

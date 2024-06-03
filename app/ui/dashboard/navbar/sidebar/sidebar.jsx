@@ -9,11 +9,9 @@ import {
   MdWork,
   MdAnalytics,
   MdOutlineSettings,
-  MdLogout,
 } from "react-icons/md";
 import MenuLink from "./menuLink/menuLink";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+
 
 const menuItems = [
   {
@@ -25,8 +23,8 @@ const menuItems = [
         icon: <MdDashboard />,
       },
       {
-        title: "Technician/Staff",
-        path: "/dashboard/technicians",
+        title: "Service Engineers",
+        path: "/dashboard/serviceEngineer",
         icon: <MdSupervisedUserCircle />,
       },
       {
@@ -35,7 +33,7 @@ const menuItems = [
         icon: <MdShoppingBag />,
       },
       {
-        title: "ServiceCalls",
+        title: "Service Calls",
         path: "/dashboard/service",
         icon: <MdAttachMoney />,
       },
@@ -87,7 +85,7 @@ const Sidebar = () => {
   return (
     <div className={styles.container} >
       <div className={styles.user}>
-        <h6>Aqua Supreme Pure</h6>
+        <h4>Aqua Supreme Pure</h4>
       </div>
       <ul className={styles.list}>
         {menuItems.map((cat, idx) => (

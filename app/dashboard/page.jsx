@@ -11,7 +11,7 @@ import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
-import SettingsAccessibilityIcon from "@mui/icons-material/SettingsAccessibility";
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
@@ -117,7 +117,7 @@ const Dashboard = () => {
                           router.push(`/dashboard/customerdetails/${item._id}`)
                         }
                       >
-                        <SettingsAccessibilityIcon sx={{ fontSize: "20px" }} />
+                        <VisibilityIcon sx={{ fontSize: "20px" }} />
                       </Button>
 
                       <Button
@@ -171,7 +171,7 @@ const Dashboard = () => {
                               )
                             }
                           >
-                            <SettingsAccessibilityIcon
+                            <VisibilityIcon
                               sx={{ fontSize: "20px" }}
                             />
                           </Button>

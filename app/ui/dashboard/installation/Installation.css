@@ -3,10 +3,17 @@
     background-color: aliceblue;
     color: black;
     border-radius: 10px;
+    margin-bottom: 20px;
 }
+
+.Input label{
+padding-top: 11px;
+}
+
 .textArea{
     border-radius: 10px;
-    margin: 10px 0 20px 0;
+    width: 100%;
+    resize: vertical;
 }
 
 .upload{
