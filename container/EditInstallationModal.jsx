@@ -94,7 +94,7 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
               <br />
               <TextField
                 id="outlined-basic"
-                label="phone Number"
+                label="Phone Number"
                 variant="outlined"
                 sx={{ width: "100%" }}
                 type="phone"

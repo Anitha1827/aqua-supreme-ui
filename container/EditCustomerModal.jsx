@@ -108,7 +108,7 @@ export default function EditCustomerModal({
                 <div style={{ width: "100%", margin: "10px" }}>
                   <TextField
                     id="outlined-basic"
-                    label="phone Number"
+                    label="Phone Number"
                     variant="outlined"
                     sx={{ width: "100%" }}
                     type="phone"

@@ -84,7 +84,7 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
               <br />
               <TextField
                 id="outlined-basic"
-                label="phone Number"
+                label="Phone Number"
                 variant="outlined"
                 sx={{ width: "100%" }}
                 type="phone"

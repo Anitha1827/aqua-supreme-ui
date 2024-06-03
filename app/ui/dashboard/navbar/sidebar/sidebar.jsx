@@ -87,13 +87,7 @@ const Sidebar = () => {
   return (
     <div className={styles.container} >
       <div className={styles.user}>
-        <Image
-          className={styles.userImage}
-          src="/noavatar.png"
-          alt=""
-          width="50"
-          height="50"
-        />
+        <h6>Aqua Supreme Pure</h6>
       </div>
       <ul className={styles.list}>
         {menuItems.map((cat, idx) => (

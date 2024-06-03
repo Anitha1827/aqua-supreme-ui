@@ -86,7 +86,7 @@ export default function AddServiceModal({ open, setOpen,setService }) {
             >
               <TextField
                 id="outlined-basic"
-                label="customerName"
+                label="Customer Name"
                 variant="outlined"
                 sx={{ width: "100%" }}
                 type="name"
@@ -105,7 +105,7 @@ export default function AddServiceModal({ open, setOpen,setService }) {
               <br />
               <TextField
                 id="outlined-basic"
-                label="phone Number"
+                label="Phone Number"
                 variant="outlined"
                 sx={{ width: "100%" }}
                 type="phone"

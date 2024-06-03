@@ -107,7 +107,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
              <div style={{ margin: "10px", width: "100%" }}>
               <TextField
                 id="outlined-basic"
-                label="phone Number"
+                label="Phone Number"
                 variant="outlined"
                 fullWidth
                 type="phone"
