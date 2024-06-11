@@ -5,13 +5,7 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
-// Date picker
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import dayjs from "dayjs";
-import { editCustomer, getCustomer } from "@/service";
+import { editCustomer, getAllCustomer } from "@/service";
 
 const style = {
   position: "absolute",
@@ -33,29 +27,33 @@ export default function EditCustomerModal({
 }) {
   const [name, setName] = useState(editdata.customerName);
   const [phone, setPhone] = useState(editdata.customerPhone);
-  const [address, setAddress] = useState(editdata.address);
-  const [date, setDate] = useState(editdata.lastServicedAt);
+  const [doorNo, setDoorNo] = useState(editdata.address.doorNo);
+  const [street, setStreet] = useState(editdata.address.street)
+  const[area, setArea] = useState(editdata.address.area)
+  const [pin, setPin] = useState(editdata.address.pin)
 
   useEffect(()=>{
     setName(editdata.customerName)
     setPhone(editdata.customerPhone)
-    setAddress(editdata.address)
-    setDate(editdata.lastServicedAt)
+    setDoorNo(editdata.address.doorNo)
+    setStreet(editdata.address.street)
+    setArea(editdata.address.area)
+    setPin(editdata.address.pin)
   },[editdata])
   //   Modal
   const handleClose = () => setEdit(false);
 
   let getusesr = async () => {
-    let res = await getCustomer();
+    let res = await getAllCustomer();
     console.log("res", res);
     setCustomer(res.getAllCustomerDetails);
   };
   
-  const handleSubmit = async() => {
-    if(!name || !phone || !address || !date){
-      return alert("Please Fill all Field")
-    }
-    let data = {name,phone, address, date}
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+      // let {doorNo,street,area,pin} = data
+    let data = {name,phone}
+    data["address"] = {doorNo,street,area,pin}
     data["id"] = editdata._id;
     let res = await editCustomer(data);
     if (res.message !== "Customer Updated Succesfully!") {
@@ -130,38 +128,75 @@ export default function EditCustomerModal({
                 <div style={{ width: "100%", margin: "10px" }}>
                   <TextField
                     id="outlined-multiline-flexible"
-                    label="Address"
-                    type="address"
-                    name="address"
+                    label="Door Number"
+                    type="doorNo"
+                    name="doorNo"
                     fullWidth
                     multiline
                     maxRows={4}
-                    value={address}
+                    value={doorNo}
                     onChange={(e) => {
-                      setAddress(e.target.value);
+                      setDoorNo(e.target.value);
                     }}
                   />
                 </div>
+
                 <div style={{ width: "100%", margin: "10px" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]}>
-                      <DatePicker
-                        fullWidth
-                        label="Service/Install At"
-                        name="date"
-                        value={dayjs(date)}
-                        onChange={(e) => {
-                          setDate(e.target.value);
-                          // handleChange({
-                          //   target: { name: "date", value: date.format() },
-                          // });
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    label="Street"
+                    type="Street"
+                    name="street"
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    value={street}
+                    onChange={(e) => {
+                      setStreet(e.target.value);
+                    }}
+                  />
                 </div>
               </div>
+              
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    label="Area"
+                    type="area"
+                    name="area"
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    value={area}
+                    onChange={(e) => {
+                      setArea(e.target.value);
+                    }}
+                  />
+                </div>
 
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-multiline-flexible"
+                    label="Pin Code"
+                    type="pin"
+                    name="pin"
+                    fullWidth
+                    multiline
+                    maxRows={4}
+                    value={pin}
+                    onChange={(e) => {
+                      setPin(e.target.value);
+                    }}
+                  />
+                </div>
+              </div>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update
               </Button>

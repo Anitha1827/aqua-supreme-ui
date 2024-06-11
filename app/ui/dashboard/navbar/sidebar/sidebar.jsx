@@ -10,7 +10,9 @@ import {
   MdAnalytics,
   MdOutlineSettings,
 } from "react-icons/md";
+import { FaAppStoreIos } from "react-icons/fa6";
 import MenuLink from "./menuLink/menuLink";
+import { IoChatboxEllipses } from "react-icons/io5";
 
 
 const menuItems = [
@@ -23,11 +25,6 @@ const menuItems = [
         icon: <MdDashboard />,
       },
       {
-        title: "Service Engineers",
-        path: "/dashboard/serviceEngineer",
-        icon: <MdSupervisedUserCircle />,
-      },
-      {
         title: "Installations",
         path: "/dashboard/installations",
         icon: <MdShoppingBag />,
@@ -36,6 +33,21 @@ const menuItems = [
         title: "Service Calls",
         path: "/dashboard/service",
         icon: <MdAttachMoney />,
+      },
+      {
+        title:"Product",
+        path:"/dashboard/product",
+        icon:<FaAppStoreIos />,
+      },
+      {
+        title:"Service Reminder",
+        path:"/dashboard/reminder",
+        icon:<IoChatboxEllipses />,
+      },
+      {
+        title: "Service Engineers",
+        path: "/dashboard/serviceEngineer",
+        icon: <MdSupervisedUserCircle />,
       },
     ],
   },

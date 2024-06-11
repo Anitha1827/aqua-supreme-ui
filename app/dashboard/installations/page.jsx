@@ -90,11 +90,11 @@ const Installations = () => {
                 <td>{idx + 1}</td>
                 <td>{inst.customerName}</td>
                 <td>{inst.customerPhone}</td>
-                <td>{inst.duedate}</td>
+                <td>{inst.createdAt}</td>
                 <td>
-                  {inst.lastServicedAt
-                    ? inst.lastServicedAt.split("").slice(0, 10).join("")
-                    : "24-05-2024"}
+                  {inst.duedate
+                    ? inst.duedate.split("").slice(0, 10).join("")
+                    : ""}
                 </td>
                 <td>
                   <div

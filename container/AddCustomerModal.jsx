@@ -5,23 +5,21 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
-// Date picker
-import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { addNewCustomer, getCustomer } from "@/service";
-import dayjs from "dayjs";
+import { addNewCustomer, getAllCustomer } from "@/service";
+
 
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
   phone: yup.string().required("please Enter Phone Number"),
-  date: yup.string().required("Please Select Service completed date"),
-  address: yup.string().required("Please Enter Address"),
+  doorNo: yup.string().required("Please Enter door Number"),
+  street: yup.string().required("Please Enter Streat"),
+  area: yup.string().required("Please Enter Area"),
+  pin: yup.string().required("Please Enter Pin Number"),
+
 });
 
 const style = {
@@ -44,11 +42,16 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
     initialValues: {
       name: "",
       phone: "",
-      date: "",
-      address: "",
+      doorNo: "",
+      street:"",
+      area:"",
+      pin:"",
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
+      console.log("data",data);
+      let {doorNo,street,area,pin} = data
+      data["address"] = {doorNo,street,area,pin}
       let res = await addNewCustomer(data);
       if (res.message !== "Customer Added Successfully!") {
         alert("try again later");
@@ -59,7 +62,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
   });
 
   let getCustomerDetails = async () => {
-    let res = await getCustomer();
+    let res = await getAllCustomer();
     console.log(res, "customerline19");
     setCustomer(res.getAllCustomerDetails);
   };
@@ -124,19 +127,42 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
               )}
              </div>
              </div>
-              
+             <label style={{color:"black",display:"flex", justifyContent:"center"}}>Address</label>
               <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
+              <div  style={{ margin: "10px", width: "100%" }}>
+                {/* Address Field */}
+                
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Door Number"
+                type="doorNo"
+                name="doorNo"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.doorNo}
+                onChange={handleChange}
+              />
+              {errors.doorNo ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.doorNo}
+                </div>
+              ) : (
+                ""
+              )}
+              </div>
+
               <div  style={{ margin: "10px", width: "100%" }}>
                 {/* Address Field */}
               <TextField
                 id="outlined-multiline-flexible"
-                label="Address"
-                type="address"
-                name="address"
+                label="Street"
+                type="street"
+                name="street"
                 fullWidth
                 multiline
                 maxRows={4}
-                value={values.address}
+                value={values.street}
                 onChange={handleChange}
               />
               {errors.address ? (
@@ -147,24 +173,47 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                 ""
               )}
               </div>
-              <div style={{ margin: "10px", width: "100%" }}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="Service/Install At"
-                    name="date"
-                    value={dayjs(values.date)}
-                    onChange={(date) => {
-                      handleChange({
-                        target: { name: "date", value: date.format() },
-                      });
-                    }}
-                  />
-                </DemoContainer>
-              </LocalizationProvider>
-              {errors.date ? (
+             </div>
+
+             <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
+              <div  style={{ margin: "10px", width: "100%" }}>
+                {/* Address Field */}
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Area"
+                type="area"
+                name="area"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.area}
+                onChange={handleChange}
+              />
+              {errors.area ? (
                 <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.date}
+                  {errors.area}
+                </div>
+              ) : (
+                ""
+              )}
+              </div>
+
+              <div  style={{ margin: "10px", width: "100%" }}>
+                {/* Address Field */}
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Pin Code"
+                type="pin"
+                name="pin"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.pin}
+                onChange={handleChange}
+              />
+              {errors.pin ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.pin}
                 </div>
               ) : (
                 ""

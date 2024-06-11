@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import { Button} from "@mui/material";
+import { Button } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import AddServiceModal from "@/container/AddServiceModal";
@@ -52,7 +52,7 @@ const ServiceCalls = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.searchcontainer}>
-        <SearchIcon className={styles.searchicon} />
+          <SearchIcon className={styles.searchicon} />
           <input
             className={styles.searchfield}
             placeholder="Search..."
@@ -90,7 +90,7 @@ const ServiceCalls = () => {
                   <td>
                     {item.serviceDate
                       ? item.serviceDate.split("").slice(0, 10).join("")
-                      : "23-05-2024"}
+                      : ""}
                   </td>
                   <td>
                     <div
@@ -148,7 +148,7 @@ const ServiceCalls = () => {
                       <td>
                         {item.serviceDate
                           ? item.serviceDate.split("").slice(0, 10).join("")
-                          : "23-05-2024"}
+                          : ""}
                       </td>
                       <td>
                         <div

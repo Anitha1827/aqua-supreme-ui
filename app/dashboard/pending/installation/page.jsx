@@ -56,8 +56,8 @@ const InstallationPendingPage = () => {
                   <td>{idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
-                  <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
-                  <td>{data.duedate}</td>
+                  <td>{data.createdAt.split("").slice(0, 10).join("")}</td>
+                  <td>{data.duedate.split("").slice(0, 10).join("")}</td>
                   <td>{data.isInstallationAssignTo}</td>
                   <td>
                     <button className={styles.pendbutton}>Pending</button>

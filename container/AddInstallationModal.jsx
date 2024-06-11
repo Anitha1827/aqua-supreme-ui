@@ -21,6 +21,10 @@ const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
   phone: yup.string().required("please Enter Phone Number"),
   date: yup.string().required("Please Select Installation date"),
+  doorNo: yup.string().required("Please Enter Door Number"),
+  street: yup.string().required("Please Enter street"),
+  area: yup.string().required("Please Enter Area"),
+  pin: yup.string().required("Please Enter pin Number"),
 });
 
 const style = {
@@ -28,11 +32,13 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 400,
+  width: "30%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  overflow:"auto",
+  height:"80vh",
 };
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
@@ -43,10 +49,16 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
     initialValues: {
       name: "",
       phone: "",
-      date: "",
+      date: new Date(),
+      doorNo:"",
+      street:"",
+      area:"",
+      pin:"",
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
+      let {doorNo,street,area,pin} = data
+      data["address"] = {doorNo,street,area,pin}
       let res = await addNewInstallation(data);
       console.log("modal52", res);
       //checking an response message for successfully installation added 
@@ -125,7 +137,7 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
-                    label="Service/Install At"
+                    label="Installation Date"
                     name="date"
                     value={dayjs(values.date)}
                     onChange={(date) => {
@@ -145,6 +157,84 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
               )}
               <br />
               <br />
+              <div>
+              <TextField
+                id="outlined-basic"
+                label="Door Number"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="doorNo"
+                name="doorNo"
+                value={values.doorNo}
+                onChange={handleChange}
+              />
+              {errors.doorNo ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.doorNo}
+                </div>
+              ) : (
+                ""
+              )}
+              <br/>
+              <br/>
+              <TextField
+                id="outlined-basic"
+                label="Street"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="street"
+                name="street"
+                value={values.street}
+                onChange={handleChange}
+              />
+              {errors.street ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.street}
+                </div>
+              ) : (
+                ""
+              )}
+              <br/>
+              <br/>
+              <TextField
+                id="outlined-basic"
+                label="Area"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="area"
+                name="area"
+                value={values.area}
+                onChange={handleChange}
+              />
+              {errors.area ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.area}
+                </div>
+              ) : (
+                ""
+              )}
+              <br/>
+              <br/>
+              <TextField
+                id="outlined-basic"
+                label="Pin Code"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="pin"
+                name="pin"
+                value={values.pin}
+                onChange={handleChange}
+              />
+              {errors.pin ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.pin}
+                </div>
+              ) : (
+                ""
+              )}
+              <br/>
+              <br/>
+              </div>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>

@@ -40,7 +40,6 @@ const ServicePendingPage = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Contact</td>
-            <td>CreatedAt</td>
             <td>UpdatedAt</td>
             <td>Assigned-To</td>
             <td>Status</td>
@@ -54,8 +53,7 @@ const ServicePendingPage = () => {
                   <td>{idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
-                  <td>{data.createdAt}</td>
-                  <td>{data.serviceDate.split("").slice(0, 10).join("")}</td>
+                  <td>{data.updatedAt}</td>
                   <td>{data.serviceAssignTo}</td>
                   <td>
                     <button className={styles.pendbutton}>Pending</button>

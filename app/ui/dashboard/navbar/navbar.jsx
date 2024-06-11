@@ -39,11 +39,11 @@ const Navbar = () => {
     <div className={styles.container}>
       <div className={styles.title}>{pathname.split("/").pop()}</div>
       <div className={styles.menu}>
-        <div className={styles.icons}>
+        {/* <div className={styles.icons}>
           <Badge badgeContent={4} color="primary">
             <MailIcon color="success" />
           </Badge>
-        </div>
+        </div> */}
         <div className={`${styles2.user}`}>
           {/* popover start here */}
           <div

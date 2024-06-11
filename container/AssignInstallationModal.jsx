@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -12,12 +12,15 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { assignTechnician } from '@/service';
+import { assignTechnician, getNewUser } from '@/service';
 
 const AssignInstallationModal = ({assign,setAssign,id}) => {
+  
 
     // Dropdown
     const [tech, setTech] = useState('');
+    const [technician, setTechnician] = useState({})
+    const[loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
     setTech(event.target.value);
@@ -33,7 +36,16 @@ const AssignInstallationModal = ({assign,setAssign,id}) => {
       console.log("modal33", response)
       handleClose();
     }
-    console.log("assigntechni", tech)
+    
+    // Get technician details
+    const getTechDetails = async() => {
+      let resp = await getNewUser();
+      setTechnician(resp.getuser)
+      setLoading(true);
+    }
+    useEffect(()=>{
+      getTechDetails()
+    },[])
   return (
     <React.Fragment>
       <Dialog
@@ -50,6 +62,7 @@ const AssignInstallationModal = ({assign,setAssign,id}) => {
              <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
         <InputLabel id="demo-simple-select-label">Select Technician</InputLabel>
+        
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -57,9 +70,9 @@ const AssignInstallationModal = ({assign,setAssign,id}) => {
           label="Teachnician"
           onChange={handleChange}
         >
-          <MenuItem value="tech1">Technician-1</MenuItem>
-          <MenuItem value="tech2">Technician-2</MenuItem>
-          <MenuItem value="tech3">Technician-3</MenuItem>
+          {loading && technician.map((item,idx)=>(
+            <MenuItem value={item.name} key={idx}>{item.name}</MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>

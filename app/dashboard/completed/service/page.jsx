@@ -52,7 +52,7 @@ const ServiceCompletedPage = () => {
                   <td>{item.customerName}</td>
                   <td>{item.customerPhone}</td>
                   <td>{item.createdAt}</td>
-                  <td>{item.serviceDate.split("").slice(0, 10).join("")}</td>
+                  <td>{item.updatedAt}</td>
                   <td>{item.serviceAssignTo}</td>
                   <td>
                     <button className={styles.compbutton}>Completed</button>

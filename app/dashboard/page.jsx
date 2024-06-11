@@ -94,9 +94,9 @@ const Dashboard = () => {
                   <td>
                     {item.lastServicedAt
                       ? item.lastServicedAt.split("").splice(0, 10).join("")
-                      : "24-05-2024"}
+                      : ""}
                   </td>
-                  <td>{item.duedate}</td>
+                  <td>{item.duedate ? item.duedate.split("").slice(0,10).join("") : ""}</td>
                   <td>
                     <div
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}

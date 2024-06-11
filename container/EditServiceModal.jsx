@@ -10,7 +10,7 @@ import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { editService, getService } from "@/service";
+import { editDuedate, editService, getService } from "@/service";
 import dayjs from "dayjs";
 
 const style = {
@@ -31,12 +31,10 @@ export default function EditServiceModal({
   editdata,
   setService,
 }) {
-  const [name, setName] = useState(editdata.customerName);
   const [phone, setPhone] = useState(editdata.customerPhone);
   const [date, setDate] = useState(editdata.lastServicedAt);
 
   useEffect(()=>{
-    setName(editdata.customerName)
     setPhone(editdata.customerPhone)
     setDate(editdata.lastServicedAt)
   },[editdata])
@@ -51,14 +49,21 @@ export default function EditServiceModal({
   };
 
   const handleSubmit = async () => {
-    if (!name || !phone || !date) {
-      return alert("Please Fill the fields");
+    if (phone.length !== 10) {
+      return alert("Please Fill valid Phone Number");
     }
-    let data = { name, phone, date };
+    let data = {phone };
     data["id"] = editdata._id;
     let res = await editService(data);
     if (res.message !== "Service Updated Successfully!") {
       alert("try again later");
+    }
+    if(editdata.data !== date){
+    let val = {date}
+    let res = await editDuedate(val)
+    if (res.message !== "Service due date Updated Successfully!") {
+      alert("try again later");
+    }
     }
     handleClose();
     getservice();
@@ -84,19 +89,6 @@ export default function EditServiceModal({
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
-              <TextField
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="name"
-                name="name"
-                value={name}
-                onChange={(e) => setName(e.target.name)}
-              />
-
-              <br />
-              <br />
               <TextField
                 id="outlined-basic"
                 label="Phone Number"

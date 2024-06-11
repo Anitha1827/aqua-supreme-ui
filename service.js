@@ -1,8 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
-
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -20,22 +19,26 @@ const login = async (data) => {
 };
 
 // Reset password  // data = {newpassword,oldpassword}
-const resetPassword = async(data) => {
-try {
-  let response = await axios.put(`${api_url}/auth/reset-password`, data);
-  console.log("response", response)
-  return response.data;
-} catch (error) {
-  console.log(error);
-  alert("try again later")
-}
-}
+const resetPassword = async (data) => {
+  try {
+    let response = await axios.put(`${api_url}/auth/reset-password`, data);
+    console.log("response", response);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert("try again later");
+  }
+};
 
 // Add New Customer
 const addNewCustomer = async (data) => {
   try {
-    let response = await axios.post(`${api_url}/customer/create`, data);
-    console.log("response", response);
+    console.log("servicedata37", data);
+    let response = await axios.post(
+      `${api_url}/customer/createnew-customer`,
+      data
+    );
+    console.log("response38", response);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -54,6 +57,18 @@ const editCustomer = async (data) => {
     alert("try again later");
   }
 };
+
+//update customer duedate
+const updateduedate = async(data) => {
+  try {
+    let res = await axios.put(`${api_url}/customer/update-duedate`, data);
+    console.log("duedate65", res.data);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+}
 // Delete Customer
 const deleteCustomer = async (id) => {
   try {
@@ -77,7 +92,7 @@ const addNewInstallation = async (data) => {
     alert("try again later");
   }
 };
-// Get Customer Details
+// Get Customer Details for Installation page
 const getCustomer = async () => {
   try {
     let response = await axios.get(`${api_url}/customer/get`);
@@ -89,16 +104,29 @@ const getCustomer = async () => {
   }
 };
 
+//get service reminder customer details
+const getServiceReminderCustomer = async () => {
+  try {
+    let response = await axios.get(`${api_url}/customer/service-reminder`);
+    console.log(response.data, "responsefromservice");
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("Try again later!..");
+  }
+};
+
+// for customer page
 const getAllCustomer = async () => {
   try {
     let response = await axios.get(`${api_url}/customer/getAll`);
-    console.log(response.data,"respservice94");
-      return response.data;
+    console.log(response.data, "respservice94");
+    return response.data;
   } catch (error) {
     console.error(error);
-    alert("Try again later!")
+    alert("Try again later!");
   }
-}
+};
 
 // Get details by id
 const getCustomerDetailsById = async (id) => {
@@ -328,7 +356,7 @@ const getServicePendingData = async () => {
 // Edit Service Details
 const editService = async (data) => {
   try {
-    let response = await axios.put(`${api_url}/service/edit`, data);
+    let response = await axios.put(`${api_url}/service/edit-phone`, data);
     console.log("sesrvice143", response.data);
     return response.data;
   } catch (error) {
@@ -337,6 +365,17 @@ const editService = async (data) => {
   }
 };
 
+// Edit Duedate
+const editDuedate = async (data) => {
+  try {
+    let response = await axios.put(`${api_url}/service/edit-duedate`, data);
+    console.log("sesrvice344", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert("try again later");
+  }
+};
 const deleteService = async (id) => {
   try {
     let res = await axios.delete(`${api_url}/service/delete/${id}`);
@@ -348,6 +387,56 @@ const deleteService = async (id) => {
   }
 };
 
+// Get Products Details
+const getAllProduct = async (data) => {
+  try {
+    let res = await axios.get(`${api_url}/product/getproduct`, data);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// Create a Product in DB
+const addProduct = async (data) => {
+  try {
+    let resp = await axios.post(`${api_url}/product/create`, data);
+    console.log("addprodservice393", resp.data);
+    return resp.data;
+  } catch (error) {
+    console.log(error);
+    alert("Please try again later");
+  }
+};
+
+// Delete a Product
+const deleteProduct = async (id) => {
+  try {
+    console.log("serviceid405", id);
+    let response = await axios.delete(`${api_url}/product/deleteproduct/${id}`);
+    console.log("servicedele406", response.data);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert("try again later");
+  }
+};
+
+// Edit Product
+const editProduct = async (data) => {
+  try {
+    let response = await axios.put(`${api_url}/product/update-product`, data);
+    console.log("editdata418", response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later!");
+  }
+};
+
+
+
 export {
   login,
   resetPassword,
@@ -355,7 +444,9 @@ export {
   getCustomer,
   getAllCustomer,
   editCustomer,
+  updateduedate,
   deleteCustomer,
+  getServiceReminderCustomer,
   addNewInstallation,
   getInstallationDetails,
   assignTechnician,
@@ -378,4 +469,9 @@ export {
   updateServiceStatus,
   getServiceCompleted,
   getServicePendingData,
+  editDuedate,
+  getAllProduct,
+  addProduct,
+  deleteProduct,
+  editProduct,
 };
