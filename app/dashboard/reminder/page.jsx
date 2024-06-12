@@ -14,9 +14,9 @@ const ServiceReminder = () => {
   const [editdata, setEditdata] = useState({});
 
   const handleOpen = (remind) => {
-   setEditdata(remind)
+    setEditdata(remind);
     setOpen(true);
-  }
+  };
   // Function to parse date in MM/DD/YYYY format
   function parseDate(dateStr) {
     const [day, month, year] = dateStr.split("/").map(Number);
@@ -67,33 +67,64 @@ const ServiceReminder = () => {
           </tr>
         </thead>
         <tbody>
-          {reminder.length > 0 &&
-            reminder.map((remind, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{remind.customerName}</td>
-                <td>{remind.customerPhone}</td>
-                <td>{remind.lastServicedAt}</td>
-                <td>
-                  {remind.duedate}
-                  <Button
-                    onClick={()=> handleOpen(remind)}
-                    className={`${styles.button} ${styles.view}`}
-                    title="Edit"
-                    color="primary"
-                  >
-                    <FaRegEdit sx={{ fontSize: "20px" }} />
-                  </Button>
-                </td>
-                <td>{remind.serviceCount}</td>
-              </tr>
-            ))}
+          {reminder.length > 0 && (search.length <= 0
+            ? reminder.map((remind, idx) => (
+                <tr key={idx}>
+                  <td>{idx + 1}</td>
+                  <td>{remind.customerName}</td>
+                  <td>{remind.customerPhone}</td>
+                  <td>{remind.lastServicedAt}</td>
+                  <td>
+                    {remind.duedate}
+                    <Button
+                      onClick={() => handleOpen(remind)}
+                      className={`${styles.button} ${styles.view}`}
+                      title="Edit"
+                      color="primary"
+                    >
+                      <FaRegEdit sx={{ fontSize: "20px" }} />
+                    </Button>
+                  </td>
+                  <td>{remind.serviceCount}</td>
+                </tr>
+              ))
+            : 
+            reminder.map((remind, idx) =>(
+              remind.customerName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    remind.customerPhone.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{remind.customerName}</td>
+                      <td>{remind.customerPhone}</td>
+                      <td>{remind.lastServicedAt}</td>
+                      <td>
+                        {remind.duedate}
+                        <Button
+                          onClick={() => handleOpen(remind)}
+                          className={`${styles.button} ${styles.view}`}
+                          title="Edit"
+                          color="primary"
+                        >
+                          <FaRegEdit sx={{ fontSize: "20px" }} />
+                        </Button>
+                      </td>
+                      <td>{remind.serviceCount}</td>
+                    </tr>
+                  )))
+                  }
         </tbody>
       </table>
 
       {/* Edit Duedate modal */}
       {editdata.duedate && (
-        <EditDueDateModal open={open} setOpen={setOpen} editdata={editdata} setReminder={setReminder} />
+        <EditDueDateModal
+          open={open}
+          setOpen={setOpen}
+          editdata={editdata}
+          setReminder={setReminder}
+        />
       )}
     </div>
   );

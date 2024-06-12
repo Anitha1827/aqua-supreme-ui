@@ -434,7 +434,52 @@ const editProduct = async (data) => {
     alert("try again later!");
   }
 };
+// add lead to db
+const addLead = async(data) => {
+  try {
+    let resp = await axios.post(`${api_url}/lead/addlead`, data);
+    console.log("leadservice441", resp.data);
+    return resp.data
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+}
+// Get lead data
+const getLead = async(data) => {
+  try {
+    let resp = await axios.get(`${api_url}/lead/getlead`,data);
+    console.log("getlead452", resp.data);
+    return resp.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+}
 
+// Update Lead
+const updateLead = async(data) =>{
+  try {
+    let resp = await axios.put(`${api_url}/lead/editlead`,data);
+    console.log("update464", resp.data);
+    return resp.data
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// Delete lead
+const deleteLead = async(id)=>{
+try {
+  let resp = await axios.delete(`${api_url}/lead/delete-lead/${id}`);
+  console.log("deletedlead", resp.data);
+  return resp.data
+} catch (error) {
+  console.error(error);
+  alert("try again later")
+}
+}
 
 
 export {
@@ -474,4 +519,8 @@ export {
   addProduct,
   deleteProduct,
   editProduct,
+  addLead,
+  getLead,
+  updateLead,
+  deleteLead,
 };

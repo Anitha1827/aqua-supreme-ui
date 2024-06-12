@@ -82,6 +82,16 @@ const menuItems = [
     ],
   },
   {
+    title: "Leads",
+    list: [
+      {
+        title: "Lead",
+        path: "/dashboard/lead",
+        icon: <MdAnalytics />,
+      },
+    ],
+  },
+  {
     title: "User",
     list: [
       {
@@ -91,6 +101,7 @@ const menuItems = [
       },
     ],
   },
+  
 ];
 
 const Sidebar = () => {
