@@ -71,8 +71,7 @@ const ProductPage = () => {
           </tr>
         </thead>
         <tbody>
-          {product.length > 0 &&
-            product.map((prod, idx) => (
+          {product.length > 0 && search.length <= 0 ?  product.map((prod, idx) => (
               <tr key={idx}>
                 <td>{idx + 1}</td>
                 <td>{prod.productname}</td>
@@ -99,7 +98,38 @@ const ProductPage = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            )) :  product.map((prod, idx) => (prod.productname
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+              prod.productmodel.includes(search)) && (
+              <tr key={idx}>
+                <td>{idx + 1}</td>
+                <td>{prod.productname}</td>
+                <td>{prod.productmodel}</td>
+                <td>
+                  <div
+                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                  >
+                    {/* Edit button */}
+                    <Button onClick={() => handleEdit(prod)} title="Edit Data">
+                      <FaRegEdit sx={{ fontSize: "20px" }} />
+                    </Button>
+
+                    {/* Delete button */}
+                    <Button
+                      aria-label="delete"
+                      // size="large"
+                      className={`${styles.button} ${styles.delete}`}
+                      onClick={() => handleDelete(prod)}
+                      title="Delete"
+                    >
+                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))
+           }
         </tbody>
       </table>
       {/* Add product modal */}
