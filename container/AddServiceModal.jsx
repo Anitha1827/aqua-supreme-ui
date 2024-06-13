@@ -23,8 +23,6 @@ import { addService, getService, getServiceReminderCustomer } from "@/service";
 import dayjs from "dayjs";
 
 const validataionSchema = yup.object({
-  name: yup.string().required("Please Enter Name"),
-  // phone: yup.string().required("please Enter Phone Number"),
   duedate: yup.string().required("Please select service date"),
 });
 
@@ -43,28 +41,34 @@ const style = {
 export default function AddServiceModal({ open, setOpen, setService }) {
   // Dropdown
   const [custname, setCustName] = useState([]);
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
+  const [id, setId] = useState();
 
   //   Modal
   const handleClose = () => setOpen(false);
 
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
-      // phone: "",
-      name:"",
       duedate: new Date(),
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
-      data["phone"] = custname[0].customerPhone
-      data["customerId"] = custname[0]._id;
+      if (id == "") {
+        return alert("please select the customer");
+      }
+      let val = custname.filter((val) => val._id == id);
+      data["phone"] = val[0].customerPhone;
+      data["customerId"] = id;
+      data["customerName"] = val[0].customerName;
       let res = await addService(data);
       console.log("resmodal", res);
       if (res.message !== "Service Created Successfully!") {
         alert("try again later");
       }
       handleClose();
+      setLoading(true);
+      setId("");
       getservicemodal();
     },
   });
@@ -73,17 +77,19 @@ export default function AddServiceModal({ open, setOpen, setService }) {
     let res = await getService();
     console.log("resmodal21", res);
     setService(res.getAllServiceDetails);
+    console.log("detailcalled");
+    getCustomerDetails();
   };
 
   let getCustomerDetails = async () => {
     let response = await getServiceReminderCustomer();
     console.log("response79", response.data);
     setCustName(response.data);
-    setLoading(false)
-  }
-  useEffect(()=>{
-    getCustomerDetails()
-  },[])
+    setLoading(false);
+  };
+  useEffect(() => {
+    getCustomerDetails();
+  }, []);
   return (
     <div>
       <Modal
@@ -111,14 +117,22 @@ export default function AddServiceModal({ open, setOpen, setService }) {
                   <Select
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
-                    value={values.name}
+                    value={id}
                     label="Name"
                     name="name"
-                    onChange={handleChange}
+                    onChange={(e) => {
+                      setId(e.target.value);
+                    }}
                   >
-                    {!loading && custname.map((item,idx) => (
-                      <MenuItem key={idx} value={item.customerName}>{item.customerName}</MenuItem>
-                    ))}
+                    {!loading &&
+                      custname.map((item, idx) => (
+                        <MenuItem key={idx} value={item._id}>
+                          {item.customerName}
+                          <span style={{ color: "gray", fontSize: "8px" }}>
+                            ( {item.customerPhone})
+                          </span>
+                        </MenuItem>
+                      ))}
                   </Select>
                 </FormControl>
               </Box>

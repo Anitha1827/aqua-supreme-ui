@@ -36,6 +36,7 @@ const ServiceCalls = () => {
 
   let getservicemodal = async () => {
     let res = await getService();
+    console.log("line39", res.getAllServiceDetails)
     setService(res.getAllServiceDetails);
   };
   useEffect(() => {
