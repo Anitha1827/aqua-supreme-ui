@@ -33,26 +33,51 @@ const CustomerDetailsPage = () => {
 
       <div>
         <p>
-          <b>Id:-</b> {detail._id}
+          <b>Id:-</b> <span style={{ color: "gray" }}> {detail._id}</span>
         </p>
         <p>
-          <b>Customer Name:-</b> {detail.customerName}
+          <b>Customer Name:-</b>{" "}
+          <span style={{ color: "gray" }}> {detail.customerName}</span>
         </p>
         <p>
-          <b>Contact Number:-</b> {detail.customerPhone}
+          <b>Contact Number:-</b>{" "}
+          <span style={{ color: "gray" }}> {detail.customerPhone}</span>
         </p>
         <p>
           <b>lastServiced/Installed At:-</b>{" "}
-          {detail.lastServicedAt
-            ? detail.lastServicedAt.split("").slice(0, 10).join("")
-            : "30-05-2024"}
+          <span style={{ color: "gray" }}>
+            {detail.lastServicedAt
+              ? detail.lastServicedAt.split("").slice(0, 10).join("")
+              : ""}
+          </span>
         </p>
         <p>
-          <b>Due Date:-</b> {detail.duedate}
+          <b>Due Date:-</b>{" "}
+          <span style={{ color: "gray" }}>
+            {detail.duedate
+              ? detail.duedate.split("").slice(0, 10).join("")
+              : ""}
+          </span>
         </p>
         {/* <p><b>lastServiced/Installed At:-</b></p> */}
         <p>
-          <b>Address:-</b> {detail.address}
+          <b>Address</b>
+        </p>
+        <p>
+          <b>Door Number: </b>{" "}
+          <span style={{ color: "gray" }}>{detail.address?.doorNo}</span>
+        </p>
+        <p>
+          <b>Street: </b>{" "}
+          <span style={{ color: "gray" }}>{detail.address?.street}</span>
+        </p>
+        <p>
+          <b>Area: </b>{" "}
+          <span style={{ color: "gray" }}>{detail.address?.area}</span>
+        </p>
+        <p>
+          <b>Pin code: </b>{" "}
+          <span style={{ color: "gray" }}>{detail.address?.pin}</span>
         </p>
       </div>
     </div>
