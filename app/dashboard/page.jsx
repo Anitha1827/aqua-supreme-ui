@@ -11,7 +11,7 @@ import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
@@ -36,13 +36,12 @@ const Dashboard = () => {
     setCustomer(res.getAllCustomerDetails);
   };
   useEffect(() => {
-    let token = localStorage.getItem("token")
-    if(!token){
-      router.push("/login")
-    }else{
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+    } else {
       getCustomerDetails();
     }
-   
   }, []);
 
   // Delete functionalities
@@ -52,13 +51,16 @@ const Dashboard = () => {
     getCustomerDetails();
   };
 
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.searchcontainer}>
-        <SearchIcon className={styles.searchicon} />
+          <SearchIcon className={styles.searchicon} />
           <input
-          placeholder="Search..."
+            placeholder="Search..."
             className={styles.searchfield}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -86,9 +88,9 @@ const Dashboard = () => {
         </thead>
         <tbody>
           {customer.length > 0 && search.length <= 0
-            ? customer.map((item, idx) => (
+            ? customer.slice(startIndex, startIndex + 10).map((item, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{item.customerName}</td>
                   <td>{item.customerPhone}</td>
                   <td>
@@ -96,7 +98,11 @@ const Dashboard = () => {
                       ? item.lastServicedAt.split("").splice(0, 10).join("")
                       : ""}
                   </td>
-                  <td>{item.duedate ? item.duedate.split("").slice(0,10).join("") : ""}</td>
+                  <td>
+                    {item.duedate
+                      ? item.duedate.split("").slice(0, 10).join("")
+                      : ""}
+                  </td>
                   <td>
                     <div
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -146,9 +152,13 @@ const Dashboard = () => {
                       <td>
                         {item.lastServicedAt
                           ? item.lastServicedAt.split("").splice(0, 10).join("")
-                          : "24-05-2024"}
+                          : ""}
                       </td>
-                      <td>{item.duedate}</td>
+                      <td>
+                        {item.duedate
+                          ? item.duedate.split("").slice(0, 10).join("")
+                          : ""}
+                      </td>
                       <td>
                         <div
                           className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -171,9 +181,7 @@ const Dashboard = () => {
                               )
                             }
                           >
-                            <VisibilityIcon
-                              sx={{ fontSize: "20px" }}
-                            />
+                            <VisibilityIcon sx={{ fontSize: "20px" }} />
                           </Button>
 
                           <Button
@@ -192,7 +200,11 @@ const Dashboard = () => {
               )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={customer.length}
+        setStartIndex={setStartIndex}
+      />
       {/* Add Customer Modal */}
       <AddCustomerModel
         open={open}

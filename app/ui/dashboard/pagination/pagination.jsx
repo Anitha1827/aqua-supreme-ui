@@ -1,13 +1,42 @@
-import React from 'react'
-import styles from "./pagination.module.css"
+import React from "react";
+import styles from "./pagination.module.css";
 
-const Pagination = () => {
+const Pagination = ({ startIndex, setStartIndex, maxlength }) => {
+  const handleLeftArrowClick = () => {
+    if (startIndex > 0) {
+      setStartIndex(startIndex - 10);
+    }
+  };
+
+  const handleRightArrowClick = () => {
+    if (startIndex < maxlength - 10) {
+      setStartIndex(startIndex + 10);
+    }
+  };
   return (
     <div className={styles.container}>
-        <button className={styles.button} disabled>Previous</button>
-        <button className={styles.button}>Next</button>
-    </div>
-  )
-}
+      {startIndex == 0 ? (
+        <button className={styles.button} disabled>
+          Previous
+        </button>
+      ) : (
+        <button className={styles.button} onClick={handleLeftArrowClick}>
+          Previous
+        </button>
+      )}
 
-export default Pagination
+      {/* next button */}
+      {startIndex + 10 > maxlength ? (
+        <button className={styles.button} disabled>
+          Next
+        </button>
+      ) : (
+        <button className={styles.button} onClick={handleRightArrowClick}>
+          Next
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default Pagination;

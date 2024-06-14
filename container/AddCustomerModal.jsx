@@ -1,10 +1,12 @@
 "use client";
 import React from "react";
+import "@/app/ui/dashboard/addcustomer/addcustomer.module.css"
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
+
 
 // formik
 import * as yup from "yup";
@@ -32,12 +34,15 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
+  overflow:"auto",
+  height:"70vh",
 };
 
 export default function AddCustomerModel({ open, setOpen, setCustomer }) {
   //   Modal
   const handleClose = () => setOpen(false);
 
+  // Formik
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
       name: "",
@@ -82,9 +87,9 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
         }}
       >
         <Fade in={open} className="bg-gray text-black">
-          <Box sx={style}>
+          <Box  sx={style}>
             <form
-              className="flex flex-col gap-2 w-full justify-center"
+              className="form-container"
               onSubmit={handleSubmit}
             >
              <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
@@ -100,7 +105,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                 fullWidth
               />
               {errors.name ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
+                <div className="error-message">
                   {errors.name}
                 </div>
               ) : (
@@ -119,7 +124,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                 onChange={handleChange}
               />
               {errors.phone ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
+                <div className="error-message">
                   {errors.phone}
                 </div>
               ) : (
@@ -127,7 +132,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
               )}
              </div>
              </div>
-             <label style={{color:"black",display:"flex", justifyContent:"center"}}>Address</label>
+             <label className="text-center text-black">Address</label>
               <div style={{display:"flex", flexDirection:"row", justifyContent:"space-evenly"}}>
               <div  style={{ margin: "10px", width: "100%" }}>
                 {/* Address Field */}
@@ -220,6 +225,8 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
               )}
               </div>
              </div>
+             <br/>
+             <br/>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>

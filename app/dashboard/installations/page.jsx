@@ -76,7 +76,7 @@ const Installations = () => {
           <tr style={{fontWeight:"bold"}}>
             <td>Sl.No</td>
             <td>Name</td>
-            <td>Phone Number</td>
+            <td>Contact</td>
             <td>Created At</td>
             <td>Installation Date</td>
             <td>Action</td>
