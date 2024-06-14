@@ -139,7 +139,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                   )}
                 </div>
               </div>
-              <label className="text-center text-black">Address</label>
+              <label style={{display:"flex", justifyContent:"space-around",color:"gray"}}>Address</label>
               <div
                 style={{
                   display: "flex",

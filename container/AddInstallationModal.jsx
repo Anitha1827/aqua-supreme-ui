@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -15,8 +15,17 @@ import dayjs from "dayjs";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { addNewInstallation, getInstallationDetails } from "@/service";
+import {
+  addNewInstallation,
+  getAllProduct,
+  getInstallationDetails,
+} from "@/service";
 import AlertMessage from "./AlertMessage";
+// select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
@@ -33,7 +42,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "30%",
+  width: "50%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -43,6 +52,14 @@ const style = {
 };
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
+  // Select dropdown
+  const [product, setProduct] = useState("");
+  const [prodList, setProdList] = useState([]);
+
+  const handleSelect = (event) => {
+    setProduct(event.target.value);
+  };
+
   // Modal
   const handleClose = () => setOpen(false);
 
@@ -65,6 +82,7 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
     onSubmit: async (data) => {
       let { doorNo, street, area, pin } = data;
       data["address"] = { doorNo, street, area, pin };
+      data["product"] = product;
       let res = await addNewInstallation(data);
       console.log("modal52", res);
       //checking an response message for successfully installation added
@@ -86,6 +104,16 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
     let response = await getInstallationDetails();
     setInstall(response.getAllCustomerDetails);
   };
+
+  // fetching product
+  let getProduct = async () => {
+    let resp = await getAllProduct();
+    console.log("produPage106", resp.getproduct);
+    setProdList(resp.getproduct);
+  };
+  useEffect(() => {
+    getProduct();
+  }, []);
   return (
     <div>
       <Modal
@@ -107,145 +135,215 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
-              <TextField
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="name"
-                name="name"
-                value={values.name}
-                onChange={handleChange}
-              />
-              {errors.name ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.name}
-                </div>
-              ) : (
-                ""
-              )}
-              <br />
-              <br />
-              <TextField
-                id="outlined-basic"
-                label="Phone Number"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="phone"
-                name="phone"
-                value={values.phone}
-                onChange={handleChange}
-              />
-              {errors.phone ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.phone}
-                </div>
-              ) : (
-                ""
-              )}
-              <br />
-              <br />
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={["DatePicker"]}>
-                  <DatePicker
-                    label="Installation Date"
-                    name="date"
-                    value={dayjs(values.date)}
-                    onChange={(date) => {
-                      handleChange({
-                        target: { name: "date", value: date.format() },
-                      });
-                    }}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Name"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="name"
+                    name="name"
+                    value={values.name}
+                    onChange={handleChange}
                   />
-                </DemoContainer>
-              </LocalizationProvider>
-              {errors.date ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.date}
+                  {errors.name ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.name}
+                    </div>
+                  ) : (
+                    ""
+                  )}
                 </div>
-              ) : (
-                ""
-              )}
-              <br />
-              <br />
-              <div>
-                <TextField
-                  id="outlined-basic"
-                  label="Door Number"
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  type="doorNo"
-                  name="doorNo"
-                  value={values.doorNo}
-                  onChange={handleChange}
-                />
-                {errors.doorNo ? (
-                  <div style={{ color: "crimson", padding: "5px" }}>
-                    {errors.doorNo}
-                  </div>
-                ) : (
-                  ""
-                )}
-                <br />
-                <br />
-                <TextField
-                  id="outlined-basic"
-                  label="Street"
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  type="street"
-                  name="street"
-                  value={values.street}
-                  onChange={handleChange}
-                />
-                {errors.street ? (
-                  <div style={{ color: "crimson", padding: "5px" }}>
-                    {errors.street}
-                  </div>
-                ) : (
-                  ""
-                )}
-                <br />
-                <br />
-                <TextField
-                  id="outlined-basic"
-                  label="Area"
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  type="area"
-                  name="area"
-                  value={values.area}
-                  onChange={handleChange}
-                />
-                {errors.area ? (
-                  <div style={{ color: "crimson", padding: "5px" }}>
-                    {errors.area}
-                  </div>
-                ) : (
-                  ""
-                )}
-                <br />
-                <br />
-                <TextField
-                  id="outlined-basic"
-                  label="Pin Code"
-                  variant="outlined"
-                  sx={{ width: "100%" }}
-                  type="pin"
-                  name="pin"
-                  value={values.pin}
-                  onChange={handleChange}
-                />
-                {errors.pin ? (
-                  <div style={{ color: "crimson", padding: "5px" }}>
-                    {errors.pin}
-                  </div>
-                ) : (
-                  ""
-                )}
-                <br />
-                <br />
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Phone Number"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="phone"
+                    name="phone"
+                    value={values.phone}
+                    onChange={handleChange}
+                  />
+                  {errors.phone ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.phone}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
+              <br />
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        label="Installation Date"
+                        name="date"
+                        value={dayjs(values.date)}
+                        onChange={(date) => {
+                          handleChange({
+                            target: { name: "date", value: date.format() },
+                          });
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  {errors.date ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.date}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <Box>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Product
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={product}
+                        label="product"
+                        name="product"
+                        onChange={handleSelect}
+                      >
+                        {prodList.map((val, idx) => (
+                          <MenuItem
+                            key={idx}
+                            value={`${val.productname} - ${val.productmodel}`}
+                          >
+                            {val.productname} - {val.productmodel}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                </div>
+              </div>
+              <br />
+              <label
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  color: "gray",
+                }}
+              >
+                Address
+              </label>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Door Number"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="doorNo"
+                    name="doorNo"
+                    value={values.doorNo}
+                    onChange={handleChange}
+                  />
+                  {errors.doorNo ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.doorNo}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Street"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="street"
+                    name="street"
+                    value={values.street}
+                    onChange={handleChange}
+                  />
+                  {errors.street ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.street}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Area"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="area"
+                    name="area"
+                    value={values.area}
+                    onChange={handleChange}
+                  />
+                  {errors.area ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.area}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div style={{ margin: "10px", width: "100%" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Pin Code"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="pin"
+                    name="pin"
+                    value={values.pin}
+                    onChange={handleChange}
+                  />
+                  {errors.pin ? (
+                    <div style={{ color: "crimson", padding: "5px" }}>
+                      {errors.pin}
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
+              </div>
+
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>
