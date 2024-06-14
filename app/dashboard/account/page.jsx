@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Card from "@mui/material/Card";
 // import CardContent from "@mui/material/CardContent";
 // import Typography from "@mui/material/Typography";
@@ -7,22 +7,28 @@ import Card from "@mui/material/Card";
 // import Stack from "@mui/material/Stack";
 import "@/app/ui/settings/settings.css";
 // import styles from "@/app/ui/dashboard/users/users.module.css";
+// Tabs
+import { Tabs, Tab, Button } from "@nextui-org/react";
+import TextField from "@mui/material/TextField";
+// import DeleteIcon from "@mui/icons-material/Delete";
+import { resetPassword } from "@/service";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
+import AlertMessage from "@/container/AlertMessage";
 
 const validataionSchema = yup.object({
   oldPassword: yup.string().required("Please Enter OldPassword"),
   newPassword: yup.string().required("Please Enter New Password"),
   confirmPass: yup.string().required("Please Enter Confirm Password"),
 });
-// Tabs
-import { Tabs, Tab, Button } from "@nextui-org/react";
-import TextField from "@mui/material/TextField";
-// import DeleteIcon from "@mui/icons-material/Delete";
-import { resetPassword } from "@/service";
 
 const Settings = () => {
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
       oldPassword: "",
@@ -31,18 +37,25 @@ const Settings = () => {
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
-     if(data.newPassword !== data.confirmPass){
-      return alert("Please enter confirm and Newpassword same");
-     }
+      if (data.newPassword !== data.confirmPass) {
+        setMessage(true);
+        setContent("Please enter confirm and Newpassword same");
+        setType("error");
+        return null;
+      }
 
       let resp = await resetPassword(data);
-      if(resp.message === "Invalid Password"){
-        alert("Invalid Password")
-      } 
-      else if(resp.message !== "Password Reset Successfully!"){
-        alert("try again later")
+      if (resp.message === "Invalid Password") {
+        setMessage(true);
+        setContent("Invalid Password");
+        setType("error");
+        return null;
+      } else if (resp.message !== "Password Reset Successfully!") {
+        setMessage(true);
+        setContent("Customer added successfully!");
+        setType("success");
       }
-    }
+    },
   });
 
   return (
@@ -88,9 +101,21 @@ const Settings = () => {
           >
             <Card>
               <h3 sx={{ p: 5 }}>Change Password</h3>
-              <form onSubmit={handleSubmit} style={{display:"flex", flexDirection:"row", alignItems:"center"}}>
-               
-                  <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+              <form
+                onSubmit={handleSubmit}
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
                   <TextField
                     sx={{ m: 4 }}
                     id="outlined-basic"
@@ -107,8 +132,14 @@ const Settings = () => {
                   ) : (
                     ""
                   )}
-                  </div>
-                  <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
                   <TextField
                     sx={{ m: 4 }}
                     id="outlined-basic"
@@ -126,8 +157,14 @@ const Settings = () => {
                   ) : (
                     ""
                   )}
-                  </div>
-                  <div style={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
                   <TextField
                     sx={{ m: 4 }}
                     id="outlined-basic"
@@ -144,11 +181,11 @@ const Settings = () => {
                   ) : (
                     ""
                   )}
-                  </div>
-               
-              <Button className="button" type="submit">
-                Change Password
-              </Button>
+                </div>
+
+                <Button className="button" type="submit">
+                  Change Password
+                </Button>
               </form>
             </Card>
           </Tab>
@@ -180,6 +217,12 @@ const Settings = () => {
           </Tab> */}
         </Tabs>
       </div>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

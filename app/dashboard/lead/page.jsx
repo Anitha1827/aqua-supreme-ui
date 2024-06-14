@@ -25,6 +25,8 @@ const LeadCreation = () => {
   const [editdata, setEditData] = useState({});
 
   const [lead, setLead] = useState([]);
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   const handleOpen = () => setOpen(true);
 
@@ -39,11 +41,11 @@ const LeadCreation = () => {
     setEditData(val);
   };
 
-  useEffect(()=>{
-    if(!edit && !cust){
+  useEffect(() => {
+    if (!edit && !cust) {
       setEditData({});
     }
-  },[edit,cust])
+  }, [edit, cust]);
   // Delete functionalities
   const handleDelete = async (val) => {
     let resp = await deleteLead(val._id);
@@ -94,9 +96,9 @@ const LeadCreation = () => {
         <tbody>
           {lead.length > 0 &&
             (search.length <= 0
-              ? lead.map((val, idx) => (
+              ? lead.slice(startIndex, startIndex + 10).map((val, idx) => (
                   <tr key={idx}>
-                    <td>{idx + 1}</td>
+                    <td>{startIndex + idx + 1}</td>
                     <td>{val.name}</td>
                     <td>{val.phone}</td>
                     <td>
@@ -182,7 +184,11 @@ const LeadCreation = () => {
                 ))}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={lead.length}
+        setStartIndex={setStartIndex}
+      />
       {/* Add Customer Modal */}
       <AddLeadModal open={open} setOpen={setOpen} setLead={setLead} />
 
@@ -198,7 +204,12 @@ const LeadCreation = () => {
 
       {/* Convert to customer */}
       {editdata.name && (
-        <ConvertModal cust={cust} setCust={setCust} editdata={editdata}  setLead={setLead}/>
+        <ConvertModal
+          cust={cust}
+          setCust={setCust}
+          editdata={editdata}
+          setLead={setLead}
+        />
       )}
     </div>
   );

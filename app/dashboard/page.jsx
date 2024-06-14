@@ -29,6 +29,8 @@ const Dashboard = () => {
   const [editdata, setEditData] = useState({});
   const [customer, setCustomer] = useState([]);
   const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   // To get Customer details from DB
   let getCustomerDetails = async () => {
@@ -50,9 +52,6 @@ const Dashboard = () => {
     console.log(res);
     getCustomerDetails();
   };
-
-  // Pagination setup
-  const [startIndex, setStartIndex] = useState(0);
 
   return (
     <div className={styles.container}>

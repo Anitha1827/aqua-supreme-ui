@@ -24,6 +24,9 @@ const ServiceCalls = () => {
   const [assign, setAssign] = useState(false);
   const [search, setSearch] = useState("");
   const [id, setId] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
+
   const handleAssign = (id) => {
     setAssign(true);
     setId(id);
@@ -36,7 +39,7 @@ const ServiceCalls = () => {
 
   let getservicemodal = async () => {
     let res = await getService();
-    console.log("line39", res.getAllServiceDetails)
+    console.log("line39", res.getAllServiceDetails);
     setService(res.getAllServiceDetails);
   };
   useEffect(() => {
@@ -82,9 +85,9 @@ const ServiceCalls = () => {
         </thead>
         <tbody>
           {service.length > 0 && search.length <= 0
-            ? service.map((item, idx) => (
+            ? service.slice(startIndex, startIndex + 10).map((item, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{item.customerName}</td>
                   <td>{item.customerPhone}</td>
                   <td>{item.createdAt}</td>
@@ -196,7 +199,11 @@ const ServiceCalls = () => {
               )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={service.length}
+        setStartIndex={setStartIndex}
+      />
       <AddServiceModal open={open} setOpen={setOpen} setService={setService} />
       {editdata.customerName && (
         <EditServiceModal

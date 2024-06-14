@@ -8,6 +8,8 @@ import { getServiceCompleted } from "@/service";
 const ServiceCompletedPage = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   let getCompletedData = async () => {
     let response = await getServiceCompleted();
@@ -46,9 +48,9 @@ const ServiceCompletedPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.map((item, idx) => (
+            ? data.slice(startIndex, startIndex + 10).map((item, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{item.customerName}</td>
                   <td>{item.customerPhone}</td>
                   <td>{item.createdAt}</td>
@@ -83,7 +85,11 @@ const ServiceCompletedPage = () => {
           <tr></tr>
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={data.length}
+        setStartIndex={setStartIndex}
+      />
     </div>
   );
 };

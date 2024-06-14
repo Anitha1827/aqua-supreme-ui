@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
 import { editInstallation, getInstallationDetails } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const style = {
   position: "absolute",
@@ -25,24 +26,35 @@ const style = {
   p: 4,
 };
 
-export default function EditInstallationModal({ edit, setEdit, editdata, setInstall}) {
+export default function EditInstallationModal({
+  edit,
+  setEdit,
+  editdata,
+  setInstall,
+}) {
   const [name, setName] = useState(editdata.customerName);
   const [phone, setPhone] = useState(editdata.customerPhone);
   const [date, setDate] = useState(editdata.duedate);
   const [doorNo, setDoorNo] = useState(editdata.address.doorNo);
-  const [street, setStreet] = useState(editdata.address.street)
+  const [street, setStreet] = useState(editdata.address.street);
   const [area, setArea] = useState(editdata.address.area);
   const [pin, setPin] = useState(editdata.address.pin);
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     setName(editdata.customerName);
-    setPhone(editdata.customerPhone)
-    setDate(editdata.duedate ? editdata.duedate.split("").splice(0,10).join("") : "");
+    setPhone(editdata.customerPhone);
+    setDate(
+      editdata.duedate ? editdata.duedate.split("").splice(0, 10).join("") : ""
+    );
     setDoorNo(editdata.address.doorNo);
-    setArea(editdata.address.area)
-    setStreet(editdata.address.street)
-    setPin(editdata.address.pin)
-  },[editdata])
+    setArea(editdata.address.area);
+    setStreet(editdata.address.street);
+    setPin(editdata.address.pin);
+  }, [editdata]);
 
   const handleClose = () => setEdit(false);
 
@@ -52,20 +64,34 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
     setInstall(response.getAllCustomerDetails);
   };
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!name || !phone || !date){
-      return alert("Please fill all the fields")
+    if (!name || !phone || !date) {
+      setMessage(true);
+      setContent("Please fill all the fields");
+      setType("error");
+      return null;
     }
-    let data = {name,phone,duedate:date,address:{doorNo,area,pin,street}}
+    let data = {
+      name,
+      phone,
+      duedate: date,
+      address: { doorNo, area, pin, street },
+    };
     data["id"] = editdata._id;
-      let res = await editInstallation(data);
-      if (res.message !== "Customer Updated Succesfully!") {
-        alert("try again later");
-      }
-      handleClose();
-      getInstallation();
-  }
+    let res = await editInstallation(data);
+    if (res.message !== "Customer Updated Succesfully!") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    handleClose();
+    setMessage(true);
+    setContent("Installation edited successfully!");
+    setType("success");
+    getInstallation();
+  };
   return (
     <div>
       <Modal
@@ -87,114 +113,140 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
-              <div style={{
+              <div
+                style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-evenly",
-                }}>
+                }}
+              >
                 <div style={{ width: "100%", margin: "10px" }}>
-                <TextField
-                id="outlined-basic"
-                label="Name"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="name"
-                name="name"
-                value={name}
-                onChange={(e)=>{setName(e.target.value)}}
-              />
+                  <TextField
+                    id="outlined-basic"
+                    label="Name"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="name"
+                    name="name"
+                    value={name}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
                 </div>
                 <div style={{ width: "100%", margin: "10px" }}>
-                <TextField
-                id="outlined-basic"
-                label="Phone Number"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="phone"
-                name="phone"
-                value={phone}
-                onChange={(e)=>{setPhone(e.target.value)}}
-              />
+                  <TextField
+                    id="outlined-basic"
+                    label="Phone Number"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="phone"
+                    name="phone"
+                    value={phone}
+                    onChange={(e) => {
+                      setPhone(e.target.value);
+                    }}
+                  />
                 </div>
               </div>
-              <label style={{display:"flex", justifyContent:"center", color:"black"}}>Address</label>
-             <div style={{
+              <label
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  color: "black",
+                }}
+              >
+                Address
+              </label>
+              <div
+                style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-evenly",
-                }}>
-              <div style={{ width: "100%", margin: "10px" }}>
-              <TextField
-                id="outlined-basic"
-                label="Door Number"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="doorNo"
-                name="doorNo"
-                value={doorNo}
-                onChange={(e)=>{setDoorNo(e.target.value)}}
-              />
+                }}
+              >
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Door Number"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="doorNo"
+                    name="doorNo"
+                    value={doorNo}
+                    onChange={(e) => {
+                      setDoorNo(e.target.value);
+                    }}
+                  />
+                </div>
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Street"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="street"
+                    name="street"
+                    value={street}
+                    onChange={(e) => {
+                      setStreet(e.target.value);
+                    }}
+                  />
+                </div>
               </div>
-              <div style={{ width: "100%", margin: "10px" }}>
-              <TextField
-                id="outlined-basic"
-                label="Street"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="street"
-                name="street"
-                value={street}
-                onChange={(e)=>{setStreet(e.target.value)}}
-              />
-              </div>
-             </div>
-              
-              <div style={{
+
+              <div
+                style={{
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-evenly",
-                }} >
-              <div style={{ width: "100%", margin: "10px" }}>
-              <TextField
-                id="outlined-basic"
-                label="Area"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="area"
-                name="area"
-                value={area}
-                onChange={(e)=>{setArea(e.target.value)}}
-              />
+                }}
+              >
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Area"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="area"
+                    name="area"
+                    value={area}
+                    onChange={(e) => {
+                      setArea(e.target.value);
+                    }}
+                  />
+                </div>
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <TextField
+                    id="outlined-basic"
+                    label="Pin Code"
+                    variant="outlined"
+                    sx={{ width: "100%" }}
+                    type="pin"
+                    name="pin"
+                    value={pin}
+                    onChange={(e) => {
+                      setPin(e.target.value);
+                    }}
+                  />
+                </div>
               </div>
-              <div style={{ width: "100%", margin: "10px" }}>
-              <TextField
-                id="outlined-basic"
-                label="Pin Code"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="pin"
-                name="pin"
-                value={pin}
-                onChange={(e)=>{setPin(e.target.value)}}
-              />
-              </div>
-              </div>
-              
+
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     label="Installation Date"
                     name="date"
                     value={dayjs(date)}
-                    onChange={(e)=>{
-                     setDate(e)
+                    onChange={(e) => {
+                      setDate(e);
                     }}
                   />
                 </DemoContainer>
               </LocalizationProvider>
-             
-              <br/>
-              <br/>
+
+              <br />
+              <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update
               </Button>
@@ -202,6 +254,12 @@ export default function EditInstallationModal({ edit, setEdit, editdata, setInst
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }

@@ -12,6 +12,7 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { editDuedate, editService, getService } from "@/service";
 import dayjs from "dayjs";
+import AlertMessage from "./AlertMessage";
 
 const style = {
   position: "absolute",
@@ -33,12 +34,16 @@ export default function EditServiceModal({
 }) {
   const [phone, setPhone] = useState(editdata.customerPhone);
   const [date, setDate] = useState(editdata.lastServicedAt);
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
-  useEffect(()=>{
-    setPhone(editdata.customerPhone)
-    setDate(editdata.lastServicedAt)
-  },[editdata])
-  
+  useEffect(() => {
+    setPhone(editdata.customerPhone);
+    setDate(editdata.lastServicedAt);
+  }, [editdata]);
+
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -50,22 +55,34 @@ export default function EditServiceModal({
 
   const handleSubmit = async () => {
     if (phone.length !== 10) {
-      return alert("Please Fill valid Phone Number");
+      setMessage(true);
+      setContent("Please Fill valid Phone Number");
+      setType("error");
+      return null;
     }
-    let data = {phone };
+    let data = { phone };
     data["id"] = editdata._id;
     let res = await editService(data);
     if (res.message !== "Service Updated Successfully!") {
-      alert("try again later");
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
     }
-    if(editdata.data !== date){
-    let val = {date}
-    let res = await editDuedate(val)
-    if (res.message !== "Service due date Updated Successfully!") {
-      alert("try again later");
-    }
+    if (editdata.data !== date) {
+      let val = { date };
+      let res = await editDuedate(val);
+      if (res.message !== "Service due date Updated Successfully!") {
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
+      }
     }
     handleClose();
+    setMessage(true);
+    setContent("Service Edited successfully!");
+    setType("success");
     getservice();
   };
   return (
@@ -123,6 +140,12 @@ export default function EditServiceModal({
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }

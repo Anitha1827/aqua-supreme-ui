@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 const InstallationPendingPage = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   let router = useRouter();
 
@@ -26,7 +28,7 @@ const InstallationPendingPage = () => {
     <div className={styles.container}>
       <div className={styles.top}>
         <div className={styles.searchcontainer}>
-        <SearchIcon className={styles.searchicon} />
+          <SearchIcon className={styles.searchicon} />
           <input
             className={styles.searchfield}
             placeholder="Search..."
@@ -51,9 +53,9 @@ const InstallationPendingPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.map((data, idx) => (
+            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
                   <td>{data.createdAt.split("").slice(0, 10).join("")}</td>
@@ -113,7 +115,11 @@ const InstallationPendingPage = () => {
               )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={data.length}
+        setStartIndex={setStartIndex}
+      />
     </div>
   );
 };

@@ -21,7 +21,13 @@ import Select from "@mui/material/Select";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { addNewCustomer, addNewInstallation, deleteLead, getLead } from "@/service";
+import {
+  addNewCustomer,
+  addNewInstallation,
+  deleteLead,
+  getLead,
+} from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
   doorNo: yup.string().required("Please Enter Door Number"),
@@ -43,7 +49,12 @@ const style = {
   p: 4,
 };
 
-const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
+const ConvertModal = ({ cust, setCust, editdata, setLead }) => {
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [messagetype, setMessageType] = useState("");
+  const [content, setContent] = useState("");
+
   // Select dropdown
   const [type, setType] = useState("");
   // date
@@ -80,9 +91,12 @@ const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
       data["name"] = name;
       data["phone"] = phone;
       data["date"] = val.date;
-     
+
       if (!name && !phone) {
-        return alert("please fill all fields");
+        setMessage(true);
+        setContent("please fill all required fields");
+        setMessageType("error");
+        return null;
       }
       if (type === "installation") {
         let res = await addNewInstallation(data);
@@ -90,7 +104,10 @@ const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
         //checking an response message for successfully installation added
         // if not show alert
         if (res.message !== "Customer Added Successfully!") {
-          alert("try again later");
+          setMessage(true);
+          setContent("try again later");
+          setMessageType("error");
+          return null;
         }
       } else {
         let res = await addNewCustomer(data);
@@ -98,20 +115,24 @@ const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
         //checking an response message for successfully installation added
         // if not show alert
         if (res.message !== "Customer Added Successfully!") {
-          alert("try again later");
+          setMessage(true);
+          setContent("try again later");
+          setMessageType("error");
+          return null;
         }
       }
 
       await deleteLead(editdata._id);
-      getLeadData()
+      getLeadData();
       handleClose();
-
+      setMessage(true);
+      setContent("Lead Converted to Customer successfully!");
+      setMessageType("success");
     },
   });
-   // get lead data
-   const getLeadData = async () => {
+  // get lead data
+  const getLeadData = async () => {
     let resp = await getLead();
-    console.log("leads22", resp.getlead);
     setLead(resp.getlead);
   };
 
@@ -304,31 +325,31 @@ const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
                 </div>
 
                 <div style={{ margin: "10px", width: "100%" }}>
-                {type === "installation" && (
-                  <>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DatePicker"]}>
-                        <DatePicker
-                          label="Installation Date"
-                          name="date"
-                          value={dayjs(values.date)}
-                          onChange={(date) => {
-                            handleChange({
-                              target: { name: "date", value: date.format() },
-                            });
-                          }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                    {errors.date ? (
-                      <div style={{ color: "crimson", padding: "5px" }}>
-                        {errors.date}
-                      </div>
-                    ) : (
-                      ""
-                    )}
-                  </>
-                )}
+                  {type === "installation" && (
+                    <>
+                      <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={["DatePicker"]}>
+                          <DatePicker
+                            label="Installation Date"
+                            name="date"
+                            value={dayjs(values.date)}
+                            onChange={(date) => {
+                              handleChange({
+                                target: { name: "date", value: date.format() },
+                              });
+                            }}
+                          />
+                        </DemoContainer>
+                      </LocalizationProvider>
+                      {errors.date ? (
+                        <div style={{ color: "crimson", padding: "5px" }}>
+                          {errors.date}
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
               <br />
@@ -339,6 +360,12 @@ const ConvertModal = ({ cust, setCust, editdata,setLead }) => {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={messagetype}
+      />
     </div>
   );
 };

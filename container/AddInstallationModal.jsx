@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -16,6 +16,7 @@ import dayjs from "dayjs";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { addNewInstallation, getInstallationDetails } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
@@ -37,42 +38,52 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  overflow:"auto",
-  height:"80vh",
+  overflow: "auto",
+  height: "80vh",
 };
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Modal
   const handleClose = () => setOpen(false);
 
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
       name: "",
       phone: "",
       date: new Date(),
-      doorNo:"",
-      street:"",
-      area:"",
-      pin:"",
+      doorNo: "",
+      street: "",
+      area: "",
+      pin: "",
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
-      let {doorNo,street,area,pin} = data
-      data["address"] = {doorNo,street,area,pin}
+      let { doorNo, street, area, pin } = data;
+      data["address"] = { doorNo, street, area, pin };
       let res = await addNewInstallation(data);
       console.log("modal52", res);
-      //checking an response message for successfully installation added 
+      //checking an response message for successfully installation added
       // if not show alert
       if (res.message !== "Customer Added Successfully!") {
-        alert("try again later");
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
       }
       handleClose();
+      setMessage(true);
+      setContent("Installation added successfully!");
+      setType("success");
       getInstallation();
     },
   });
   const getInstallation = async () => {
     let response = await getInstallationDetails();
-    console.log("line63", response);
     setInstall(response.getAllCustomerDetails);
   };
   return (
@@ -158,82 +169,82 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
               <br />
               <br />
               <div>
-              <TextField
-                id="outlined-basic"
-                label="Door Number"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="doorNo"
-                name="doorNo"
-                value={values.doorNo}
-                onChange={handleChange}
-              />
-              {errors.doorNo ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.doorNo}
-                </div>
-              ) : (
-                ""
-              )}
-              <br/>
-              <br/>
-              <TextField
-                id="outlined-basic"
-                label="Street"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="street"
-                name="street"
-                value={values.street}
-                onChange={handleChange}
-              />
-              {errors.street ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.street}
-                </div>
-              ) : (
-                ""
-              )}
-              <br/>
-              <br/>
-              <TextField
-                id="outlined-basic"
-                label="Area"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="area"
-                name="area"
-                value={values.area}
-                onChange={handleChange}
-              />
-              {errors.area ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.area}
-                </div>
-              ) : (
-                ""
-              )}
-              <br/>
-              <br/>
-              <TextField
-                id="outlined-basic"
-                label="Pin Code"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="pin"
-                name="pin"
-                value={values.pin}
-                onChange={handleChange}
-              />
-              {errors.pin ? (
-                <div style={{ color: "crimson", padding: "5px" }}>
-                  {errors.pin}
-                </div>
-              ) : (
-                ""
-              )}
-              <br/>
-              <br/>
+                <TextField
+                  id="outlined-basic"
+                  label="Door Number"
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  type="doorNo"
+                  name="doorNo"
+                  value={values.doorNo}
+                  onChange={handleChange}
+                />
+                {errors.doorNo ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.doorNo}
+                  </div>
+                ) : (
+                  ""
+                )}
+                <br />
+                <br />
+                <TextField
+                  id="outlined-basic"
+                  label="Street"
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  type="street"
+                  name="street"
+                  value={values.street}
+                  onChange={handleChange}
+                />
+                {errors.street ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.street}
+                  </div>
+                ) : (
+                  ""
+                )}
+                <br />
+                <br />
+                <TextField
+                  id="outlined-basic"
+                  label="Area"
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  type="area"
+                  name="area"
+                  value={values.area}
+                  onChange={handleChange}
+                />
+                {errors.area ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.area}
+                  </div>
+                ) : (
+                  ""
+                )}
+                <br />
+                <br />
+                <TextField
+                  id="outlined-basic"
+                  label="Pin Code"
+                  variant="outlined"
+                  sx={{ width: "100%" }}
+                  type="pin"
+                  name="pin"
+                  value={values.pin}
+                  onChange={handleChange}
+                />
+                {errors.pin ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.pin}
+                  </div>
+                ) : (
+                  ""
+                )}
+                <br />
+                <br />
               </div>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
@@ -242,6 +253,13 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
           </Box>
         </Fade>
       </Modal>
+      {/* snackbar */}
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

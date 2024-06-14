@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -9,7 +9,7 @@ import { Button, TextField } from "@mui/material";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { addLead, getLead } from "@/service";
-
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter the Name"),
@@ -28,33 +28,44 @@ const style = {
   p: 4,
 };
 
-const AddLeadModal = ({open,setOpen,setLead}) => {
-    // Modal
-    let handleClose = () => setOpen(false);
+const AddLeadModal = ({ open, setOpen, setLead }) => {
+  // Modal
+  let handleClose = () => setOpen(false);
 
-    let { values, handleChange, handleSubmit, errors } = useFormik({
-        initialValues: {
-          name: "",
-          phone: "",
-        },
-        validataionSchema: validataionSchema,
-        onSubmit: async(data) => {
-            let resp = await addLead(data)
-            console.log("leadline43", resp)
-            if(resp.message !== "Lead added Successfully!"){
-                alert("try again later");
-            }
-            handleClose()
-            getLeadData()
-        }
-      });
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
-    //   get leaddata
-    const getLeadData = async() => {
-        let resp = await getLead();
-        console.log("leaddata54", resp.getlead);
-        setLead(resp.getlead);
-    }
+  let { values, handleChange, handleSubmit, errors } = useFormik({
+    initialValues: {
+      name: "",
+      phone: "",
+    },
+    validataionSchema: validataionSchema,
+    onSubmit: async (data) => {
+      let resp = await addLead(data);
+      console.log("leadline43", resp);
+      if (resp.message !== "Lead added Successfully!") {
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
+      }
+      handleClose();
+      setMessage(true);
+      setContent("Lead added successfully!");
+      setType("success");
+      getLeadData();
+    },
+  });
+
+  //   get leaddata
+  const getLeadData = async () => {
+    let resp = await getLead();
+    console.log("leaddata54", resp.getlead);
+    setLead(resp.getlead);
+  };
 
   return (
     <div>
@@ -75,47 +86,46 @@ const AddLeadModal = ({open,setOpen,setLead}) => {
           <Box sx={style}>
             <form
               className="flex flex-col gap-2 w-full justify-center"
-                onSubmit={handleSubmit}
+              onSubmit={handleSubmit}
             >
-              
-                  <TextField
-                    id="outlined-basic"
-                    label="Name"
-                    variant="outlined"
-                    type="name"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  {errors.name ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.name}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                <br/>
-                <br/>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    fullWidth
-                    type="phone"
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChange}
-                  />
-                  {errors.phone ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.phone}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-               <br/>
-               <br/>
+              <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
+                type="name"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                fullWidth
+              />
+              {errors.name ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.name}
+                </div>
+              ) : (
+                ""
+              )}
+              <br />
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Phone Number"
+                variant="outlined"
+                fullWidth
+                type="phone"
+                name="phone"
+                value={values.phone}
+                onChange={handleChange}
+              />
+              {errors.phone ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.phone}
+                </div>
+              ) : (
+                ""
+              )}
+              <br />
+              <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>
@@ -123,6 +133,12 @@ const AddLeadModal = ({open,setOpen,setLead}) => {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

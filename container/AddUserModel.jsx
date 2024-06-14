@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -10,6 +10,7 @@ import { Button, TextField } from "@mui/material";
 import * as yup from "yup";
 import { useFormik } from "formik";
 import { addNewUser, getNewUser } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
@@ -28,29 +29,39 @@ const style = {
   p: 4,
 };
 
-export default function AddUserModel({ open, setOpen,setTech }) {
+export default function AddUserModel({ open, setOpen, setTech }) {
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
   //   Modal
   const handleClose = () => setOpen(false);
 
-  let {values,handleChange,handleSubmit,errors} = useFormik({
-    initialValues:{
-      name:"",
-      phone:"",
+  let { values, handleChange, handleSubmit, errors } = useFormik({
+    initialValues: {
+      name: "",
+      phone: "",
     },
     validationSchema: validataionSchema,
-    onSubmit: async (data)=>{
+    onSubmit: async (data) => {
       let res = await addNewUser(data);
-      if(res.message !== "New User added successfully!"){
-        alert("try again later")
+      if (res.message !== "New User added successfully!") {
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
       }
-      getusesr()
+      getusesr();
       handleClose();
-    }
+      setMessage(true);
+      setContent("User added successfully!");
+      setType("success");
+    },
   });
 
   let getusesr = async () => {
     let res = await getNewUser();
-    console.log("res", res);
     setTech(res.getuser);
   };
   return (
@@ -70,7 +81,10 @@ export default function AddUserModel({ open, setOpen,setTech }) {
       >
         <Fade in={open} className="bg-gray text-black">
           <Box sx={style}>
-            <form className="flex flex-col gap-2 w-full justify-center" onSubmit={handleSubmit}>
+            <form
+              className="flex flex-col gap-2 w-full justify-center"
+              onSubmit={handleSubmit}
+            >
               <TextField
                 id="outlined-basic"
                 label="Name"
@@ -81,7 +95,13 @@ export default function AddUserModel({ open, setOpen,setTech }) {
                 value={values.name}
                 onChange={handleChange}
               />
-              {errors.name ? <div style = {{color:"crimson",padding:"5px"}}>{errors.name}</div> : ""}
+              {errors.name ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.name}
+                </div>
+              ) : (
+                ""
+              )}
               <br />
               <br />
               <TextField
@@ -94,7 +114,13 @@ export default function AddUserModel({ open, setOpen,setTech }) {
                 value={values.phone}
                 onChange={handleChange}
               />
-              {errors.phone ? <div style = {{color:"crimson",padding:"5px"}}>{errors.phone}</div> : ""}
+              {errors.phone ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.phone}
+                </div>
+              ) : (
+                ""
+              )}
               <br />
               <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
@@ -104,6 +130,12 @@ export default function AddUserModel({ open, setOpen,setTech }) {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }

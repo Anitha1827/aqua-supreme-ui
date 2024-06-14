@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -8,62 +8,69 @@ import { Button, TextField } from "@mui/material";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { addProduct, getAllProduct } from '@/service';
+import { addProduct, getAllProduct } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
-    productname: yup.string().required("Please Enter Product Name"),
-    productmodel:yup.string().required("Please Enter Modal"),
+  productname: yup.string().required("Please Enter Product Name"),
+  productmodel: yup.string().required("Please Enter Modal"),
 });
 
 const style = {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "30%",
-    bgcolor: "background.paper",
-    border: "2px solid #000",
-    boxShadow: 24,
-    p: 4,
-    overflow:"auto",
-    height:"80vh",
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "30%",
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  overflow: "auto",
+  height: "80vh",
+};
+
+const AddProductModal = ({ open, setOpen, setProduct }) => {
+  // Modal
+  const handleClose = () => setOpen(false);
+
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
+  let { values, handleChange, handleSubmit, errors } = useFormik({
+    initialValues: {
+      productname: "",
+      productmodel: "",
+    },
+    validationSchema: validataionSchema,
+    onSubmit: async (data) => {
+      let resp = await addProduct(data);
+      if (resp.message != "Product added to the database successfully!") {
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
+      }
+      handleClose();
+      setMessage(true);
+      setContent("Product added successfully!");
+      setType("success");
+      getAllProductDetails();
+    },
+  });
+
+  // Get product details
+  const getAllProductDetails = async () => {
+    let response = await getAllProduct();
+    console.log("addproduct59", response.getproduct);
+    setProduct(response.getproduct);
   };
 
-
-
-const AddProductModal = ({open, setOpen, setProduct}) => {
-    // Modal
-    const handleClose = () => setOpen(false);
-
-    let {values, handleChange, handleSubmit, errors} = useFormik({
-        initialValues:{
-            productname:"",
-            productmodel:"",
-        },
-        validationSchema:validataionSchema,
-        onSubmit: async(data) =>{
-            let resp = await addProduct(data)
-            console.log("productmodal46", resp)
-
-            if(resp.message != "Product added to the database successfully!"){
-                alert("try again later");
-            }
-            handleClose();
-            getAllProductDetails();
-        }
-    })
-
-    // Get product details
-    const getAllProductDetails = async() =>{
-        let response = await getAllProduct();
-        console.log("addproduct59", response.getproduct);
-        setProduct(response.getproduct);
-    }
-
-    
   return (
     <div>
-         <Modal
+      <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={open}
@@ -118,8 +125,8 @@ const AddProductModal = ({open, setOpen, setProduct}) => {
               ) : (
                 ""
               )}
-             <br/>
-             <br/>
+              <br />
+              <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>
@@ -127,8 +134,14 @@ const AddProductModal = ({open, setOpen, setProduct}) => {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
-  )
-}
+  );
+};
 
-export default AddProductModal
+export default AddProductModal;

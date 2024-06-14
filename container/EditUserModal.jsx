@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
 import { editUser, getNewUser } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const style = {
   position: "absolute",
@@ -22,11 +23,15 @@ const style = {
 export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
   const [name, setName] = useState(editdata.name);
   const [phone, setPhone] = useState(editdata.phone);
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
-  useEffect(()=>{
+  useEffect(() => {
     setName(editdata.name);
-    setPhone(editdata.phone)
-  },[editdata])
+    setPhone(editdata.phone);
+  }, [editdata]);
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -38,15 +43,24 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
 
   const handleSubmit = async () => {
     if (!name || !phone) {
-      return alert("Please fill all the fields");
+      setMessage(true);
+      setContent("Please fill all the fields");
+      setType("error");
+      return null;
     }
     let data = { name, phone };
     data["id"] = editdata._id;
     let res = await editUser(data);
     if (res.message !== "User Details edited successfully!") {
-      alert("try again later");
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
     }
     handleClose();
+    setMessage(true);
+    setContent("Edited Customer successfully!");
+    setType("success");
     getusesr();
   };
   return (
@@ -101,6 +115,12 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }

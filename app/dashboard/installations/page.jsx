@@ -23,7 +23,9 @@ const Installations = () => {
   const [editdata, setEditData] = useState({});
   const [assign, setAssign] = useState(false);
   const [id, setId] = useState("");
-  const [search, setSearch] = useState("")
+  const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   const handleEdit = (inst) => {
     setEdit(true);
@@ -57,9 +59,9 @@ const Installations = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-      <div className={styles.searchcontainer}>
-      <SearchIcon className={styles.searchicon} />
-        <input
+        <div className={styles.searchcontainer}>
+          <SearchIcon className={styles.searchicon} />
+          <input
             className={styles.searchfield}
             placeholder="Search..."
             value={search}
@@ -73,7 +75,7 @@ const Installations = () => {
       </div>
       <table className={styles.table}>
         <thead>
-          <tr style={{fontWeight:"bold"}}>
+          <tr style={{ fontWeight: "bold" }}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Contact</td>
@@ -83,106 +85,132 @@ const Installations = () => {
           </tr>
         </thead>
         <tbody>
-          {install.length > 0 &&
-            search.length <= 0 ? (
-              install.map((inst, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{inst.customerName}</td>
-                <td>{inst.customerPhone}</td>
-                <td>{inst.createdAt}</td>
-                <td>
-                  {inst.duedate
-                    ? inst.duedate.split("").slice(0, 10).join("")
-                    : ""}
-                </td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    {/* Edit button */}
-                    <Button onClick={() => handleEdit(inst)} title="Edit Data">
-                      <FaRegEdit sx={{fontSize:"20px"}} />
-                    </Button>
-                    {/* Assign person button */}
-                    <Button onClick={() => handleAssign(inst._id)} title="Assign technician">
-                      <IoPersonAddOutline sx={{fontSize:"20px"}} />
-                    </Button>
-
-                    {/* status update button */}
-                    <Button
-                      onClick={() =>
-                        router.push(`/dashboard/installations/${inst._id}`)
-                      }
-                      title="Update Status"
+          {install.length > 0 && search.length <= 0
+            ? install.slice(startIndex, startIndex + 10).map((inst, idx) => (
+                <tr key={idx}>
+                  <td>{startIndex + idx + 1}</td>
+                  <td>{inst.customerName}</td>
+                  <td>{inst.customerPhone}</td>
+                  <td>{inst.createdAt}</td>
+                  <td>
+                    {inst.duedate
+                      ? inst.duedate.split("").slice(0, 10).join("")
+                      : ""}
+                  </td>
+                  <td>
+                    <div
+                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
-                      <TaskAltIcon sx={{fontSize:"20px"}}/>
-                    </Button>
-                    {/* Delete button */}
-                    <Button
-                      aria-label="delete"
-                      // size="large"
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(inst)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-            ) : (install.map((inst, idx) => (
-              ( inst.customerName.toLowerCase().includes(search.toLowerCase()) ||  inst.customerPhone.includes(search))&&
-             ( <tr key={idx}>
-              <td>{idx + 1}</td>
-              <td>{inst.customerName}</td>
-              <td>{inst.customerPhone}</td>
-              <td>{inst.duedate}</td>
-              <td>
-                {inst.lastServicedAt
-                  ? inst.lastServicedAt.split("").slice(0, 10).join("")
-                  : "24-05-2024"}
-              </td>
-              <td>
-                <div
-                  className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                >
-                  {/* Edit button */}
-                  <Button onClick={() => handleEdit(inst)} title="Edit Data">
-                    <FaRegEdit sx={{fontSize:"20px"}} />
-                  </Button>
-                  {/* Assign person button */}
-                  <Button onClick={() => handleAssign(inst._id)} title="Assign technician">
-                    <IoPersonAddOutline sx={{fontSize:"20px"}} />
-                  </Button>
+                      {/* Edit button */}
+                      <Button
+                        onClick={() => handleEdit(inst)}
+                        title="Edit Data"
+                      >
+                        <FaRegEdit sx={{ fontSize: "20px" }} />
+                      </Button>
+                      {/* Assign person button */}
+                      <Button
+                        onClick={() => handleAssign(inst._id)}
+                        title="Assign technician"
+                      >
+                        <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+                      </Button>
 
-                  {/* status update button */}
-                  <Button
-                    onClick={() =>
-                      router.push(`/dashboard/installations/${inst._id}`)
-                    }
-                    title="Update Status"
-                  >
-                    <TaskAltIcon sx={{fontSize:"20px"}}/>
-                  </Button>
-                  {/* Delete button */}
-                  <Button
-                    aria-label="delete"
-                    // size="large"
-                    className={`${styles.button} ${styles.delete}`}
-                    onClick={() => handleDelete(inst)}
-                    title="Delete"
-                  >
-                    <DeleteIcon sx={{fontSize:"20px", color:"crimson"}}  />
-                  </Button>
-                </div>
-              </td>
-            </tr>)
-            )))}
+                      {/* status update button */}
+                      <Button
+                        onClick={() =>
+                          router.push(`/dashboard/installations/${inst._id}`)
+                        }
+                        title="Update Status"
+                      >
+                        <TaskAltIcon sx={{ fontSize: "20px" }} />
+                      </Button>
+                      {/* Delete button */}
+                      <Button
+                        aria-label="delete"
+                        // size="large"
+                        className={`${styles.button} ${styles.delete}`}
+                        onClick={() => handleDelete(inst)}
+                        title="Delete"
+                      >
+                        <DeleteIcon
+                          sx={{ fontSize: "20px", color: "crimson" }}
+                        />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            : install.map(
+                (inst, idx) =>
+                  (inst.customerName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    inst.customerPhone.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{inst.customerName}</td>
+                      <td>{inst.customerPhone}</td>
+                      <td>{inst.duedate}</td>
+                      <td>
+                        {inst.lastServicedAt
+                          ? inst.lastServicedAt.split("").slice(0, 10).join("")
+                          : "24-05-2024"}
+                      </td>
+                      <td>
+                        <div
+                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                        >
+                          {/* Edit button */}
+                          <Button
+                            onClick={() => handleEdit(inst)}
+                            title="Edit Data"
+                          >
+                            <FaRegEdit sx={{ fontSize: "20px" }} />
+                          </Button>
+                          {/* Assign person button */}
+                          <Button
+                            onClick={() => handleAssign(inst._id)}
+                            title="Assign technician"
+                          >
+                            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+                          </Button>
+
+                          {/* status update button */}
+                          <Button
+                            onClick={() =>
+                              router.push(
+                                `/dashboard/installations/${inst._id}`
+                              )
+                            }
+                            title="Update Status"
+                          >
+                            <TaskAltIcon sx={{ fontSize: "20px" }} />
+                          </Button>
+                          {/* Delete button */}
+                          <Button
+                            aria-label="delete"
+                            // size="large"
+                            className={`${styles.button} ${styles.delete}`}
+                            onClick={() => handleDelete(inst)}
+                            title="Delete"
+                          >
+                            <DeleteIcon
+                              sx={{ fontSize: "20px", color: "crimson" }}
+                            />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+              )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={install.length}
+        setStartIndex={setStartIndex}
+      />
 
       {/* Add new Installation modal */}
       <AddInstallationModal

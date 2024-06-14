@@ -9,6 +9,7 @@ import { deleteProduct, getAllProduct } from "@/service";
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditProductModel from "@/container/EditProductModel";
+import Pagination from "@/app/ui/dashboard/pagination/pagination";
 
 const ProductPage = () => {
   const [search, setSearch] = useState("");
@@ -18,6 +19,8 @@ const ProductPage = () => {
   // edit
   const [edit, setEdit] = useState(false); //modal state
   const [editdata, setEditData] = useState({});
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   // Get Products
   let getProduct = async () => {
@@ -71,78 +74,98 @@ const ProductPage = () => {
           </tr>
         </thead>
         <tbody>
-          {product.length > 0 && search.length <= 0 ?  product.map((prod, idx) => (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{prod.productname}</td>
-                <td>{prod.productmodel}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    {/* Edit button */}
-                    <Button onClick={() => handleEdit(prod)} title="Edit Data">
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
-
-                    {/* Delete button */}
-                    <Button
-                      aria-label="delete"
-                      // size="large"
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(prod)}
-                      title="Delete"
+          {product.length > 0 && search.length <= 0
+            ? product.slice(startIndex, startIndex + 10).map((prod, idx) => (
+                <tr key={idx}>
+                  <td>{startIndex + idx + 1}</td>
+                  <td>{prod.productname}</td>
+                  <td>{prod.productmodel}</td>
+                  <td>
+                    <div
+                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            )) :  product.map((prod, idx) => (prod.productname
-              .toLowerCase()
-              .includes(search.toLowerCase()) ||
-              prod.productmodel.includes(search)) && (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{prod.productname}</td>
-                <td>{prod.productmodel}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    {/* Edit button */}
-                    <Button onClick={() => handleEdit(prod)} title="Edit Data">
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
+                      {/* Edit button */}
+                      <Button
+                        onClick={() => handleEdit(prod)}
+                        title="Edit Data"
+                      >
+                        <FaRegEdit sx={{ fontSize: "20px" }} />
+                      </Button>
 
-                    {/* Delete button */}
-                    <Button
-                      aria-label="delete"
-                      // size="large"
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(prod)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-           }
+                      {/* Delete button */}
+                      <Button
+                        aria-label="delete"
+                        // size="large"
+                        className={`${styles.button} ${styles.delete}`}
+                        onClick={() => handleDelete(prod)}
+                        title="Delete"
+                      >
+                        <DeleteIcon
+                          sx={{ fontSize: "20px", color: "crimson" }}
+                        />
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            : product.map(
+                (prod, idx) =>
+                  (prod.productname
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    prod.productmodel.includes(search)) && (
+                    <tr key={idx}>
+                      <td>{idx + 1}</td>
+                      <td>{prod.productname}</td>
+                      <td>{prod.productmodel}</td>
+                      <td>
+                        <div
+                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                        >
+                          {/* Edit button */}
+                          <Button
+                            onClick={() => handleEdit(prod)}
+                            title="Edit Data"
+                          >
+                            <FaRegEdit sx={{ fontSize: "20px" }} />
+                          </Button>
+
+                          {/* Delete button */}
+                          <Button
+                            aria-label="delete"
+                            // size="large"
+                            className={`${styles.button} ${styles.delete}`}
+                            onClick={() => handleDelete(prod)}
+                            title="Delete"
+                          >
+                            <DeleteIcon
+                              sx={{ fontSize: "20px", color: "crimson" }}
+                            />
+                          </Button>
+                        </div>
+                      </td>
+                    </tr>
+                  )
+              )}
         </tbody>
       </table>
+      <Pagination
+        startIndex={startIndex}
+        maxlength={product.length}
+        setStartIndex={setStartIndex}
+      />
+
       {/* Add product modal */}
       <AddProductModal open={open} setOpen={setOpen} setProduct={setProduct} />
 
       {/* Edit product modal */}
       {editdata.productname && (
         <EditProductModel
-        edit={edit}
-        setEdit={setEdit}
-        editdata={editdata}
-        setProduct={setProduct}
-      />
+          edit={edit}
+          setEdit={setEdit}
+          editdata={editdata}
+          setProduct={setProduct}
+        />
       )}
     </div>
   );

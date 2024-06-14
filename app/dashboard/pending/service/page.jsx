@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 const ServicePendingPage = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   let router = useRouter();
 
@@ -48,9 +50,9 @@ const ServicePendingPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.map((data, idx) => (
+            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
                   <td>{data.updatedAt}</td>
@@ -107,7 +109,11 @@ const ServicePendingPage = () => {
               )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={data.length}
+        setStartIndex={setStartIndex}
+      />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import { installationCompleted } from "@/service";
 const InstallationCompletedPage = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   const getCompletedData = async () => {
     let response = await installationCompleted();
@@ -45,9 +47,9 @@ const InstallationCompletedPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.map((data, idx) => (
+            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
                 <tr key={idx}>
-                  <td>{idx + 1}</td>
+                  <td>{startIndex + idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
                   <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
@@ -81,7 +83,11 @@ const InstallationCompletedPage = () => {
               )}
         </tbody>
       </table>
-      <Pagination />
+      <Pagination
+        startIndex={startIndex}
+        maxlength={data.length}
+        setStartIndex={setStartIndex}
+      />
     </div>
   );
 };

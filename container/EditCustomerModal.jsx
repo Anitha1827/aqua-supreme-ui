@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
 import { editCustomer, getAllCustomer } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const style = {
   position: "absolute",
@@ -28,18 +29,23 @@ export default function EditCustomerModal({
   const [name, setName] = useState(editdata.customerName);
   const [phone, setPhone] = useState(editdata.customerPhone);
   const [doorNo, setDoorNo] = useState(editdata.address.doorNo);
-  const [street, setStreet] = useState(editdata.address.street)
-  const[area, setArea] = useState(editdata.address.area)
-  const [pin, setPin] = useState(editdata.address.pin)
+  const [street, setStreet] = useState(editdata.address.street);
+  const [area, setArea] = useState(editdata.address.area);
+  const [pin, setPin] = useState(editdata.address.pin);
 
-  useEffect(()=>{
-    setName(editdata.customerName)
-    setPhone(editdata.customerPhone)
-    setDoorNo(editdata.address.doorNo)
-    setStreet(editdata.address.street)
-    setArea(editdata.address.area)
-    setPin(editdata.address.pin)
-  },[editdata])
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
+  useEffect(() => {
+    setName(editdata.customerName);
+    setPhone(editdata.customerPhone);
+    setDoorNo(editdata.address.doorNo);
+    setStreet(editdata.address.street);
+    setArea(editdata.address.area);
+    setPin(editdata.address.pin);
+  }, [editdata]);
   //   Modal
   const handleClose = () => setEdit(false);
 
@@ -48,20 +54,26 @@ export default function EditCustomerModal({
     console.log("res", res);
     setCustomer(res.getAllCustomerDetails);
   };
-  
-  const handleSubmit = async(e) => {
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-      // let {doorNo,street,area,pin} = data
-    let data = {name,phone}
-    data["address"] = {doorNo,street,area,pin}
+    // let {doorNo,street,area,pin} = data
+    let data = { name, phone };
+    data["address"] = { doorNo, street, area, pin };
     data["id"] = editdata._id;
     let res = await editCustomer(data);
     if (res.message !== "Customer Updated Succesfully!") {
-      alert("try again later");
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
     }
     handleClose();
+    setMessage(true);
+    setContent("Customer Edited successfully!");
+    setType("success");
     getusesr();
-  }
+  };
   return (
     <div>
       <Modal
@@ -157,7 +169,7 @@ export default function EditCustomerModal({
                   />
                 </div>
               </div>
-              
+
               <div
                 style={{
                   display: "flex",
@@ -204,6 +216,12 @@ export default function EditCustomerModal({
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }

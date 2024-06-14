@@ -14,6 +14,8 @@ const UserPage = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const handleOpen = () => setOpen(true);
+   // Pagination setup
+   const [startIndex, setStartIndex] = useState(0);
 
   const handleEdit = (item) => {
     setEdit(true);
@@ -70,9 +72,9 @@ const UserPage = () => {
           </thead>
           <tbody>
             {tech.length > 0 && search.length <= 0
-              ? tech.map((item, idx) => (
+              ? tech.slice(startIndex, startIndex + 10).map((item, idx) => (
                   <tr key={idx}>
-                    <td>{idx + 1}</td>
+                    <td>{startIndex + idx + 1}</td>
                     <td>{item.name ? item.name : "test"}</td>
                     <td>{item.phone}</td>
                     <td>Active</td>
@@ -144,7 +146,9 @@ const UserPage = () => {
                 )}
           </tbody>
         </table>
-        <Pagination />
+        <Pagination startIndex={startIndex}
+        maxlength={tech.length}
+        setStartIndex={setStartIndex} />
 
         {/* Adding user model */}
         <AddUserModel open={open} setOpen={setOpen} setTech={setTech} />

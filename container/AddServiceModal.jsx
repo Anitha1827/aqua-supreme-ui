@@ -21,6 +21,7 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import { addService, getService, getServiceReminderCustomer } from "@/service";
 import dayjs from "dayjs";
+import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
   duedate: yup.string().required("Please select service date"),
@@ -39,6 +40,11 @@ const style = {
 };
 
 export default function AddServiceModal({ open, setOpen, setService }) {
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
   // Dropdown
   const [custname, setCustName] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -55,18 +61,26 @@ export default function AddServiceModal({ open, setOpen, setService }) {
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
       if (id == "") {
-        return alert("please select the customer");
+        setMessage(true);
+        setContent("please select the customer");
+        setType("error");
+        return null;
       }
       let val = custname.filter((val) => val._id == id);
       data["phone"] = val[0].customerPhone;
       data["customerId"] = id;
       data["customerName"] = val[0].customerName;
       let res = await addService(data);
-      console.log("resmodal", res);
       if (res.message !== "Service Created Successfully!") {
-        alert("try again later");
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
       }
       handleClose();
+      setMessage(true);
+      setContent("Service added successfully!");
+      setType("success");
       setLoading(true);
       setId("");
       getservicemodal();
@@ -75,15 +89,12 @@ export default function AddServiceModal({ open, setOpen, setService }) {
 
   let getservicemodal = async () => {
     let res = await getService();
-    console.log("resmodal21", res);
     setService(res.getAllServiceDetails);
-    console.log("detailcalled");
     getCustomerDetails();
   };
 
   let getCustomerDetails = async () => {
     let response = await getServiceReminderCustomer();
-    console.log("response79", response.data);
     setCustName(response.data);
     setLoading(false);
   };
@@ -175,6 +186,12 @@ export default function AddServiceModal({ open, setOpen, setService }) {
           </Box>
         </Fade>
       </Modal>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 }
