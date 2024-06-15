@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -481,6 +481,54 @@ try {
 }
 }
 
+//add spares to db
+const addSpare = async(data) => {
+  try {
+    let resp = await axios.post(`${api_url}/spares/sparecreate`,data);
+    console.log("spare488",resp.data);
+    return resp.data
+  } catch (error) {
+    console.error(error)
+    alert("try again later");
+  }
+};
+
+// Get Spares from DB
+const getSpare = async(data) => {
+  try {
+    let resp = await axios.get(`${api_url}/spares/getspare`, data);
+    console.log("gerspare500",resp.data);
+    return resp.data;
+
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+};
+
+// Update spares
+const updateSpare = async(data) => {
+  try {
+    let resp = await axios.put(`${api_url}/spares/spareupdate`,data);
+    console.log("updatespare", resp.data);
+    return resp.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+};
+
+// Delete Spares
+const deleteSpare = async(id) => {
+  try {
+    let resp = await axios.delete(`${api_url}/spares/deletespare/${id}`);
+    console.log("deletedspare", resp.data);
+    return resp.data;
+  } catch (error) {
+    console.log(error)
+    alert("try again later")
+  }
+}
 
 export {
   login,
@@ -523,4 +571,8 @@ export {
   getLead,
   updateLead,
   deleteLead,
+  addSpare,
+  getSpare,
+  updateSpare,
+  deleteSpare,
 };

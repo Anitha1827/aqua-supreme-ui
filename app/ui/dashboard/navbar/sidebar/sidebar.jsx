@@ -35,19 +35,9 @@ const menuItems = [
         icon: <MdAttachMoney />,
       },
       {
-        title:"Product",
-        path:"/dashboard/product",
-        icon:<FaAppStoreIos />,
-      },
-      {
         title:"Service Reminder",
         path:"/dashboard/reminder",
         icon:<IoChatboxEllipses />,
-      },
-      {
-        title: "Service Engineers",
-        path: "/dashboard/serviceEngineer",
-        icon: <MdSupervisedUserCircle />,
       },
     ],
   },
@@ -82,11 +72,52 @@ const menuItems = [
     ],
   },
   {
+    title: "Product",
+    list: [
+      {
+        title:"Product",
+        path:"/dashboard/product",
+        icon:<FaAppStoreIos />,
+      },
+    ],
+  },
+  {
+    title: "Spares",
+    list: [
+      {
+        title:"Spares",
+        path:"/dashboard/spares",
+        icon:<FaAppStoreIos />,
+      },
+    ],
+  },
+  
+  {
+    title: "Service Engineers",
+    list: [
+      {
+        title: "Service Engineers",
+        path: "/dashboard/serviceEngineer",
+        icon: <MdSupervisedUserCircle />,
+      },
+    ],
+  },
+  {
     title: "Leads",
     list: [
       {
         title: "Lead",
         path: "/dashboard/lead",
+        icon: <MdAnalytics />,
+      },
+    ],
+  },
+  {
+    title: "Area",
+    list: [
+      {
+        title: "Area",
+        path: "/dashboard/area",
         icon: <MdAnalytics />,
       },
     ],
