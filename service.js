@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let api_url = "http://localhost:7000/api";
-// let api_url = "https://aqua-supreme-api.vercel.app/api"
+// let api_url = "http://localhost:7000/api";
+let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
