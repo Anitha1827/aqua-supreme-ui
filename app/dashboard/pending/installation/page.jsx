@@ -58,7 +58,7 @@ const InstallationPendingPage = () => {
                   <td>{startIndex + idx + 1}</td>
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
-                  <td>{data.createdAt.split("").slice(0, 10).join("")}</td>
+                  <td>{data.createdAt}</td>
                   <td>{data.duedate.split("").slice(0, 10).join("")}</td>
                   <td>{data.isInstallationAssignTo}</td>
                   <td>

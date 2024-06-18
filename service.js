@@ -576,6 +576,18 @@ const deleteArea = async(id) => {
     console.error(error);
     alert("try again later")
   }
+};
+
+//finding user type
+const findingUser = async(token) => {
+  try {
+    let res = await axios.post(`${api_url}/auth/find-user`, {token});
+    console.log("findinguser", res.data);
+    return res.data
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
 }
 
 export {
@@ -627,4 +639,5 @@ export {
   getArea,
   updateArea,
   deleteArea, 
+  findingUser,
 };
