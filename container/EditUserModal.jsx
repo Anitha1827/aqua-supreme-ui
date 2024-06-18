@@ -23,6 +23,8 @@ const style = {
 export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
   const [name, setName] = useState(editdata.name);
   const [phone, setPhone] = useState(editdata.phone);
+  const[email, setEmail] = useState(editdata.email);
+  const[password, setPassword] = useState(editdata.password)
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -31,6 +33,8 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
   useEffect(() => {
     setName(editdata.name);
     setPhone(editdata.phone);
+    setEmail(editdata.email);
+    setPassword(editdata.password);
   }, [editdata]);
   //   Modal
   const handleClose = () => setEdit(false);
@@ -41,14 +45,15 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
     setTech(res.getuser);
   };
 
-  const handleSubmit = async () => {
-    if (!name || !phone) {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!name || !phone || !email || !password) {
       setMessage(true);
       setContent("Please fill all the fields");
       setType("error");
       return null;
     }
-    let data = { name, phone };
+    let data = { name, phone,email,password };
     data["id"] = editdata._id;
     let res = await editUser(data);
     if (res.message !== "User Details edited successfully!") {
@@ -105,6 +110,30 @@ export default function EditUserModal({ edit, setEdit, editdata, setTech }) {
                 name="phone"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+              />
+              <br />
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Email Id"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="email"
+                name="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <br />
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Password"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="password"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <br />
               <br />

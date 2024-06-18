@@ -27,6 +27,16 @@ margin-top: 20px;
     padding: 10px;
     text-align: center;
 }
+.tabletd {
+    width: 200px;
+    height: 100px;
+    text-align: justify;
+    overflow: hidden;
+    display: block;
+}
+/* .tabletd:hover{
+    overflow:auto;
+} */
 
 .buttons{
     display: flex;

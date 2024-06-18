@@ -24,6 +24,7 @@ const style = {
 const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
   const [name, setName] = useState(editdata.name);
   const [phone, setPhone] = useState(editdata.phone);
+  const [feedback, setFeedback] = useState(editdata.feedback);
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -32,19 +33,20 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
   useEffect(() => {
     setName(editdata.name);
     setPhone(editdata.phone);
+    setFeedback(editdata.feedback);
   }, [editdata]);
 
   const handleClose = () => setEdit(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !phone) {
+    if (!name || !phone || !feedback) {
       setMessage(true);
       setContent("please fill all fields");
       setType("error");
       return null;
     }
-    let data = { name, phone, id: editdata._id };
+    let data = { name, phone, feedback, id: editdata._id };
     data["id"] = editdata._id;
     let resp = await updateLead(data);
     if (resp.message !== "lead updated successfully!") {
@@ -63,7 +65,7 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
   // get lead data
   const getLeadData = async () => {
     let resp = await getLead();
-    console.log("editedlead37", resp.getlead);
+    console.log("editedlead68", resp.getlead);
     setLead(resp.getlead);
   };
   return (
@@ -113,6 +115,33 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
                   setPhone(e.target.value);
                 }}
               />
+              <br />
+              <br />
+              <div>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { m: 1, width: "25ch" },
+                  }}
+                >
+                  <div>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Remarks"
+                      name="feedback"
+                      type="feedback"
+                      variant="outlined"
+                      multiline
+                      rows={4}
+                      value={feedback}
+                      onChange={(e) => {
+                        setFeedback(e.target.value);
+                      }}
+                      fullWidth
+                    />
+                  </div>
+                </Box>
+              </div>
               <br />
               <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">

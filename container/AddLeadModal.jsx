@@ -14,6 +14,7 @@ import AlertMessage from "./AlertMessage";
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter the Name"),
   phone: yup.string().required("please Enter Phone Number"),
+  feedback: yup.string().required("Please Enter remarks"),
 });
 
 const style = {
@@ -41,6 +42,7 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
     initialValues: {
       name: "",
       phone: "",
+      feedback: "",
     },
     validataionSchema: validataionSchema,
     onSubmit: async (data) => {
@@ -124,6 +126,36 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
               ) : (
                 ""
               )}
+              <br />
+              <br />
+              <div>
+                <Box
+                  component="form"
+                  sx={{
+                    "& .MuiTextField-root": { m: 1, width: "25ch" },
+                  }}
+                >
+                  <div>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Remarks"
+                      name="feedback"
+                      multiline
+                      rows={4}
+                      value={values.feedback}
+                      onChange={handleChange}
+                      fullWidth
+                    />
+                  </div>
+                </Box>
+                {errors.feedback ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.feedback}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
               <br />
               <br />
               <Button variant="contained" sx={{ width: "100%" }} type="submit">

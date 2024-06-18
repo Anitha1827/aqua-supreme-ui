@@ -12,6 +12,7 @@ import { deleteLead, getLead } from "@/service";
 import EditLeadModal from "@/container/EditLeadModal";
 import { IoPersonAddOutline } from "react-icons/io5";
 import ConvertModal from "@/container/ConvertModal";
+import { TextField } from "@mui/material";
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -90,6 +91,7 @@ const LeadCreation = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
+            <td>Remarks</td>
             <td>Action</td>
           </tr>
         </thead>
@@ -101,6 +103,9 @@ const LeadCreation = () => {
                     <td>{startIndex + idx + 1}</td>
                     <td>{val.name}</td>
                     <td>{val.phone}</td>
+                    <td>
+                          <span className={styles.tabletd} title={val.feedback} >{val.feedback}</span>
+                    </td>
                     <td>
                       <div
                         className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -145,6 +150,9 @@ const LeadCreation = () => {
                         <td>{idx + 1}</td>
                         <td>{val.name}</td>
                         <td>{val.phone}</td>
+                        <td>
+                           <span className={styles.tabletd} title={val.feedback} >{val.feedback}</span>
+                        </td>
                         <td>
                           <div
                             className={`${styles.buttons} ${styles.button} ${styles.view}`}

@@ -53,7 +53,9 @@ const InstallationCompletedPage = () => {
                   <td>{data.customerName}</td>
                   <td>{data.customerPhone}</td>
                   <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
-                  <td>{data.duedate}</td>
+                  <td>{data.duedate
+                          ? data.duedate.split("").slice(0, 10).join("")
+                          : ""}</td>
                   <td>{data.isInstallationAssignTo}</td>
                   <td>
                     <button className={styles.compbutton}>Completed</button>
@@ -73,7 +75,11 @@ const InstallationCompletedPage = () => {
                       <td>
                         {data.lastServicedAt.split("").slice(0, 10).join("")}
                       </td>
-                      <td>{data.duedate}</td>
+                      <td>
+                        {data.duedate
+                          ? data.duedate.split("").slice(0, 10).join("")
+                          : ""}
+                      </td>
                       <td>{data.isInstallationAssignTo}</td>
                       <td>
                         <button className={styles.compbutton}>Completed</button>

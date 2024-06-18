@@ -15,6 +15,8 @@ import AlertMessage from "./AlertMessage";
 const validataionSchema = yup.object({
   name: yup.string().required("Please Enter Name"),
   phone: yup.string().required("please Enter Phone Number"),
+  email:yup.string().required("please enter Email id"),
+  password:yup.string().required("please enter password"),
 });
 
 const style = {
@@ -42,6 +44,8 @@ export default function AddUserModel({ open, setOpen, setTech }) {
     initialValues: {
       name: "",
       phone: "",
+      email:"",
+      password:"",
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
@@ -117,6 +121,44 @@ export default function AddUserModel({ open, setOpen, setTech }) {
               {errors.phone ? (
                 <div style={{ color: "crimson", padding: "5px" }}>
                   {errors.phone}
+                </div>
+              ) : (
+                ""
+              )}
+              <br />
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Email Id"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="email"
+                name="email"
+                value={values.email}
+                onChange={handleChange}
+              />
+              {errors.email ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.email}
+                </div>
+              ) : (
+                ""
+              )}
+              <br />
+              <br />
+              <TextField
+                id="outlined-basic"
+                label="Password"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="password"
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+              />
+              {errors.password ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.password}
                 </div>
               ) : (
                 ""

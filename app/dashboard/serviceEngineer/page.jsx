@@ -66,7 +66,7 @@ const UserPage = () => {
               <td>Sl.No</td>
               <td>Name</td>
               <td>Phone Number</td>
-              <td>Status</td>
+              <td>email</td>
               <td>Action</td>
             </tr>
           </thead>
@@ -77,7 +77,7 @@ const UserPage = () => {
                     <td>{startIndex + idx + 1}</td>
                     <td>{item.name ? item.name : "test"}</td>
                     <td>{item.phone}</td>
-                    <td>Active</td>
+                    <td>{item.email}</td>
                     <td>
                       <div
                         className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -115,7 +115,7 @@ const UserPage = () => {
                         <td>{idx + 1}</td>
                         <td>{item.name ? item.name : "test"}</td>
                         <td>{item.phone}</td>
-                        <td>Active</td>
+                        <td>{item.email}</td>
                         <td>
                           <div
                             className={`${styles.buttons} ${styles.button} ${styles.view}`}

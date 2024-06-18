@@ -52,7 +52,6 @@ const Dashboard = () => {
     console.log(res);
     getCustomerDetails();
   };
-
   return (
     <div className={styles.container}>
       <div className={styles.top}>

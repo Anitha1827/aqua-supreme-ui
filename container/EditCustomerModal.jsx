@@ -5,8 +5,13 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
-import { editCustomer, getAllCustomer } from "@/service";
+import { editCustomer, getAllCustomer, getArea } from "@/service";
 import AlertMessage from "./AlertMessage";
+// Select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const style = {
   position: "absolute",
@@ -32,7 +37,8 @@ export default function EditCustomerModal({
   const [street, setStreet] = useState(editdata.address.street);
   const [area, setArea] = useState(editdata.address.area);
   const [pin, setPin] = useState(editdata.address.pin);
-
+// to get area list from db
+const [areaList, setAreaList] = useState({})
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -54,6 +60,16 @@ export default function EditCustomerModal({
     console.log("res", res);
     setCustomer(res.getAllCustomerDetails);
   };
+
+  //get Area list
+  let getAreaList = async () => {
+    let resp = await getArea();
+    setAreaList(resp.getArea);
+  };
+  useEffect(()=>{
+    getAreaList();
+  },[])
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -178,19 +194,27 @@ export default function EditCustomerModal({
                 }}
               >
                 <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Area"
-                    type="area"
-                    name="area"
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    value={area}
-                    onChange={(e) => {
-                      setArea(e.target.value);
-                    }}
-                  />
+                <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Area
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={area}
+                        label="area"
+                        name="area"
+                        onChange={(e) => {
+                          setArea(e.target.value);
+                        }}
+                      >
+                        {areaList.length > 0 && areaList.map((val,idx) => (
+                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                 </div>
 
                 <div style={{ width: "100%", margin: "10px" }}>

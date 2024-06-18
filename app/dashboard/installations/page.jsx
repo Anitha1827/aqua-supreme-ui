@@ -87,7 +87,15 @@ const Installations = () => {
         <tbody>
           {install.length > 0 && search.length <= 0
             ? install.slice(startIndex, startIndex + 10).map((inst, idx) => (
-                <tr key={idx}>
+                <tr
+                  key={idx}
+                  className={`${
+                    inst.isInstallationAssignTo &&
+                    inst.isInstallationAssignTo.length > 0
+                      ? "Assigned"
+                      : "notAssigned"
+                  }`}
+                >
                   <td>{startIndex + idx + 1}</td>
                   <td>{inst.customerName}</td>
                   <td>{inst.customerPhone}</td>

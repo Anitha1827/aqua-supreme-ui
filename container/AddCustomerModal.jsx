@@ -1,16 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "@/app/ui/dashboard/addcustomer/addcustomer.module.css";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
+// Select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { addNewCustomer, getAllCustomer } from "@/service";
+import { addNewCustomer, getAllCustomer, getArea } from "@/service";
 import AlertMessage from "./AlertMessage";
 
 const validataionSchema = yup.object({
@@ -44,6 +49,17 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
+  //for area list
+  const [area, setArea] = useState({});
+  // Get area list
+  let getAreaList = async () => {
+    let resp = await getArea();
+    setArea(resp.getArea);
+  };
+
+  useEffect(() => {
+    getAreaList();
+  }, []);
 
   // Formik
   let { values, handleChange, handleSubmit, errors } = useFormik({
@@ -139,7 +155,15 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                   )}
                 </div>
               </div>
-              <label style={{display:"flex", justifyContent:"space-around",color:"gray"}}>Address</label>
+              <label
+                style={{
+                  display: "flex",
+                  justifyContent: "space-around",
+                  color: "gray",
+                }}
+              >
+                Address
+              </label>
               <div
                 style={{
                   display: "flex",
@@ -202,17 +226,25 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
               >
                 <div style={{ margin: "10px", width: "100%" }}>
                   {/* Address Field */}
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Area"
-                    type="area"
-                    name="area"
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    value={values.area}
-                    onChange={handleChange}
-                  />
+                  <Box>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Area
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={values.area}
+                        label="area"
+                        name="area"
+                        onChange={handleChange}
+                      >
+                        {area.length > 0 && area.map((val, idx) => (
+                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                   {errors.area ? (
                     <div style={{ color: "crimson", padding: "5px" }}>
                       {errors.area}

@@ -18,6 +18,7 @@ import { useFormik } from "formik";
 import {
   addNewInstallation,
   getAllProduct,
+  getArea,
   getInstallationDetails,
 } from "@/service";
 import AlertMessage from "./AlertMessage";
@@ -33,7 +34,7 @@ const validataionSchema = yup.object({
   date: yup.string().required("Please Select Installation date"),
   doorNo: yup.string().required("Please Enter Door Number"),
   street: yup.string().required("Please Enter street"),
-  area: yup.string().required("Please Enter Area"),
+  area: yup.string().required("Please Select Area"),
   pin: yup.string().required("Please Enter pin Number"),
 });
 
@@ -55,6 +56,13 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Select dropdown
   const [product, setProduct] = useState("");
   const [prodList, setProdList] = useState([]);
+   //for area list
+   const [area, setArea] = useState({});
+   // Get area list
+   let getAreaList = async () => {
+     let resp = await getArea();
+     setArea(resp.getArea);
+   };
 
   const handleSelect = (event) => {
     setProduct(event.target.value);
@@ -113,6 +121,7 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   };
   useEffect(() => {
     getProduct();
+    getAreaList();
   }, []);
   return (
     <div>
@@ -305,16 +314,25 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                 }}
               >
                 <div style={{ margin: "10px", width: "100%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Area"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="area"
-                    name="area"
-                    value={values.area}
-                    onChange={handleChange}
-                  />
+                <Box>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Area
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={values.area}
+                        label="area"
+                        name="area"
+                        onChange={handleChange}
+                      >
+                        {area.length > 0 && area.map((val, idx) => (
+                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                   {errors.area ? (
                     <div style={{ color: "crimson", padding: "5px" }}>
                       {errors.area}

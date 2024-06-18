@@ -12,12 +12,17 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { assignServiceTechnician, getNewUser } from "@/service";
+import AlertMessage from "./AlertMessage";
 
 const AssignServiceModal = ({ assign, setAssign, id }) => {
   // Dropdown
   const [tech, setTech] = useState("");
   const [technician, setTechnician] = useState([]);
   const [loading, setLoading] = useState(false);
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
   const handleChange = (event) => {
     setTech(event.target.value);
@@ -30,6 +35,17 @@ const AssignServiceModal = ({ assign, setAssign, id }) => {
   const handleSubmit = async () => {
     let res = await assignServiceTechnician(id, tech);
     console.log("modal32", res);
+    if (res.message !== "Technican assigned succussfully!") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    handleClose();
+    setMessage(true);
+    setContent("Technican assigned succussfully!");
+    setType("success");
+    handleClose();
     handleClose();
   };
   // Get technician details
@@ -82,6 +98,12 @@ const AssignServiceModal = ({ assign, setAssign, id }) => {
           </Button>
         </DialogActions>
       </Dialog>
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </React.Fragment>
   );
 };

@@ -42,7 +42,7 @@ const ServiceCompletedPage = () => {
             <td>Contact</td>
             <td>CreatedAt</td>
             <td>CompletedAt</td>
-            <td>Technician</td>
+            <td>Service Engineer</td>
             <td>Status</td>
           </tr>
         </thead>

@@ -11,8 +11,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs from "dayjs";
-import { editInstallation, getInstallationDetails } from "@/service";
+import { editInstallation, getArea, getInstallationDetails } from "@/service";
 import AlertMessage from "./AlertMessage";
+// Select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const style = {
   position: "absolute",
@@ -43,6 +48,17 @@ export default function EditInstallationModal({
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
+
+  // to get area list from db
+  const [areaList, setAreaList] = useState({});
+  //get Area list
+  let getAreaList = async () => {
+    let resp = await getArea();
+    setAreaList(resp.getArea);
+  };
+  useEffect(()=>{
+    getAreaList();
+  },[]);
 
   useEffect(() => {
     setName(editdata.customerName);
@@ -203,18 +219,27 @@ export default function EditInstallationModal({
                 }}
               >
                 <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Area"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="area"
-                    name="area"
-                    value={area}
-                    onChange={(e) => {
-                      setArea(e.target.value);
-                    }}
-                  />
+                <Box>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Area
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={area}
+                        label="area"
+                        name="area"
+                        onChange={(e) => {
+                          setArea(e.target.value);
+                        }}
+                      >
+                        {areaList.length > 0 && areaList.map((val,idx) => (
+                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                 </div>
                 <div style={{ width: "100%", margin: "10px" }}>
                   <TextField

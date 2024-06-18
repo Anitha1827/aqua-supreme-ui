@@ -1,60 +1,53 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
-import { editProduct, getAllProduct } from "@/service";
-import AlertMessage from "./AlertMessage";
+import AlertMessage from './AlertMessage';
+import { getArea, updateArea } from '@/service';
 
-const EditProductModel = ({ edit, setEdit, editdata, setProduct }) => {
-  const [name, setName] = useState(editdata.productname);
-  const [model, setModel] = useState(editdata.productmodel);
-  // Snackbar
+const EditAreaModal = ({edit, setEdit,editdata,setArea}) => {
+    const [areaName, setAreaname] = useState(editdata.areaName)
+    useEffect(()=>{
+        setAreaname(editdata.areaName)
+    },[editdata])
+    // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
 
   const handleClose = () => setEdit(false);
-
-  useEffect(() => {
-    setName(editdata.productname);
-    setModel(editdata.productmodel);
-  }, [editdata]);
-
-  // fetch product details after edit the data
-  const getProduct = async () => {
-    let resp = await getAllProduct();
-    console.log("productdeatilsafterfetch24", resp.getproduct);
-    setProduct(resp.getproduct);
-  };
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    if (!name || !model) {
-      setMessage(true);
-      setContent("Please fill all the fields");
+    if(!areaName){
+        setMessage(true);
+      setContent("Please fill Area field");
       setType("error");
       return null;
     }
-    let data = { productname: name, productmodel: model, id: editdata._id };
+    let data = {areaName, id:editdata._id};
     data["id"] = editdata._id;
-    let resp = await editProduct(data);
-    if (resp.message !== "Product updated Successfully!") {
+    let resp = await updateArea(data)
+    if (resp.message !== "Area Updated successfully!") {
+        setMessage(true);
+        setContent("try again later");
+        setType("error");
+        return null;
+      }
+      handleClose();
       setMessage(true);
-      setContent("try again later");
-      setType("error");
-      return null;
-    }
-    handleClose();
-    setMessage(true);
-    setContent("Customer edited successfully!");
-    setType("success");
-    getProduct();
+      setContent("Area Edited successfully!");
+      setType("success");
+      getAreadata();
   };
 
-  // Modal style
-  const style = {
+  const getAreadata = async () => {
+    let resp = await getArea();
+    setArea(resp.getArea);
+  };
+   // Modal style
+   const style = {
     position: "absolute",
     top: "50%",
     left: "50%",
@@ -89,28 +82,14 @@ const EditProductModel = ({ edit, setEdit, editdata, setProduct }) => {
             >
               <TextField
                 id="outlined-basic"
-                label="Product Name"
+                label="Area Name"
                 variant="outlined"
                 sx={{ width: "100%" }}
-                type="name"
-                name="name"
-                value={name}
+                type="areaName"
+                name="areaName"
+                value={areaName}
                 onChange={(e) => {
-                  setName(e.target.value);
-                }}
-              />
-              <br />
-              <br />
-              <TextField
-                id="outlined-basic"
-                label="Model Number"
-                variant="outlined"
-                sx={{ width: "100%" }}
-                type="model"
-                name="model"
-                value={model}
-                onChange={(e) => {
-                  setModel(e.target.value);
+                  setAreaname(e.target.value);
                 }}
               />
               <br />
@@ -129,7 +108,7 @@ const EditProductModel = ({ edit, setEdit, editdata, setProduct }) => {
         messageType={type}
       />
     </div>
-  );
-};
+  )
+}
 
-export default EditProductModel;
+export default EditAreaModal

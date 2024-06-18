@@ -74,19 +74,25 @@ const ServiceCalls = () => {
       </div>
       <table className={styles.table}>
         <thead>
-          <tr>
+          <tr style={{ fontWeight: "bold" }}>
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
             <td>Created At</td>
             <td>Service Date</td>
+            <td>Service Engineer</td>
             <td>Action</td>
           </tr>
         </thead>
         <tbody>
           {service.length > 0 && search.length <= 0
             ? service.slice(startIndex, startIndex + 10).map((item, idx) => (
-                <tr key={idx}>
+                <tr key={idx}  className={`${
+                  item.isInstallationAssignTo &&
+                  item.isInstallationAssignTo.length > 0
+                    ? "Assigned"
+                    : "notAssigned"
+                }`}>
                   <td>{startIndex + idx + 1}</td>
                   <td>{item.customerName}</td>
                   <td>{item.customerPhone}</td>
@@ -96,6 +102,7 @@ const ServiceCalls = () => {
                       ? item.serviceDate.split("").slice(0, 10).join("")
                       : ""}
                   </td>
+                  <td>test</td>
                   <td>
                     <div
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}

@@ -3,36 +3,43 @@ import React, { useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Textarea from "@mui/joy/Textarea";
 import Button from "@mui/joy/Button";
-import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import "@/app/ui/dashboard/installation/Installation.css";
-import { styled } from "@mui/joy";
 import { useParams, useRouter } from "next/navigation";
-import { getServiceDetailsById, updateServiceStatus } from "@/service";
+import {
+  getNewUser,
+  getServiceDetailsById,
+  updateServiceStatus,
+} from "@/service";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-
-const VisuallyHiddenInput = styled("input")`
-  clip: rect(0 0 0 0);
-  clip-path: inset(50%);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  white-space: nowrap;
-  width: 1px;
-`;
+// Select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
 
 const ServiceStatus = () => {
+  let router = useRouter();
   const [data, setData] = useState();
   const [remarks, setRemarks] = useState("");
   const [pending, setPending] = useState(false);
-
-  let router = useRouter();
+  //technician name
+  const [tech, setTech] = useState("");
+  const [technician, setTechnician] = useState({});
+  const [loading, setLoading] = useState(false);
+  const handleChange = (event) => {
+    setTech(event.target.value);
+  };
+  // Get technician details
+  const getTechDetails = async () => {
+    let resp = await getNewUser();
+    setTechnician(resp.getuser);
+    setLoading(true);
+  };
 
   let params = useParams();
   let id = params.id;
-  console.log("line28", id);
 
   let getServiceDetails = async (id) => {
     let response = await getServiceDetailsById(id);
@@ -40,20 +47,19 @@ const ServiceStatus = () => {
     setPending(response.data.isPending);
     console.log("line36", response.data);
   };
-  console.log("line44", pending);
 
   useEffect(() => {
     getServiceDetails(id);
+    getTechDetails();
   }, []);
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-  let formdata = {remarks, isPending:pending, isCompleted:!pending}
-     await updateServiceStatus(id,formdata)
-    router.push("/dashboard/service")
-    console.log("formdata55",formdata)
-  }
-  
+    let formdata = { remarks, isPending: pending, isCompleted: !pending };
+    await updateServiceStatus(id, formdata);
+    router.push("/dashboard/service");
+    console.log("formdata55", formdata);
+  };
   return (
     <>
       {data && (
@@ -87,28 +93,49 @@ const ServiceStatus = () => {
             onChange={(e) => setRemarks(e.target.value)}
           />
 
-          {/* Pending update */}
-
-          <FormControlLabel
-            control={pending == true ? <Checkbox checked/> : <Checkbox/>}
-            label="Pending"
-            sx={{ "& .MuiSvgIcon-root": { fontSize: 28, color: "white" } }}
-            value={pending}
-            onChange={() => setPending(!pending)}
-          />
-
-          {/* Upload button */}
-          <Button
-            component="label"
-            role={undefined}
-            variant="contained"
-            tabIndex={-1}
-            startIcon={<CloudUploadIcon />}
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
+            }}
           >
-            Upload file
-            <VisuallyHiddenInput type="file" />
-          </Button>
+            <div style={{ width: "100%", margin: "10px" }}>
+              {/* Pending update */}
+              <FormControlLabel
+                control={pending == true ? <Checkbox checked /> : <Checkbox />}
+                label="Pending"
+                sx={{ "& .MuiSvgIcon-root": { fontSize: 28, color: "white" } }}
+                value={pending}
+                onChange={() => setPending(!pending)}
+              />
+            </div>
+            {/* select service engineer */}
+            <div style={{ width: "100%", margin: "10px" }}>
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Service Engineers
+                  </InputLabel>
 
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={tech}
+                    label="Teachnician"
+                    onChange={handleChange}
+                  >
+                    {loading &&
+                      technician.map((item, idx) => (
+                        <MenuItem value={item.name} key={idx}>
+                          {item.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+            </div>
+          </div>
           <Button
             variant="contained"
             color="white"
