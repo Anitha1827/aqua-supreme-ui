@@ -528,6 +528,54 @@ const deleteSpare = async(id) => {
     console.log(error)
     alert("try again later")
   }
+};
+
+// Add area name
+const addArea = async(data) => {
+  try {
+    let res = await axios.post(`${api_url}/area/createarea`,data);
+    console.log("addarea", res.data)
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    alert("Try again later")
+  }
+};
+
+// get area name
+const getArea = async(data) => {
+try {
+  let resp = await axios.get(`${api_url}/area/fetcharea`,data);
+  console.log("getarea", resp.data);
+  return resp.data;
+} catch (error) {
+  console.error(error);
+  alert("try again later")
+}
+};
+
+// update area name
+const updateArea = async(data) =>{
+  try {
+    let res = await axios.put(`${api_url}/area/updateArea`,data);
+    console.log("updateArea", res.data);
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later");
+  }
+};
+
+// Delete area name
+const deleteArea = async(id) => {
+  try {
+    let res = await axios.delete(`${api_url}/area/deleteArea/${id}`);
+    console.log("deleteArea", res.data);
+    return res.data
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
 }
 
 export {
@@ -575,4 +623,8 @@ export {
   getSpare,
   updateSpare,
   deleteSpare,
+  addArea,
+  getArea,
+  updateArea,
+  deleteArea, 
 };
