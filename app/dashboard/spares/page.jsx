@@ -77,8 +77,8 @@ const Spares = () => {
           </tr>
         </thead>
         <tbody>
-          {spares.length > 0 &&
-            spares.slice(startIndex, startIndex + 10).map((sprs, idx) => (
+          {spares.length > 0 && search.length <= 0
+           ? spares.slice(startIndex, startIndex + 10).map((sprs, idx) => (
               <tr key={idx}>
                 <td>{startIndex + idx + 1}</td>
                 <td>{sprs.spareName}</td>
@@ -106,7 +106,41 @@ const Spares = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+            :
+            spares.map((sprs, idx) => (sprs.spareName
+              .toLowerCase()
+              .includes(search.toLowerCase()) ||
+              sprs.spareNumber.includes(search)) && (
+              <tr key={idx}>
+                <td>{idx + 1}</td>
+                <td>{sprs.spareName}</td>
+                <td>{sprs.spareNumber}</td>
+                <td>
+                  <div
+                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                  >
+                    <Button
+                      onClick={() => handleEdit(sprs)}
+                      className={`${styles.button} ${styles.view}`}
+                      title="Edit"
+                      color="primary"
+                    >
+                      <FaRegEdit sx={{ fontSize: "20px" }} />
+                    </Button>
+
+                    <Button
+                      className={`${styles.button} ${styles.delete}`}
+                      onClick={() => handleDelete(sprs)}
+                      title="Delete"
+                    >
+                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))
+          }
         </tbody>
       </table>
       <Pagination

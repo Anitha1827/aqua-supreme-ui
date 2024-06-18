@@ -76,8 +76,8 @@ const AreaPage = () => {
           </tr>
         </thead>
         <tbody>
-          {area.length > 0 &&
-            area.slice(startIndex, startIndex + 10).map((val, idx) => (
+          {area.length > 0 && search.length <= 0
+           ? area.slice(startIndex, startIndex + 10).map((val, idx) => (
               <tr key={idx}>
                 <td>{startIndex + idx + 1}</td>
                 <td>{val.areaName}</td>
@@ -104,7 +104,39 @@ const AreaPage = () => {
                   </div>
                 </td>
               </tr>
-            ))}
+            ))
+          :
+          area.map((val, idx) => (val.areaName
+            .toLowerCase()
+            .includes(search.toLowerCase())) && (
+            <tr key={idx}>
+              <td>{idx + 1}</td>
+              <td>{val.areaName}</td>
+              <td>
+                <div
+                  className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                >
+                  <Button
+                      onClick={() => handleEdit(val)}
+                    className={`${styles.button} ${styles.view}`}
+                    title="Edit"
+                    color="primary"
+                  >
+                    <FaRegEdit sx={{ fontSize: "20px" }} />
+                  </Button>
+
+                  <Button
+                    className={`${styles.button} ${styles.delete}`}
+                      onClick={() => handleDelete(val)}
+                    title="Delete"
+                  >
+                    <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+                  </Button>
+                </div>
+              </td>
+            </tr>
+          ))
+          }
         </tbody>
       </table>
       <Pagination
