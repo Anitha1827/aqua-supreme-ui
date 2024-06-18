@@ -38,19 +38,17 @@ const validataionSchema = yup.object({
   pin: yup.string().required("Please Enter pin Number"),
 });
 
-const style = {
+const style = (isSmallScreen) => ({
   position: "absolute",
-  top: "50%",
+  top: isSmallScreen ? "10%" : "50%",
   left: "50%",
-  transform: "translate(-50%, -50%)",
+  transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -40%)",
   width: "50%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
-  p: 4,
-  overflow: "auto",
-  height: "80vh",
-};
+  padding: 4,
+});
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Select dropdown
