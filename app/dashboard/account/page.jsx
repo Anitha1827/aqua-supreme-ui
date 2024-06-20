@@ -62,7 +62,7 @@ const Settings = () => {
     }
     let res = await findingUser(token);
     if(res.type === "serviceEngineer"){
-      return router.push("dashboard/installations")
+      return router.push("/installations")
     }
   } 
   useEffect(()=>{
