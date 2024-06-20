@@ -33,7 +33,7 @@ const AssignInstallationModal = ({ assign, setAssign, id }) => {
   };
   const handleSubmit = async () => {
     let response = await assignTechnician(id, tech);
-    if (response.message !== "Technican assigned succussfully!") {
+    if (response.message !== "Technician assigned Successfully!") {
       setMessage(true);
       setContent("try again later");
       setType("error");
@@ -41,7 +41,7 @@ const AssignInstallationModal = ({ assign, setAssign, id }) => {
     }
     handleClose();
     setMessage(true);
-    setContent("Technican assigned succussfully!");
+    setContent("Technician assigned Successfully!");
     setType("success");
     handleClose();
   };

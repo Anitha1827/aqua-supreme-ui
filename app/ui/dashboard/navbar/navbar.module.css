@@ -45,5 +45,10 @@ color: var(--text);
     justify-content: space-evenly;
     gap: 10px;
     cursor: pointer;
+    align-items: center;
 }
-
+@media (max-width:786px){
+    .title{
+        padding-left: 40px;
+    }
+}

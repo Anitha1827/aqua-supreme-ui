@@ -102,7 +102,7 @@ const ServiceCalls = () => {
                       ? item.serviceDate.split("").slice(0, 10).join("")
                       : ""}
                   </td>
-                  <td>test</td>
+                  <td>{item.serviceAssignTo ? item.serviceAssignTo : "NotAssigned"}</td>
                   <td>
                     <div
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -161,6 +161,7 @@ const ServiceCalls = () => {
                           ? item.serviceDate.split("").slice(0, 10).join("")
                           : ""}
                       </td>
+                      <td>{item.serviceAssignTo ? item.serviceAssignTo : "NotAssigned"}</td>
                       <td>
                         <div
                           className={`${styles.buttons} ${styles.button} ${styles.view}`}

@@ -11,3 +11,12 @@
     background-color: blueviolet;
     /* background-color: #2e374a; */
 }
+@media(max-width:768px){
+    .container{
+        padding: 10px 20px;
+        align-items: center;
+        gap: 5px;
+        margin: 7.2px 0px;
+        border-radius: 10px;
+    }
+}

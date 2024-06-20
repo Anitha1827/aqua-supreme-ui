@@ -18,6 +18,21 @@ const login = async (data) => {
   }
 };
 
+// service engineer login
+const serviceEngineer = async(data) => {
+  try {
+    let response = await axios.post(`${api_url}/user/login`,data);
+    console.log("serviceEngineer", response);
+    if (response.data.token) {
+      localStorage.setItem("token", response.data.token);
+    }
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    alert("Try again Later!");
+  }
+}
+
 // Reset password  // data = {newpassword,oldpassword}
 const resetPassword = async (data) => {
   try {
@@ -590,6 +605,8 @@ const findingUser = async(token) => {
   }
 }
 
+
+
 export {
   login,
   resetPassword,
@@ -640,4 +657,5 @@ export {
   updateArea,
   deleteArea, 
   findingUser,
+  serviceEngineer,
 };

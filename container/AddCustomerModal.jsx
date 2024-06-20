@@ -23,7 +23,7 @@ const validataionSchema = yup.object({
   phone: yup.string().required("please Enter Phone Number"),
   doorNo: yup.string().required("Please Enter door Number"),
   street: yup.string().required("Please Enter Streat"),
-  area: yup.string().required("Please Enter Area"),
+  area: yup.string().required("Please select Area"),
   pin: yup.string().required("Please Enter Pin Number"),
 });
 

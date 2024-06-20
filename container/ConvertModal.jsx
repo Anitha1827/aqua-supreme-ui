@@ -25,6 +25,7 @@ import {
   addNewCustomer,
   addNewInstallation,
   deleteLead,
+  getArea,
   getLead,
 } from "@/service";
 import AlertMessage from "./AlertMessage";
@@ -32,7 +33,7 @@ import AlertMessage from "./AlertMessage";
 const validataionSchema = yup.object({
   doorNo: yup.string().required("Please Enter Door Number"),
   street: yup.string().required("Please Enter street"),
-  area: yup.string().required("Please Enter Area"),
+  area: yup.string().required("Please select Area"),
   pin: yup.string().required("Please Enter pin Number"),
   date: yup.string().required("Please select Date"),
 });
@@ -54,6 +55,8 @@ const ConvertModal = ({ cust, setCust, editdata, setLead }) => {
   const [message, setMessage] = useState(false);
   const [messagetype, setMessageType] = useState("");
   const [content, setContent] = useState("");
+  //for area list
+  const [area, setArea] = useState({});
 
   // Select dropdown
   const [type, setType] = useState("");
@@ -140,6 +143,15 @@ const ConvertModal = ({ cust, setCust, editdata, setLead }) => {
     setName(editdata.name);
     setPhone(editdata.phone);
   }, [editdata]);
+  // Get area list
+  let getAreaList = async () => {
+    let resp = await getArea();
+    setArea(resp.getArea);
+  };
+
+  useEffect(() => {
+    getAreaList();
+  }, []);
   return (
     <div>
       <Modal
@@ -258,16 +270,26 @@ const ConvertModal = ({ cust, setCust, editdata, setLead }) => {
                 }}
               >
                 <div style={{ margin: "10px", width: "100%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Area"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="area"
-                    name="area"
-                    value={values.area}
-                    onChange={handleChange}
-                  />
+                  {/* Address Field */}
+                  <Box>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Area
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={values.area}
+                        label="area"
+                        name="area"
+                        onChange={handleChange}
+                      >
+                        {area.length > 0 && area.map((val, idx) => (
+                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
                   {errors.area ? (
                     <div style={{ color: "crimson", padding: "5px" }}>
                       {errors.area}

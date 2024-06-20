@@ -15,19 +15,19 @@ const validataionSchema = yup.object({
   areaName: yup.string().required("Please Enter Area!"),
 });
 
-const style = {
+const style = (isSmallScreen) => ({
   position: "absolute",
-  top: "50%",
+  top: isSmallScreen ? "10%" : "50%",
   left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "25%",
+  transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -50%)",
+  width: "50%",
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-//   overflow: "auto",
-  height: "30vh",
-};
+  overflow: "auto",
+  height: "70vh",
+});
 
 const AddAreaModal = ({ open, setOpen, setArea }) => {
   // Snackbar

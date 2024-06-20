@@ -6,8 +6,8 @@ import Button from "@mui/joy/Button";
 import "@/app/ui/dashboard/installation/Installation.css";
 import { useParams, useRouter } from "next/navigation";
 import {
-  getNewUser,
   getServiceDetailsById,
+  getSpare,
   updateServiceStatus,
 } from "@/service";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -18,23 +18,26 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
+import { Chip } from "@mui/material";
 
 const ServiceStatus = () => {
   let router = useRouter();
   const [data, setData] = useState();
   const [remarks, setRemarks] = useState("");
   const [pending, setPending] = useState(false);
-  //technician name
-  const [tech, setTech] = useState("");
-  const [technician, setTechnician] = useState({});
+  //spare
+  const [selectedSpares, setSelectedSpares] = useState([]);
+  const [spares, setSpares] = useState([]);
   const [loading, setLoading] = useState(false);
+
   const handleChange = (event) => {
-    setTech(event.target.value);
+    setSelectedSpares(event.target.value);
   };
-  // Get technician details
-  const getTechDetails = async () => {
-    let resp = await getNewUser();
-    setTechnician(resp.getuser);
+
+  // Get Spare data
+  const getSparedata = async () => {
+    let resp = await getSpare();
+    setSpares(resp.getSpare);
     setLoading(true);
   };
 
@@ -50,12 +53,12 @@ const ServiceStatus = () => {
 
   useEffect(() => {
     getServiceDetails(id);
-    getTechDetails();
+    getSparedata();
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let formdata = { remarks, isPending: pending, isCompleted: !pending };
+    let formdata = { remarks, isPending: pending, isCompleted: !pending , selectedSpares:selectedSpares};
     await updateServiceStatus(id, formdata);
     router.push("/dashboard/service");
     console.log("formdata55", formdata);
@@ -110,25 +113,31 @@ const ServiceStatus = () => {
                 onChange={() => setPending(!pending)}
               />
             </div>
-            {/* select service engineer */}
+            {/* select spares */}
             <div style={{ width: "100%", margin: "10px" }}>
               <Box sx={{ minWidth: 120 }}>
                 <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">
-                    Service Engineers
-                  </InputLabel>
+                  <InputLabel id="demo-multiple-chip-label">Spares</InputLabel>
 
                   <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={tech}
-                    label="Teachnician"
+                    labelId="demo-multiple-chip-label"
+                    id="demo-multiple-chip"
+                    multiple
+                    value={selectedSpares}
                     onChange={handleChange}
+                    inputProps={{ "aria-label": "Without label" }}
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value) => (
+                          <Chip key={value} label={value} />
+                        ))}
+                      </Box>
+                    )}
                   >
                     {loading &&
-                      technician.map((item, idx) => (
-                        <MenuItem value={item.name} key={idx}>
-                          {item.name}
+                      spares.map((item, idx) => (
+                        <MenuItem value={item.spareName} key={idx}>
+                          {item.spareName} <span> ({item.spareNumber})</span>
                         </MenuItem>
                       ))}
                   </Select>
@@ -138,9 +147,10 @@ const ServiceStatus = () => {
           </div>
           <Button
             variant="contained"
-            color="white"
+            color="primary"
             type="submit"
             className="Input"
+            style={{background:"blue"}}
           >
             Submit
           </Button>

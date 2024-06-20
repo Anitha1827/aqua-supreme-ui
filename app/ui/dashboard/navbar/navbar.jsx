@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./navbar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
@@ -12,6 +12,7 @@ import Typography from "@mui/material/Typography";
 import { Button } from "@nextui-org/react";
 import { MdLogout } from "react-icons/md";
 import { IoPerson } from "react-icons/io5";
+import { findingUser } from "@/service";
 
 const Navbar = () => {
   const pathname = usePathname();
@@ -23,6 +24,26 @@ const Navbar = () => {
   };
   // popover
   const [anchorEl, setAnchorEl] = useState(null);
+  // user type
+  const [usertype, setUserType] = useState("Service Engineer");
+
+  useEffect(()=>{
+    async function findUser() {
+      let token = localStorage.getItem("token");
+      if(!token){
+        router.push("/login");
+        return null;
+      }
+    let res = await findingUser(token);
+    if(res.type == "admin"){
+      setUserType("Admin");
+    }else if(res.type == "Owner"){
+      setUserType("Owner");
+    }
+    }
+    findUser();
+  },[]) ;
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,7 +81,7 @@ const Navbar = () => {
               height="50"
             />
             <div className={styles2.userDetail}>
-              <span className={styles2.username}>Admin</span>
+              <span className={styles2.username}>{usertype}</span>
               {/* <span className={styles2.userTitle}>Administrator</span> */}
             </div>
           </div>

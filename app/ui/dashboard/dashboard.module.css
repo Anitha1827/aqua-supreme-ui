@@ -12,3 +12,9 @@
   flex: 4;
   padding: 20px;
 }
+
+@media (max-width:768px){
+  .menu{
+    padding:0px;
+  }
+}

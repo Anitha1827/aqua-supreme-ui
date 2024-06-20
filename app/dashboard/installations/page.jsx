@@ -5,7 +5,11 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { Button } from "@mui/material";
 import AddInstallationModal from "@/container/AddInstallationModal.jsx";
-import { deleteInstallation, getInstallationDetails } from "@/service";
+import {
+  deleteInstallation,
+  findingUser,
+  getInstallationDetails,
+} from "@/service";
 import EditInstallationModal from "@/container/EditInstallationModal";
 // icons
 import { FaRegEdit } from "react-icons/fa";
@@ -26,6 +30,8 @@ const Installations = () => {
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // user type
+  const [usertype, setUserType] = useState("Service Engineer");
 
   const handleEdit = (inst) => {
     setEdit(true);
@@ -44,9 +50,29 @@ const Installations = () => {
   }, []);
 
   const getInstallation = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if (res.type == "admin") {
+      setUserType("Admin");
+    } else if (res.type == "Owner") {
+      setUserType("Owner");
+    }
+
     let response = await getInstallationDetails();
     console.log("page23", response);
-    setInstall(response.getAllCustomerDetails);
+    let data = response.getAllCustomerDetails;
+    if(res.type === "serviceEngineer"){
+      data = response.getAllCustomerDetails.filter(
+        (val) =>
+          val.isInstallationAssignTo &&
+          val.isInstallationAssignTo == res.user.name
+      );
+    }
+    setInstall(data);
   };
 
   // Delete Functionalities
@@ -81,6 +107,7 @@ const Installations = () => {
             <td>Contact</td>
             <td>Created At</td>
             <td>Installation Date</td>
+            <td>Service Engineer</td>
             <td>Action</td>
           </tr>
         </thead>
@@ -104,6 +131,11 @@ const Installations = () => {
                     {inst.duedate
                       ? inst.duedate.split("").slice(0, 10).join("")
                       : ""}
+                  </td>
+                  <td>
+                    {inst.isInstallationAssignTo
+                      ? inst.isInstallationAssignTo
+                      : "NotAssigned"}
                   </td>
                   <td>
                     <div
@@ -164,6 +196,11 @@ const Installations = () => {
                         {inst.lastServicedAt
                           ? inst.lastServicedAt.split("").slice(0, 10).join("")
                           : "24-05-2024"}
+                      </td>
+                      <td>
+                        {inst.isInstallationAssignTo
+                          ? inst.isInstallationAssignTo
+                          : "NotAssigned"}
                       </td>
                       <td>
                         <div
