@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import { installationPending } from "@/service";
+import { findingUser, installationPending } from "@/service";
 import { useRouter } from "next/navigation";
 
 const InstallationPendingPage = () => {
@@ -15,9 +15,23 @@ const InstallationPendingPage = () => {
   let router = useRouter();
 
   const getPendingData = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
     let response = await installationPending();
+    let data = response.getpendingdata;
+    if(res.type === "serviceEngineer"){
+      data = response.getpendingdata.filter(
+        (val) =>
+          val.isInstallationAssignTo &&
+          val.isInstallationAssignTo == res.user.name
+      );
+    }
     console.log("pending15", response.getpendingdata);
-    setData(response.getpendingdata);
+    setData(data);
   };
 
   useEffect(() => {

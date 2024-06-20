@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import { getServicePendingData } from "@/service";
+import { findingUser, getServicePendingData } from "@/service";
 import { useRouter } from "next/navigation";
 
 const ServicePendingPage = () => {
@@ -15,8 +15,22 @@ const ServicePendingPage = () => {
   let router = useRouter();
 
   let getPendingDetails = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
     let response = await getServicePendingData();
-    setData(response.getAllServiceDetails);
+    let data = response.getAllServiceDetails;
+    if(res.type === "serviceEngineer"){
+      data = response.getAllServiceDetails.filter(
+        (val) =>
+          val.serviceAssignTo &&
+          val.serviceAssignTo == res.user.name
+      );
+    }
+    setData(data);
   };
 
   useEffect(() => {

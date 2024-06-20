@@ -3,17 +3,33 @@ import React, { useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
-import { getServiceCompleted } from "@/service";
+import { findingUser, getServiceCompleted } from "@/service";
+import { useRouter } from "next/navigation";
 
 const ServiceCompletedPage = () => {
+  let router = useRouter();
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
 
   let getCompletedData = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
     let response = await getServiceCompleted();
-    setData(response.getAllServiceDetails);
+    let data = response.getAllServiceDetails;
+    if(res.type === "serviceEngineer"){
+      data = response.getAllServiceDetails.filter(
+        (val) =>
+          val.isInstallationAssignTo &&
+          val.isInstallationAssignTo == res.user.name
+      );
+    }
+    setData(data);
     console.log("completedpage14", response.getAllServiceDetails);
   };
 
