@@ -95,9 +95,9 @@ const Installations = () => {
           />
         </div>
 
-        <Button onClick={handleOpen} variant="contained">
+      {usertype !== "Service Engineer" &&  <Button onClick={handleOpen} variant="contained">
           Add
-        </Button>
+        </Button>}
       </div>
       <table className={styles.table}>
         <thead>
@@ -142,20 +142,23 @@ const Installations = () => {
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
                       {/* Edit button */}
+                      {usertype !== "Service Engineer" && 
                       <Button
                         onClick={() => handleEdit(inst)}
                         title="Edit Data"
                       >
                         <FaRegEdit sx={{ fontSize: "20px" }} />
                       </Button>
+                        }
                       {/* Assign person button */}
+                      { usertype !== "Service Engineer" && 
                       <Button
                         onClick={() => handleAssign(inst._id)}
                         title="Assign technician"
                       >
                         <IoPersonAddOutline sx={{ fontSize: "20px" }} />
                       </Button>
-
+                      }
                       {/* status update button */}
                       <Button
                         onClick={() =>
@@ -166,7 +169,7 @@ const Installations = () => {
                         <TaskAltIcon sx={{ fontSize: "20px" }} />
                       </Button>
                       {/* Delete button */}
-                      <Button
+                      { usertype !== "Service Engineer" && <Button
                         aria-label="delete"
                         // size="large"
                         className={`${styles.button} ${styles.delete}`}
@@ -176,7 +179,7 @@ const Installations = () => {
                         <DeleteIcon
                           sx={{ fontSize: "20px", color: "crimson" }}
                         />
-                      </Button>
+                      </Button>}
                     </div>
                   </td>
                 </tr>
@@ -207,19 +210,19 @@ const Installations = () => {
                           className={`${styles.buttons} ${styles.button} ${styles.view}`}
                         >
                           {/* Edit button */}
-                          <Button
+                          {usertype !== "Service Engineer" && <Button
                             onClick={() => handleEdit(inst)}
                             title="Edit Data"
                           >
                             <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>
+                          </Button>}
                           {/* Assign person button */}
-                          <Button
+                          {usertype !== "Service Engineer" &&  <Button
                             onClick={() => handleAssign(inst._id)}
                             title="Assign technician"
                           >
                             <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                          </Button>
+                          </Button>}
 
                           {/* status update button */}
                           <Button
@@ -233,7 +236,7 @@ const Installations = () => {
                             <TaskAltIcon sx={{ fontSize: "20px" }} />
                           </Button>
                           {/* Delete button */}
-                          <Button
+                         {usertype !== "Service Engineer" &&  <Button
                             aria-label="delete"
                             // size="large"
                             className={`${styles.button} ${styles.delete}`}
@@ -243,7 +246,7 @@ const Installations = () => {
                             <DeleteIcon
                               sx={{ fontSize: "20px", color: "crimson" }}
                             />
-                          </Button>
+                          </Button>}
                         </div>
                       </td>
                     </tr>

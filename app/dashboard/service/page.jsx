@@ -6,7 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import AddServiceModal from "@/container/AddServiceModal";
 import EditServiceModal from "@/container/EditServiceModal";
-import { deleteService, getService } from "@/service";
+import { deleteService, findingUser, getService } from "@/service";
 import { useRouter } from "next/navigation";
 import { IoPersonAddOutline } from "react-icons/io5";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
@@ -26,6 +26,8 @@ const ServiceCalls = () => {
   const [id, setId] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // user type
+  const [usertype, setUserType] = useState("Service Engineer");
 
   const handleAssign = (id) => {
     setAssign(true);
@@ -38,9 +40,28 @@ const ServiceCalls = () => {
   };
 
   let getservicemodal = async () => {
-    let res = await getService();
-    console.log("line39", res.getAllServiceDetails);
-    setService(res.getAllServiceDetails);
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    let response = await getService();
+    if (res.type == "admin") {
+      setUserType("Admin");
+    } else if (res.type == "Owner") {
+      setUserType("Owner");
+    }
+    console.log("line39", response.getAllServiceDetails);
+    let data = response.getAllServiceDetails;
+    if(res.type === "serviceEngineer"){
+      data = response.getAllServiceDetails.filter(
+        (val) =>
+          val.isInstallationAssignTo &&
+          val.isInstallationAssignTo == res.user.name
+      );
+    }
+    setService(data);
   };
   useEffect(() => {
     getservicemodal();
