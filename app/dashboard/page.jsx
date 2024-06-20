@@ -6,7 +6,7 @@ import Pagination from "../ui/dashboard/pagination/pagination";
 // modal
 import Button from "@mui/material/Button";
 import AddCustomerModel from "@/container/AddCustomerModal";
-import { deleteCustomer, getAllCustomer } from "@/service";
+import { deleteCustomer, findingUser, getAllCustomer } from "@/service";
 import EditCustomerModal from "@/container/EditCustomerModal";
 // icons
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -34,8 +34,17 @@ const Dashboard = () => {
 
   // To get Customer details from DB
   let getCustomerDetails = async () => {
-    let res = await getAllCustomer();
-    setCustomer(res.getAllCustomerDetails);
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+    let response = await getAllCustomer();
+    setCustomer(response.getAllCustomerDetails);
   };
   useEffect(() => {
     let token = localStorage.getItem("token");

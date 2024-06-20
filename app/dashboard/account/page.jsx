@@ -1,21 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Card from "@mui/material/Card";
-// import CardContent from "@mui/material/CardContent";
-// import Typography from "@mui/material/Typography";
-// import Avatar from "@mui/material/Avatar";
-// import Stack from "@mui/material/Stack";
 import "@/app/ui/settings/settings.css";
-// import styles from "@/app/ui/dashboard/users/users.module.css";
 // Tabs
 import { Tabs, Tab, Button } from "@nextui-org/react";
 import TextField from "@mui/material/TextField";
-// import DeleteIcon from "@mui/icons-material/Delete";
-import { resetPassword } from "@/service";
+import { findingUser, resetPassword } from "@/service";
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
 import AlertMessage from "@/container/AlertMessage";
+import { useRouter } from "next/navigation";
 
 const validataionSchema = yup.object({
   oldPassword: yup.string().required("Please Enter OldPassword"),
@@ -24,6 +19,7 @@ const validataionSchema = yup.object({
 });
 
 const Settings = () => {
+  let router = useRouter();
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -57,6 +53,21 @@ const Settings = () => {
       }
     },
   });
+
+  async function finduser(){
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+  } 
+  useEffect(()=>{
+    finduser()
+  },[])
 
   return (
     <div className="container">

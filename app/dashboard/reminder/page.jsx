@@ -2,13 +2,15 @@
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/app/ui/dashboard/users/users.module.css";
-import { getServiceReminderCustomer } from "@/service";
+import { findingUser, getServiceReminderCustomer } from "@/service";
 import { FaRegEdit } from "react-icons/fa";
 import { Button } from "@mui/material";
 import EditDueDateModal from "@/container/EditDueDateModal";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
+import { useRouter } from "next/navigation";
 
 const ServiceReminder = () => {
+  let router = useRouter();
   const [search, setSearch] = useState("");
   const [reminder, setReminder] = useState({});
   const [open, setOpen] = useState(false);
@@ -35,6 +37,16 @@ const ServiceReminder = () => {
 
   // get service reminder data
   const getservicereminder = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+
     let resp = await getServiceReminderCustomer();
     let data = resp.data.filter((val) => val.duedate && val.duedate.length > 0);
     // Sort the customers array

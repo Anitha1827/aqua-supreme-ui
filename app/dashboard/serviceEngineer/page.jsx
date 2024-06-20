@@ -5,12 +5,14 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import Button from "@mui/material/Button";
 import AddUserModel from "@/container/AddUserModel";
-import { deleteUser, getNewUser } from "@/service";
+import { deleteUser, findingUser, getNewUser } from "@/service";
 import EditUserModal from "@/container/EditUserModal";
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useRouter } from "next/navigation";
 
 const UserPage = () => {
+  let router = useRouter();
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const handleOpen = () => setOpen(true);
@@ -28,9 +30,19 @@ const UserPage = () => {
   const [search, setSearch] = useState("");
 
   let getusesr = async () => {
-    let res = await getNewUser();
-    console.log("res", res);
-    setTech(res.getuser);
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+
+    let response = await getNewUser();
+    console.log("res", response);
+    setTech(response.getuser);
   };
 
   useEffect(() => {

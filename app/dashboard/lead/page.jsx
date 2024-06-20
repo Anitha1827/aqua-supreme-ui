@@ -8,11 +8,12 @@ import Button from "@mui/material/Button";
 import AddLeadModal from "@/container/AddLeadModal";
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { deleteLead, getLead } from "@/service";
+import { deleteLead, findingUser, getLead } from "@/service";
 import EditLeadModal from "@/container/EditLeadModal";
 import { IoPersonAddOutline } from "react-icons/io5";
 import ConvertModal from "@/container/ConvertModal";
-import { TextField } from "@mui/material";
+import { useRouter } from "next/navigation";
+
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -28,6 +29,7 @@ const LeadCreation = () => {
   const [lead, setLead] = useState([]);
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  let router = useRouter();
 
   const handleOpen = () => setOpen(true);
 
@@ -56,6 +58,16 @@ const LeadCreation = () => {
 
   // get lead data
   const getLeadData = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+
     let resp = await getLead();
     console.log("leads22", resp.getlead);
     setLead(resp.getlead);

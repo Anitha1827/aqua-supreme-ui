@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { IoIosArrowBack } from "react-icons/io";
 import "@/app/ui/dashboard/addcustomer/showcusstomer.css";
-import { getCustomerDetailsById } from "@/service";
+import { findingUser, getCustomerDetailsById } from "@/service";
 import { useParams, useRouter } from "next/navigation";
 
 const CustomerDetailsPage = () => {
@@ -14,6 +14,15 @@ const CustomerDetailsPage = () => {
   let id = params.id;
 
   const getDetails = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
     let resp = await getCustomerDetailsById(id);
     setDetails(resp.data);
   };

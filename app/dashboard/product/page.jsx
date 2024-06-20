@@ -4,12 +4,13 @@ import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
 import AddProductModal from "@/container/AddProductModal";
-import { deleteProduct, getAllProduct } from "@/service";
+import { deleteProduct, findingUser, getAllProduct } from "@/service";
 // icons
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditProductModel from "@/container/EditProductModel";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
+import { useRouter } from "next/navigation";
 
 const ProductPage = () => {
   const [search, setSearch] = useState("");
@@ -21,9 +22,20 @@ const ProductPage = () => {
   const [editdata, setEditData] = useState({});
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  let router = useRouter();
 
   // Get Products
   let getProduct = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+
     let resp = await getAllProduct();
     console.log("produPage17", resp.getproduct);
     setProduct(resp.getproduct);

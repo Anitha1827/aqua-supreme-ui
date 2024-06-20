@@ -7,10 +7,12 @@ import { Button } from "@nextui-org/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
 import AddAreaModal from "@/container/AddAreaModal";
-import { deleteArea, getArea } from "@/service";
+import { deleteArea, findingUser, getArea } from "@/service";
 import EditAreaModal from "@/container/EditAreaModal";
+import { useRouter } from "next/navigation";
 
 const AreaPage = () => {
+  let router = useRouter();
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
@@ -35,9 +37,19 @@ const AreaPage = () => {
 
 //fetching data 
   const getAreadata = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
     let resp = await getArea();
     setArea(resp.getArea);
   };
+  
   useEffect(() => {
     getAreadata();
   }, []);

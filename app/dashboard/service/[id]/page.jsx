@@ -6,6 +6,7 @@ import Button from "@mui/joy/Button";
 import "@/app/ui/dashboard/installation/Installation.css";
 import { useParams, useRouter } from "next/navigation";
 import {
+  findingUser,
   getServiceDetailsById,
   getSpare,
   updateServiceStatus,
@@ -36,6 +37,15 @@ const ServiceStatus = () => {
 
   // Get Spare data
   const getSparedata = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
     let resp = await getSpare();
     setSpares(resp.getSpare);
     setLoading(true);

@@ -7,10 +7,12 @@ import { Button } from "@nextui-org/react";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
 import AddSparesModal from "@/container/AddSparesModal";
-import { deleteSpare, getSpare } from "@/service";
+import { deleteSpare, findingUser, getSpare } from "@/service";
 import EditSparesModal from "@/container/EditSparesModal";
+import { useRouter } from "next/navigation";
 
 const Spares = () => {
+  let router = useRouter();
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
@@ -24,6 +26,16 @@ const Spares = () => {
 
   // Get Spare data
   const getSparedata = async () => {
+    let token = localStorage.getItem("token");
+    if (!token) {
+      router.push("/login");
+      return null;
+    }
+    let res = await findingUser(token);
+    if(res.type === "serviceEngineer"){
+      return router.push("dashboard/installations")
+    }
+
     let resp = await getSpare();
     setSpares(resp.getSpare);
   };
