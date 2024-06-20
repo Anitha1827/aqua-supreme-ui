@@ -57,8 +57,8 @@ const ServiceCalls = () => {
     if(res.type === "serviceEngineer"){
       data = response.getAllServiceDetails.filter(
         (val) =>
-          val.isInstallationAssignTo &&
-          val.isInstallationAssignTo == res.user.name
+          val.serviceAssignTo &&
+          val.serviceAssignTo == res.user.name
       );
     }
     setService(data);
@@ -85,13 +85,13 @@ const ServiceCalls = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <Button
+        {usertype !== "Service Engineer" && <Button
           onClick={handleOpen}
           variant="contained"
           className={styles.addbutton}
         >
           Add
-        </Button>
+        </Button>}
       </div>
       <table className={styles.table}>
         <thead>
@@ -109,8 +109,8 @@ const ServiceCalls = () => {
           {service.length > 0 && search.length <= 0
             ? service.slice(startIndex, startIndex + 10).map((item, idx) => (
                 <tr key={idx}  className={`${
-                  item.isInstallationAssignTo &&
-                  item.isInstallationAssignTo.length > 0
+                  item.serviceAssignTo &&
+                  item.serviceAssignTo.length > 0
                     ? "Assigned"
                     : "notAssigned"
                 }`}>
@@ -128,21 +128,21 @@ const ServiceCalls = () => {
                     <div
                       className={`${styles.buttons} ${styles.button} ${styles.view}`}
                     >
-                      <Button
+                     {usertype !== "Service Engineer" && <Button
                         onClick={() => handleEdit(item)}
                         className={`${styles.button} ${styles.view}`}
                         title="Edit"
                         color="primary"
                       >
                         <FaRegEdit sx={{ fontSize: "20px" }} />
-                      </Button>
+                      </Button>}
                       {/* Assign person button */}
-                      <Button
+                      {usertype !== "Service Engineer" && <Button
                         onClick={() => handleAssign(item._id)}
                         title="Assign technician"
                       >
                         <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                      </Button>
+                      </Button>}
 
                       {/* status update button */}
                       <Button
@@ -153,7 +153,7 @@ const ServiceCalls = () => {
                       >
                         <TaskAltIcon sx={{ fontSize: "20px" }} />
                       </Button>
-                      <button
+                     {usertype !== "Service Engineer" && <button
                         className={`${styles.button} ${styles.delete}`}
                         onClick={() => handleDelete(item)}
                         title="Delete"
@@ -161,7 +161,7 @@ const ServiceCalls = () => {
                         <DeleteIcon
                           sx={{ fontSize: "20px", color: "crimson" }}
                         />
-                      </button>
+                      </button>}
                     </div>
                   </td>
                 </tr>
@@ -187,21 +187,21 @@ const ServiceCalls = () => {
                         <div
                           className={`${styles.buttons} ${styles.button} ${styles.view}`}
                         >
-                          <Button
+                          {usertype !== "Service Engineer" && <Button
                             onClick={() => handleEdit(item)}
                             className={`${styles.button} ${styles.view}`}
                             title="Edit"
                             color="primary"
                           >
                             <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>
+                          </Button>}
                           {/* Assign person button */}
-                          <Button
+                          {usertype !== "Service Engineer" && <Button
                             onClick={() => handleAssign(item._id)}
                             title="Assign technician"
                           >
                             <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                          </Button>
+                          </Button>}
 
                           {/* status update button */}
                           <Button
@@ -212,7 +212,7 @@ const ServiceCalls = () => {
                           >
                             <TaskAltIcon sx={{ fontSize: "20px" }} />
                           </Button>
-                          <button
+                          {usertype !== "Service Engineer" && <button
                             className={`${styles.button} ${styles.delete}`}
                             onClick={() => handleDelete(item)}
                             title="Delete"
@@ -220,7 +220,7 @@ const ServiceCalls = () => {
                             <DeleteIcon
                               sx={{ fontSize: "20px", color: "crimson" }}
                             />
-                          </button>
+                          </button>}
                         </div>
                       </td>
                     </tr>
