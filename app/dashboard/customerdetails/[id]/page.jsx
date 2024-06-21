@@ -21,7 +21,7 @@ const CustomerDetailsPage = () => {
     }
     let res = await findingUser(token);
     if(res.type === "serviceEngineer"){
-      return router.push("dashboard/installations")
+      return router.push("/dashboard/installations")
     }
     let resp = await getCustomerDetailsById(id);
     setDetails(resp.data);

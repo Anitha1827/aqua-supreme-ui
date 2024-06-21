@@ -65,7 +65,7 @@ const LeadCreation = () => {
     }
     let res = await findingUser(token);
     if(res.type === "serviceEngineer"){
-      return router.push("/installations")
+      return router.push("/dashboard/installations")
     }
 
     let resp = await getLead();
