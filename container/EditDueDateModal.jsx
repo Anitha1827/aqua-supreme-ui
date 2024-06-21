@@ -34,6 +34,7 @@ const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
     e.preventDefault();
     let data = { duedate };
     data["id"] = editdata._id;
+    data["isReassigned"] = true;
     let resp = await updateduedate(data);
     if (resp.message !== "Due date Updated Succesfully!") {
       setMessage(true);
