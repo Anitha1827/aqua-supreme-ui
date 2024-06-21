@@ -60,30 +60,31 @@ export default function AddServiceModal({ open, setOpen, setService }) {
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
-      if (id == "") {
-        setMessage(true);
-        setContent("please select the customer");
-        setType("error");
-        return null;
-      }
-      let val = custname.filter((val) => val._id == id);
-      data["phone"] = val[0].customerPhone;
-      data["customerId"] = id;
-      data["customerName"] = val[0].customerName;
-      let res = await addService(data);
-      if (res.message !== "Service Created Successfully!") {
-        setMessage(true);
-        setContent("try again later");
-        setType("error");
-        return null;
-      }
-      handleClose();
-      setMessage(true);
-      setContent("Service added successfully!");
-      setType("success");
-      setLoading(true);
-      setId("");
-      getservicemodal();
+      console.log("dataline63",data);
+      // if (id == "") {
+      //   setMessage(true);
+      //   setContent("please select the customer");
+      //   setType("error");
+      //   return null;
+      // }
+      // let val = custname.filter((val) => val._id == id);
+      // data["phone"] = val[0].customerPhone;
+      // data["customerId"] = id;
+      // data["customerName"] = val[0].customerName;
+      // let res = await addService(data);
+      // if (res.message !== "Service Created Successfully!") {
+      //   setMessage(true);
+      //   setContent("try again later");
+      //   setType("error");
+      //   return null;
+      // }
+      // handleClose();
+      // setMessage(true);
+      // setContent("Service added successfully!");
+      // setType("success");
+      // setLoading(true);
+      // setId("");
+      // getservicemodal();
     },
   });
 

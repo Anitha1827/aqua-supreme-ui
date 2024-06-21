@@ -220,7 +220,6 @@ export default function EditCustomerModal({
                     </FormControl>
                   </Box>
                 </div>
-
                 <div style={{ width: "100%", margin: "10px" }}>
                   <TextField
                     id="outlined-multiline-flexible"
