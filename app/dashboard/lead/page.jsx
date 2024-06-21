@@ -13,7 +13,12 @@ import EditLeadModal from "@/container/EditLeadModal";
 import { IoPersonAddOutline } from "react-icons/io5";
 import ConvertModal from "@/container/ConvertModal";
 import { useRouter } from "next/navigation";
-
+//select dropdown
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -29,6 +34,12 @@ const LeadCreation = () => {
   const [lead, setLead] = useState([]);
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  //select dropdown
+  const [alert, setAlert] = useState("");
+
+  const handleChange = (event) => {
+    setAlert(event.target.value);
+  };
   let router = useRouter();
 
   const handleOpen = () => setOpen(true);
@@ -64,8 +75,8 @@ const LeadCreation = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
 
     let resp = await getLead();
@@ -104,6 +115,7 @@ const LeadCreation = () => {
             <td>Name</td>
             <td>Phone Number</td>
             <td>Remarks</td>
+            <td>Notification</td>
             <td>Action</td>
           </tr>
         </thead>
@@ -116,8 +128,11 @@ const LeadCreation = () => {
                     <td>{val.name}</td>
                     <td>{val.phone}</td>
                     <td>
-                          <span className={styles.tabletd} title={val.feedback} >{val.feedback}</span>
+                      <span className={styles.tabletd} title={val.feedback}>
+                        {val.feedback}
+                      </span>
                     </td>
+                    <td>123</td>
                     <td>
                       <div
                         className={`${styles.buttons} ${styles.button} ${styles.view}`}
@@ -163,7 +178,29 @@ const LeadCreation = () => {
                         <td>{val.name}</td>
                         <td>{val.phone}</td>
                         <td>
-                           <span className={styles.tabletd} title={val.feedback} >{val.feedback}</span>
+                          <span className={styles.tabletd} title={val.feedback}>
+                            {val.feedback}
+                          </span>
+                        </td>
+                        <td>
+                          {/* alert to admin/owner */}
+                          <Box sx={{ minWidth: 120 }}>
+                            <FormControl fullWidth>
+                              <InputLabel id="demo-simple-select-label">
+                                Notification
+                              </InputLabel>
+                              <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                value={alert}
+                                label="alert"
+                                onChange={handleChange}
+                              >
+                                <MenuItem value="Admin">Admin</MenuItem>
+                                <MenuItem value="Owner">Owner</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Box>
                         </td>
                         <td>
                           <div

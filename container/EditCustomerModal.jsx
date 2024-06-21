@@ -37,8 +37,9 @@ export default function EditCustomerModal({
   const [street, setStreet] = useState(editdata.address.street);
   const [area, setArea] = useState(editdata.address.area);
   const [pin, setPin] = useState(editdata.address.pin);
-// to get area list from db
-const [areaList, setAreaList] = useState({})
+  const [reminder, setReminder] = useState(editdata.reminderMonth);
+  // to get area list from db
+  const [areaList, setAreaList] = useState({});
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -51,6 +52,7 @@ const [areaList, setAreaList] = useState({})
     setStreet(editdata.address.street);
     setArea(editdata.address.area);
     setPin(editdata.address.pin);
+    setReminder(editdata.reminderMonth);
   }, [editdata]);
   //   Modal
   const handleClose = () => setEdit(false);
@@ -66,15 +68,14 @@ const [areaList, setAreaList] = useState({})
     let resp = await getArea();
     setAreaList(resp.getArea);
   };
-  useEffect(()=>{
+  useEffect(() => {
     getAreaList();
-  },[])
-
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // let {doorNo,street,area,pin} = data
-    let data = { name, phone };
+    let data = { name, phone, reminderMonth:reminder };
     data["address"] = { doorNo, street, area, pin };
     data["id"] = editdata._id;
     let res = await editCustomer(data);
@@ -194,7 +195,7 @@ const [areaList, setAreaList] = useState({})
                 }}
               >
                 <div style={{ width: "100%", margin: "10px" }}>
-                <Box sx={{ minWidth: 120 }}>
+                  <Box sx={{ minWidth: 120 }}>
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Area
@@ -209,9 +210,12 @@ const [areaList, setAreaList] = useState({})
                           setArea(e.target.value);
                         }}
                       >
-                        {areaList.length > 0 && areaList.map((val,idx) => (
-                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
-                        ))}
+                        {areaList.length > 0 &&
+                          areaList.map((val, idx) => (
+                            <MenuItem key={idx} value={val.areaName}>
+                              {val.areaName}
+                            </MenuItem>
+                          ))}
                       </Select>
                     </FormControl>
                   </Box>
@@ -231,6 +235,39 @@ const [areaList, setAreaList] = useState({})
                       setPin(e.target.value);
                     }}
                   />
+                </div>
+              </div>
+              {/* service reminder month*/}
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-evenly",
+                }}
+              >
+                <div style={{ width: "100%", margin: "10px" }}>
+                  <Box sx={{ minWidth: 120 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Service reminder Months
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={reminder}
+                        label="reminder"
+                        name="reminder"
+                        onChange={(e) => {
+                          setReminder(e.target.value);
+                        }}
+                      >
+                        <MenuItem value="3">3</MenuItem>
+                        <MenuItem value="4">4</MenuItem>
+                        <MenuItem value="6">6</MenuItem>
+                        <MenuItem value="12">12</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </Box>
                 </div>
               </div>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
