@@ -101,7 +101,7 @@ const ServiceStatus = () => {
       setError('Geolocation is not supported by your browser');
     }
   };
-
+  console.log("location",location)
   return (
     <>
       {data && (
