@@ -211,7 +211,7 @@ const Sidebar = () => {
         return null;
       }
       let res = await findingUser(token);
-      if (res.type == "admin") {
+      if (res.type === "admin") {
         setUserType("Admin");
       } else if (res.type == "Owner") {
         setUserType("Owner");
