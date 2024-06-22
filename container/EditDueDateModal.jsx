@@ -2,11 +2,17 @@
 import React, { useEffect, useState } from "react";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { Button, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
-import { getServiceReminderCustomer, updateduedate } from "@/service";
+import { editDuedate, getServiceReminderCustomer } from "@/service";
 import AlertMessage from "./AlertMessage";
+// Date picker
+import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 
 const style = {
   position: "absolute",
@@ -35,8 +41,8 @@ const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
     let data = { duedate };
     data["id"] = editdata._id;
     data["isReassigned"] = true;
-    let resp = await updateduedate(data);
-    if (resp.message !== "Due date Updated Succesfully!") {
+    let resp = await editDuedate(data);
+    if (resp.message !== "Service due date Updated Successfully!") {
       setMessage(true);
       setContent("try again later");
       setType("error");
@@ -96,16 +102,18 @@ const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
               onSubmit={handleSubmit}
             >
               <div style={{ width: "100%", margin: "10px" }}>
-                <TextField
-                  id="outlined-basic"
-                  label="duedate"
-                  variant="outlined"
-                  type="duedate"
-                  name="duedate"
-                  value={duedate}
-                  onChange={(e) => setDuedate(e.target.value)}
-                  fullWidth
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                  <DemoContainer components={["DatePicker"]}>
+                    <DatePicker
+                      label="due Date"
+                      name="date"
+                      value={dayjs(duedate)}
+                      onChange={(e) => {
+                        setDuedate(e.format());
+                      }}
+                    />
+                  </DemoContainer>
+                </LocalizationProvider>
               </div>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update

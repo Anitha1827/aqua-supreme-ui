@@ -51,7 +51,7 @@ const ServiceReminder = () => {
     let data = resp.data.filter(
       (val) =>
         val.duedate && val.duedate.length > 0
-       && val.duedateReassignedCount && val.duedateReassignedCount < 3
+        && val.duedateReassignedCount <= 3
     );
     // Sort the customers array
     const sortedCustomers = sortByDueDate(data);

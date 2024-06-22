@@ -43,8 +43,8 @@ const ServiceStatus = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
     let resp = await getSpare();
     setSpares(resp.getSpare);
@@ -68,11 +68,40 @@ const ServiceStatus = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let formdata = { remarks, isPending: pending, isCompleted: !pending , selectedSpares:selectedSpares};
+    let formdata = {
+      remarks,
+      isPending: pending,
+      isCompleted: !pending,
+      selectedSpares: selectedSpares,
+    };
     await updateServiceStatus(id, formdata);
     router.push("/dashboard/service");
     console.log("formdata55", formdata);
   };
+
+  // location
+  const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [error, setError] = useState(null);
+
+  const handleGetLocation = () => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation({
+            latitude: position.coords.latitude,
+            longitude: position.coords.longitude,
+          });
+          setError(null);
+        },
+        (error) => {
+          setError(error.message);
+        }
+      );
+    } else {
+      setError('Geolocation is not supported by your browser');
+    }
+  };
+
   return (
     <>
       {data && (
@@ -154,13 +183,31 @@ const ServiceStatus = () => {
                 </FormControl>
               </Box>
             </div>
+
+            {/* location */}
+            <div style={{ width: "100%", margin: "10px" }}>
+              <div style={{ padding: "20px" }}>
+                <h1>Get Current Location</h1>
+                <button onClick={handleGetLocation}>Get Location</button>
+                {location.latitude && location.longitude ? (
+                  <div>
+                    <h2>Current Location:</h2>
+                    <p>Latitude: {location.latitude}</p>
+                    <p>Longitude: {location.longitude}</p>
+                  </div>
+                ) : (
+                  <p>No location available</p>
+                )}
+                {error && <p style={{ color: "red" }}>{error}</p>}
+              </div>
+            </div>
           </div>
           <Button
             variant="contained"
             color="primary"
             type="submit"
             className="Input"
-            style={{background:"blue"}}
+            style={{ background: "blue" }}
           >
             Submit
           </Button>
