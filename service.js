@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -383,7 +383,7 @@ const editService = async (data) => {
 // Edit Duedate
 const editDuedate = async (data) => {
   try {
-    let response = await axios.put(`${api_url}/service/edit-duedate`, data);
+    let response = await axios.put(`${api_url}/customer/edit-duedate`, data);
     console.log("sesrvice344", response.data);
     return response.data;
   } catch (error) {

@@ -43,12 +43,16 @@ const ServiceReminder = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
 
     let resp = await getServiceReminderCustomer();
-    let data = resp.data.filter((val) => val.duedate && val.duedate.length > 0);
+    let data = resp.data.filter(
+      (val) =>
+        val.duedate && val.duedate.length > 0
+       && val.duedateReassignedCount && val.duedateReassignedCount < 3
+    );
     // Sort the customers array
     const sortedCustomers = sortByDueDate(data);
     setReminder(sortedCustomers);
@@ -120,9 +124,9 @@ const ServiceReminder = () => {
                         <td>{remind.customerPhone}</td>
                         <td>{remind.lastServicedAt}</td>
                         <td>
-                        {remind.duedate
-                          ? remind.duedate.split("").slice(0, 10).join("")
-                          : ""}
+                          {remind.duedate
+                            ? remind.duedate.split("").slice(0, 10).join("")
+                            : ""}
                           <Button
                             onClick={() => handleOpen(remind)}
                             className={`${styles.button} ${styles.view}`}

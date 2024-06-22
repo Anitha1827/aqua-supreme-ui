@@ -33,7 +33,7 @@ export default function EditServiceModal({
   setService,
 }) {
   const [phone, setPhone] = useState(editdata.customerPhone);
-  const [date, setDate] = useState(editdata.lastServicedAt);
+  const [date, setDate] = useState(editdata.serviceDate);
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -41,7 +41,7 @@ export default function EditServiceModal({
 
   useEffect(() => {
     setPhone(editdata.customerPhone);
-    setDate(editdata.lastServicedAt);
+    setDate(editdata.serviceDate);
   }, [editdata]);
 
   //   Modal
@@ -53,7 +53,8 @@ export default function EditServiceModal({
     setService(res.getAllServiceDetails);
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     if (phone.length !== 10) {
       setMessage(true);
       setContent("Please Fill valid Phone Number");
@@ -62,6 +63,7 @@ export default function EditServiceModal({
     }
     let data = { phone };
     data["id"] = editdata._id;
+    data["date"] = date;
     let res = await editService(data);
     if (res.message !== "Service Updated Successfully!") {
       setMessage(true);
@@ -70,7 +72,7 @@ export default function EditServiceModal({
       return null;
     }
     if (editdata.data !== date) {
-      let val = { date };
+      let val = { date, id:editdata.customerId };
       let res = await editDuedate(val);
       if (res.message !== "Service due date Updated Successfully!") {
         setMessage(true);
@@ -125,7 +127,7 @@ export default function EditServiceModal({
                     name="date"
                     value={dayjs(date)}
                     onChange={(e) => {
-                      setDate(e.target.value);
+                      setDate(e.format());
                     }}
                   />
                 </DemoContainer>
