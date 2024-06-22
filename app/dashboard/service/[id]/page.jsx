@@ -20,6 +20,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Box from "@mui/material/Box";
 import { Chip } from "@mui/material";
+import axios from "axios";
 
 const ServiceStatus = () => {
   let router = useRouter();
@@ -81,16 +82,26 @@ const ServiceStatus = () => {
 
   // location
   const [location, setLocation] = useState({ latitude: null, longitude: null });
+  const [address, setAddress] = useState("");
+
   const [error, setError] = useState(null);
 
-  const handleGetLocation = () => {
-    if ('geolocation' in navigator) {
+  const handleGetLocation = (e) => {
+    e.preventDefault();
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           setLocation({
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           });
+          let apikey = "pk.8d244bc5540d8f024761c4dafee5eef0";
+          let location = await axios.get(
+            `https://us1.locationiq.com/v1/reverse?key=${apikey}&lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json&`
+          );
+          console.log("address102", location);
+          let address = `${location.data.address.suburb},${location.data.address.city},${location.data.address.state},${location.data.address.country},${location.data.address.postcode}`;
+          setAddress(address);
           setError(null);
         },
         (error) => {
@@ -98,10 +109,10 @@ const ServiceStatus = () => {
         }
       );
     } else {
-      setError('Geolocation is not supported by your browser');
+      setError("Geolocation is not supported by your browser");
     }
   };
-  console.log("location",location)
+
   return (
     <>
       {data && (
@@ -183,23 +194,40 @@ const ServiceStatus = () => {
                 </FormControl>
               </Box>
             </div>
-
-            {/* location */}
-            <div style={{ width: "100%", margin: "10px" }}>
-              <div style={{ padding: "20px" }}>
-                <h1>Get Current Location</h1>
-                <button onClick={handleGetLocation}>Get Location</button>
-                {location.latitude && location.longitude ? (
-                  <div>
-                    <h2>Current Location:</h2>
-                    <p>Latitude: {location.latitude}</p>
-                    <p>Longitude: {location.longitude}</p>
-                  </div>
-                ) : (
-                  <p>No location available</p>
-                )}
-                {error && <p style={{ color: "red" }}>{error}</p>}
-              </div>
+          </div>
+          {/* location */}
+          <div style={{ width: "100%", margin: "10px" }}>
+            <div
+              style={{
+                padding: "20px",
+                display: "flex",
+                gap: "10px",
+                justifyContent: "flex-end",
+              }}
+            >
+              <button
+                onClick={handleGetLocation}
+                style={{
+                  width: "150px",
+                  borderRadius: "10px",
+                  background: "orange",
+                  height: "44px",
+                }}
+              >
+                Get Location
+              </button>
+              {location.latitude && location.longitude ? (
+                <div style={{ width: "100%" }}>
+                  {/* <p>Latitude: {location.latitude}</p>
+                  <p>Longitude: {location.longitude}</p> */}
+                  <p>
+                    <b>Address:</b> {address}
+                  </p>
+                </div>
+              ) : (
+                <p>No location available</p>
+              )}
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
           <Button
