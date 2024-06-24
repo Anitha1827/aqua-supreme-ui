@@ -5,6 +5,12 @@ import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
+//select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+
 // formik
 import * as yup from "yup";
 import { useFormik } from "formik";
@@ -37,6 +43,9 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
+  //handleby
+  const[handleBy, setHandleBy] = useState("")
+
 
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
@@ -46,6 +55,7 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
     },
     validataionSchema: validataionSchema,
     onSubmit: async (data) => {
+      data["handleBy"] = handleBy;
       let resp = await addLead(data);
       console.log("leadline43", resp);
       if (resp.message !== "Lead added Successfully!") {
@@ -157,7 +167,24 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
                 )}
               </div>
               <br />
-              <br />
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    HandleBy
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={handleBy}
+                    label="handleBy"
+                    onChange={(e)=>setHandleBy(e.target.value)}
+                  >
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="owner">Owner</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <br/>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 Add
               </Button>

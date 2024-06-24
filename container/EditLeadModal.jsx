@@ -7,6 +7,11 @@ import Fade from "@mui/material/Fade";
 import { Button, TextField } from "@mui/material";
 import { getLead, updateLead } from "@/service";
 import AlertMessage from "./AlertMessage";
+//select dropdown
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 // Modal style
 const style = {
@@ -25,6 +30,7 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
   const [name, setName] = useState(editdata.name);
   const [phone, setPhone] = useState(editdata.phone);
   const [feedback, setFeedback] = useState(editdata.feedback);
+  const [handleBy, setHandleBy] = useState(editdata.handleBy);
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -34,19 +40,20 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
     setName(editdata.name);
     setPhone(editdata.phone);
     setFeedback(editdata.feedback);
+    setHandleBy(editdata.setHandleBy)
   }, [editdata]);
 
   const handleClose = () => setEdit(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!name || !phone || !feedback) {
+    if (!name || !phone || !feedback || !handleBy) {
       setMessage(true);
       setContent("please fill all fields");
       setType("error");
       return null;
     }
-    let data = { name, phone, feedback, id: editdata._id };
+    let data = { name, phone, feedback, handleBy, id: editdata._id };
     data["id"] = editdata._id;
     let resp = await updateLead(data);
     if (resp.message !== "lead updated successfully!") {
@@ -144,6 +151,25 @@ const EditLeadModal = ({ edit, setEdit, editdata, setLead }) => {
               </div>
               <br />
               <br />
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    HandleBy
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={handleBy}
+                    label="handleBy"
+                    onChange={(e) => setHandleBy(e.target.value)}
+                  >
+                    <MenuItem value="admin">Admin</MenuItem>
+                    <MenuItem value="owner">Owner</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              <br/>
+              <br/>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update
               </Button>

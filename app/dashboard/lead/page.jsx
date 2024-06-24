@@ -14,11 +14,11 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import ConvertModal from "@/container/ConvertModal";
 import { useRouter } from "next/navigation";
 //select dropdown
-// import Box from "@mui/material/Box";
-// import InputLabel from "@mui/material/InputLabel";
-// import MenuItem from "@mui/material/MenuItem";
-// import FormControl from "@mui/material/FormControl";
-// import Select from "@mui/material/Select";
+import Box from "@mui/material/Box";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -31,15 +31,13 @@ const LeadCreation = () => {
   // here what data i want to edit that data will store
   const [editdata, setEditData] = useState({});
 
+  const [filter, setFilter] = useState("all");
+
   const [lead, setLead] = useState([]);
+
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
-  //select dropdown
-  // const [alert, setAlert] = useState("");
 
-  // const handleChange = (event) => {
-  //   setAlert(event.target.value);
-  // };
   let router = useRouter();
 
   const handleOpen = () => setOpen(true);
@@ -98,6 +96,22 @@ const LeadCreation = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          <Box sx={{ minWidth: 200 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Filter</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={filter}
+                label="filter"
+                onChange={(e) => setFilter(e.target.value)}
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="owner">Owner</MenuItem>
+                <MenuItem value="all">All</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </div>
 
         <Button
@@ -115,64 +129,72 @@ const LeadCreation = () => {
             <td>Name</td>
             <td>Phone Number</td>
             <td>Remarks</td>
-            <td>Notification</td>
-            {/* <td>Action</td> */}
+            <td>Created At</td>
+            <td>HandleBy</td>
+            <td>Action</td>
           </tr>
         </thead>
         <tbody>
           {lead.length > 0 &&
             (search.length <= 0
-              ? lead.slice(startIndex, startIndex + 10).map((val, idx) => (
-                  <tr key={idx}>
-                    <td>{startIndex + idx + 1}</td>
-                    <td>{val.name}</td>
-                    <td>{val.phone}</td>
-                    <td>
-                      <span className={styles.tabletd} title={val.feedback}>
-                        {val.feedback}
-                      </span>
-                    </td>
-                    <td>123</td>
-                    <td>
-                      <div
-                        className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                      >
-                        {/* Edit button */}
-                        <Button
-                          onClick={() => handleEdit(val)}
-                          title="Edit Data"
-                        >
-                          <FaRegEdit sx={{ fontSize: "20px" }} />
-                        </Button>
+              ? lead.slice(startIndex, startIndex + 10).map(
+                  (val, idx) =>
+                    (filter == "all" || val.handleBy === filter) && (
+                      <tr key={idx}>
+                        <td>{startIndex + idx + 1}</td>
+                        <td>{val.name}</td>
+                        <td>{val.phone}</td>
+                       
+                          <span className={styles.tabletd} title={val.feedback}>
+                          <td>
+                            {val.feedback}
+                            </td>
+                          </span>
+                       
+                         <td>{val.createdAt}</td>
+                       <td>{val.handleBy}</td>
+                        <td>
+                          <div
+                            className={`${styles.buttons} ${styles.button} ${styles.view}`}
+                          >
+                            {/* Edit button */}
+                            <Button
+                              onClick={() => handleEdit(val)}
+                              title="Edit Data"
+                            >
+                              <FaRegEdit sx={{ fontSize: "20px" }} />
+                            </Button>
 
-                        {/* Convert to customer */}
-                        <Button
-                          onClick={() => handleConvert(val)}
-                          title="Convert to customer"
-                        >
-                          <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                        </Button>
+                            {/* Convert to customer */}
+                            <Button
+                              onClick={() => handleConvert(val)}
+                              title="Convert to customer"
+                            >
+                              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+                            </Button>
 
-                        {/* Delete button */}
-                        <Button
-                          aria-label="delete"
-                          // size="large"
-                          className={`${styles.button} ${styles.delete}`}
-                          onClick={() => handleDelete(val)}
-                          title="Delete"
-                        >
-                          <DeleteIcon
-                            sx={{ fontSize: "20px", color: "crimson" }}
-                          />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                            {/* Delete button */}
+                            <Button
+                              aria-label="delete"
+                              // size="large"
+                              className={`${styles.button} ${styles.delete}`}
+                              onClick={() => handleDelete(val)}
+                              title="Delete"
+                            >
+                              <DeleteIcon
+                                sx={{ fontSize: "20px", color: "crimson" }}
+                              />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    )
+                )
               : lead.map(
                   (val, idx) =>
                     (val.name.toLowerCase().includes(search.toLowerCase()) ||
-                      val.phone.includes(search)) && (
+                      val.phone.includes(search)) &&
+                    (filter == "all" || val.handleBy === filter) && (
                       <tr key={idx}>
                         <td>{idx + 1}</td>
                         <td>{val.name}</td>
@@ -182,26 +204,8 @@ const LeadCreation = () => {
                             {val.feedback}
                           </span>
                         </td>
-                        <td>
-                          {/* alert to admin/owner */}
-                          {/* <Box sx={{ minWidth: 120 }}>
-                            <FormControl fullWidth>
-                              <InputLabel id="demo-simple-select-label">
-                                Notification
-                              </InputLabel>
-                              <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={alert}
-                                label="alert"
-                                onChange={handleChange}
-                              >
-                                <MenuItem value="Admin">Admin</MenuItem>
-                                <MenuItem value="Owner">Owner</MenuItem>
-                              </Select>
-                            </FormControl>
-                          </Box> */}
-                        </td>
+                        <td>{val.createdAt}</td>
+                       <td>{val.handleBy}</td>
                         <td>
                           <div
                             className={`${styles.buttons} ${styles.button} ${styles.view}`}

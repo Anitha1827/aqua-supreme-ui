@@ -28,9 +28,9 @@ margin-top: 20px;
     text-align: center;
 }
 .tabletd {
-    width: 200px;
-    height: 100px;
-    text-align: justify;
+    /* width: 200px;
+    height: 100px; */
+    text-align: center;
     overflow: hidden;
     display: block;
 }
