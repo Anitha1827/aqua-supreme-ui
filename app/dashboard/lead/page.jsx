@@ -14,11 +14,11 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import ConvertModal from "@/container/ConvertModal";
 import { useRouter } from "next/navigation";
 //select dropdown
-import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
+// import Box from "@mui/material/Box";
+// import InputLabel from "@mui/material/InputLabel";
+// import MenuItem from "@mui/material/MenuItem";
+// import FormControl from "@mui/material/FormControl";
+// import Select from "@mui/material/Select";
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -35,11 +35,11 @@ const LeadCreation = () => {
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
   //select dropdown
-  const [alert, setAlert] = useState("");
+  // const [alert, setAlert] = useState("");
 
-  const handleChange = (event) => {
-    setAlert(event.target.value);
-  };
+  // const handleChange = (event) => {
+  //   setAlert(event.target.value);
+  // };
   let router = useRouter();
 
   const handleOpen = () => setOpen(true);
@@ -116,7 +116,7 @@ const LeadCreation = () => {
             <td>Phone Number</td>
             <td>Remarks</td>
             <td>Notification</td>
-            <td>Action</td>
+            {/* <td>Action</td> */}
           </tr>
         </thead>
         <tbody>
@@ -184,7 +184,7 @@ const LeadCreation = () => {
                         </td>
                         <td>
                           {/* alert to admin/owner */}
-                          <Box sx={{ minWidth: 120 }}>
+                          {/* <Box sx={{ minWidth: 120 }}>
                             <FormControl fullWidth>
                               <InputLabel id="demo-simple-select-label">
                                 Notification
@@ -200,7 +200,7 @@ const LeadCreation = () => {
                                 <MenuItem value="Owner">Owner</MenuItem>
                               </Select>
                             </FormControl>
-                          </Box>
+                          </Box> */}
                         </td>
                         <td>
                           <div

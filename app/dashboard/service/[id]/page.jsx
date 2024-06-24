@@ -9,6 +9,7 @@ import {
   findingUser,
   getServiceDetailsById,
   getSpare,
+  updateAddress,
   updateServiceStatus,
 } from "@/service";
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -76,6 +77,9 @@ const ServiceStatus = () => {
       selectedSpares: selectedSpares,
     };
     await updateServiceStatus(id, formdata);
+    let data = {address:addressDetail, id}
+    console.log("dataline81", data)
+    await updateAddress(data);
     router.push("/dashboard/service");
     console.log("formdata55", formdata);
   };
@@ -83,6 +87,8 @@ const ServiceStatus = () => {
   // location
   const [location, setLocation] = useState({ latitude: null, longitude: null });
   const [address, setAddress] = useState("");
+  //updated address
+  const[addressDetail, setAddressDetail] = useState({})
 
   const [error, setError] = useState(null);
 
@@ -100,8 +106,12 @@ const ServiceStatus = () => {
             `https://us1.locationiq.com/v1/reverse?key=${apikey}&lat=${position.coords.latitude}&lon=${position.coords.longitude}&format=json&`
           );
           console.log("address102", location);
-          let address = `${location.data.address.suburb},${location.data.address.city},${location.data.address.state},${location.data.address.country},${location.data.address.postcode}`;
-          setAddress(address);
+          // let address = `${location.data.address.suburb},${location.data.address.city},${location.data.address.state},${location.data.address.country},${location.data.address.postcode}`;
+          setAddress(location.data.display_name);
+          setAddressDetail({
+            area:location.data.address.suburb,
+            pincode:location.data.address.postcode,
+          })
           setError(null);
         },
         (error) => {

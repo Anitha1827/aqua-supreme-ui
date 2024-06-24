@@ -1,7 +1,7 @@
 import axios from "axios";
 
-// let api_url = "http://localhost:7000/api";
-let api_url = "https://aqua-supreme-api.vercel.app/api"
+let api_url = "http://localhost:7000/api";
+// let api_url = "https://aqua-supreme-api.vercel.app/api"
 
 // Login functionality
 const login = async (data) => {
@@ -605,6 +605,18 @@ const findingUser = async(token) => {
   }
 }
 
+//updating address when adding the location fron service engineer 
+const updateAddress = async(data) => {
+  try {
+    let resp = await axios.put(`${api_url}/customer/update-address`,data);
+    console.log(resp.data);
+    return resp.data;
+  } catch (error) {
+    console.error(error);
+    alert("try again later")
+  }
+}
+
 
 
 export {
@@ -617,6 +629,7 @@ export {
   updateduedate,
   deleteCustomer,
   getServiceReminderCustomer,
+  updateAddress,
   addNewInstallation,
   getInstallationDetails,
   assignTechnician,
