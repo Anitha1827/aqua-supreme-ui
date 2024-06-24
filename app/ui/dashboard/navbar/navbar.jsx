@@ -4,8 +4,8 @@ import styles from "./navbar.module.css";
 import { usePathname, useRouter } from "next/navigation";
 import Image from "next/image";
 import styles2 from "../navbar/sidebar/sidebar.module.css";
-import Badge from "@mui/material/Badge";
-import MailIcon from "@mui/icons-material/Mail";
+// import Badge from "@mui/material/Badge";
+// import MailIcon from "@mui/icons-material/Mail";
 // popover
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
@@ -106,7 +106,7 @@ const Navbar = () => {
                   height="50"
                 />
                 <div className={styles2.userDetail}>
-                  <span className={styles2.username}>Admin</span>
+                  <span className={styles2.username}>{usertype}</span>
                   {/* <span className={styles2.userTitle}>Administrator</span> */}
                 </div>
               </div>

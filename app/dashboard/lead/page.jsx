@@ -96,7 +96,7 @@ const LeadCreation = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Box sx={{ minWidth: 200 }}>
+          <Box sx={{ minWidth: 200 }} >
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Filter</InputLabel>
               <Select
