@@ -28,7 +28,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: "25%",
+  width: 400,
   bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
@@ -151,6 +151,7 @@ const AddLeadModal = ({ open, setOpen, setLead }) => {
                       label="Remarks"
                       name="feedback"
                       multiline
+                      width="100%"
                       rows={4}
                       value={values.feedback}
                       onChange={handleChange}

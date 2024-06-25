@@ -134,3 +134,28 @@
     float: right;
     margin: 10px;
   }
+  
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .form-container {
+      flex-direction: column;
+    }
+  
+    .form-field {
+      width: 100%;
+      margin: 10px 0;
+    }
+  
+    .button {
+      width: 100%;
+      margin-top: 20px;
+    }
+  }
+  
+  .tabcontainer {
+    margin-bottom: 20px;
+  }
+  

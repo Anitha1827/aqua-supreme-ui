@@ -27,7 +27,7 @@ const style = {
     boxShadow: 24,
     p: 4,
     overflow: "auto",
-    height: "70vh",
+    height: "50vh",
   };
 
 const AddSparesModal = ({open, setOpen,setSpares}) => {

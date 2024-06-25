@@ -4,7 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { Button, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 // Date picker
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -19,18 +19,24 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "50%",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+const modalStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
 
+const paperStyle = {
+  position: "absolute",
+  width: "90%",
+  maxWidth: 500,
+  maxHeight: "98vh",
+  bgcolor: "background.paper",
+  // border: "2px solid #000",
+  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+  p: 4,
+  outline: "none",
+  borderRadius: "10px",
+};
 export default function EditInstallationModal({
   edit,
   setEdit,
@@ -56,9 +62,9 @@ export default function EditInstallationModal({
     let resp = await getArea();
     setAreaList(resp.getArea);
   };
-  useEffect(()=>{
+  useEffect(() => {
     getAreaList();
-  },[]);
+  }, []);
 
   useEffect(() => {
     setName(editdata.customerName);
@@ -122,142 +128,115 @@ export default function EditInstallationModal({
             timeout: 500,
           },
         }}
+        style={modalStyle}
       >
         <Fade in={edit} className="bg-gray text-black">
-          <Box sx={style}>
+          <Box sx={paperStyle}>
             <form
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
+                <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+              <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="name"
+                name="name"
+                value={name}
+                onChange={(e) => {
+                  setName(e.target.value);
                 }}
-              >
-                <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Name"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="name"
-                    name="name"
-                    value={name}
-                    onChange={(e) => {
-                      setName(e.target.value);
-                    }}
-                  />
-                </div>
-                <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="phone"
-                    name="phone"
-                    value={phone}
-                    onChange={(e) => {
-                      setPhone(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
-              <label
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                  color: "black",
+              />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+              <TextField
+                id="outlined-basic"
+                label="Phone Number"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="phone"
+                name="phone"
+                value={phone}
+                onChange={(e) => {
+                  setPhone(e.target.value);
                 }}
-              >
-                Address
-              </label>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
+              />
+              </Grid>
+              <Grid item xs={12}>
+              <label>Address</label>
+              </Grid>
+              <Grid item xs={12} >
+              <TextField
+                id="outlined-basic"
+                label="Door Number"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="doorNo"
+                name="doorNo"
+                value={doorNo}
+                onChange={(e) => {
+                  setDoorNo(e.target.value);
                 }}
-              >
-                <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Door Number"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="doorNo"
-                    name="doorNo"
-                    value={doorNo}
+              />
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-basic"
+                label="Street"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="street"
+                name="street"
+                value={street}
+                onChange={(e) => {
+                  setStreet(e.target.value);
+                }}
+              />
+              </Grid>
+              <Grid item xs={12}>
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Area</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={area}
+                    label="area"
+                    name="area"
                     onChange={(e) => {
-                      setDoorNo(e.target.value);
+                      setArea(e.target.value);
                     }}
-                  />
-                </div>
-                <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Street"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="street"
-                    name="street"
-                    value={street}
-                    onChange={(e) => {
-                      setStreet(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
+                  >
+                    {areaList.length > 0 &&
+                      areaList.map((val, idx) => (
+                        <MenuItem key={idx} value={val.areaName}>
+                          {val.areaName}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              </Grid>
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-basic"
+                label="Pin Code"
+                variant="outlined"
+                sx={{ width: "100%" }}
+                type="pin"
+                name="pin"
+                value={pin}
+                onChange={(e) => {
+                  setPin(e.target.value);
+                }}
+              />
+              </Grid>
 
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ width: "100%", margin: "10px" }}>
-                <Box>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Area
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={area}
-                        label="area"
-                        name="area"
-                        onChange={(e) => {
-                          setArea(e.target.value);
-                        }}
-                      >
-                        {areaList.length > 0 && areaList.map((val,idx) => (
-                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </div>
-                <div style={{ width: "100%", margin: "10px" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Pin Code"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="pin"
-                    name="pin"
-                    value={pin}
-                    onChange={(e) => {
-                      setPin(e.target.value);
-                    }}
-                  />
-                </div>
-              </div>
-
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Grid item xs={12}>
+              <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
                 <DemoContainer components={["DatePicker"]}>
                   <DatePicker
                     label="Installation Date"
@@ -269,12 +248,13 @@ export default function EditInstallationModal({
                   />
                 </DemoContainer>
               </LocalizationProvider>
-
-              <br />
-              <br />
+              </Grid>
+              <Grid item xs={12}>
               <Button variant="contained" sx={{ width: "100%" }} type="submit">
                 update
               </Button>
+              </Grid>
+              </Grid>
             </form>
           </Box>
         </Fade>

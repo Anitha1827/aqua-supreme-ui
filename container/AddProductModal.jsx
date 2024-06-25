@@ -27,7 +27,7 @@ const style = {
   boxShadow: 24,
   p: 4,
   overflow: "auto",
-  height: "80vh",
+  height: "50vh",
 };
 
 const AddProductModal = ({ open, setOpen, setProduct }) => {

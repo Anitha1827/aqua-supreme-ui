@@ -118,17 +118,20 @@ const Settings = () => {
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
+                  flexWrap: "wrap",
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
+                <div className="form-field"
+                 style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  flex: 1,
+                  minWidth: "200px",
+                }}
                 >
                   <TextField
-                    sx={{ m: 4 }}
+                    sx={{ m: 2 }}
                     id="outlined-basic"
                     label="Old Password"
                     name="oldPassword"
@@ -144,15 +147,17 @@ const Settings = () => {
                     ""
                   )}
                 </div>
-                <div
+                <div className="form-field"
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    flex: 1,
+                    minWidth: "200px",
                   }}
                 >
                   <TextField
-                    sx={{ m: 4 }}
+                     sx={{ m: 2 }}
                     id="outlined-basic"
                     label="New Password"
                     variant="outlined"
@@ -169,15 +174,17 @@ const Settings = () => {
                     ""
                   )}
                 </div>
-                <div
+                <div className="form-field"
                   style={{
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
+                    flex: 1,
+                    minWidth: "200px",
                   }}
                 >
                   <TextField
-                    sx={{ m: 4 }}
+                    sx={{ m: 2 }}
                     id="outlined-basic"
                     label="Confirm Password"
                     variant="outlined"

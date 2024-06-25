@@ -20,13 +20,15 @@ const style = (isSmallScreen) => ({
   top: isSmallScreen ? "10%" : "50%",
   left: "50%",
   transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -50%)",
-  width: "50%",
+  width: 400,
   bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
+  // border: "2px solid #000",
+  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+  // boxShadow: 24,
   p: 4,
   overflow: "auto",
-  height: "70vh",
+  height: "40vh",
+  borderRadius: "10px",
 });
 
 const AddAreaModal = ({ open, setOpen, setArea }) => {

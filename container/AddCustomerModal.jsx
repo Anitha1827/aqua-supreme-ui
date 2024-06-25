@@ -5,7 +5,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { Button, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 // Select dropdown
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
@@ -27,19 +27,26 @@ const validataionSchema = yup.object({
   pin: yup.string().required("Please Enter Pin Number"),
 });
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: "50%",
-  bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
-  overflow: "auto",
-  height: "70vh",
+const modalStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
 };
+
+const paperStyle = {
+  position: "absolute",
+  width: "90%",
+  maxWidth: 400,
+  maxHeight: '95vh', 
+  bgcolor: "background.paper",
+  // border: "2px solid #000",
+  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)", 
+  p: 4,
+  outline: "none",
+  borderRadius: "10px", 
+
+};
+
 
 export default function AddCustomerModel({ open, setOpen, setCustomer }) {
   //   Modal
@@ -96,7 +103,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
     setCustomer(res.getAllCustomerDetails);
   };
   return (
-    <div>
+    <div className="modal">
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -109,52 +116,48 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
             timeout: 500,
           },
         }}
+        style={modalStyle}
       >
-        <Fade in={open} className="bg-gray text-black">
-          <Box sx={style}>
+        <Fade in={open}>
+          <Box sx={paperStyle}>
             <form className="form-container" onSubmit={handleSubmit}>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Name"
-                    variant="outlined"
-                    type="name"
-                    name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                    fullWidth
-                  />
-                  {errors.name ? (
-                    <div className="error-message">{errors.name}</div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div style={{ margin: "10px", width: "100%" }}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    fullWidth
-                    type="phone"
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChange}
-                  />
-                  {errors.phone ? (
-                    <div className="error-message">{errors.phone}</div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
+            <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
+                type="name"
+                name="name"
+                value={values.name}
+                onChange={handleChange}
+                fullWidth
+              />
+              {errors.name ? (
+                <div className="error-message">{errors.name}</div>
+              ) : (
+                ""
+              )}
+              </Grid>
+
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-basic"
+                label="Phone Number"
+                variant="outlined"
+                fullWidth
+                type="phone"
+                name="phone"
+                value={values.phone}
+                onChange={handleChange}
+              />
+              {errors.phone ? (
+                <div className="error-message">{errors.phone}</div>
+              ) : (
+                ""
+              )}
+              </Grid>
+              <Grid item xs={12}>
               <label
                 style={{
                   display: "flex",
@@ -164,123 +167,108 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
               >
                 Address
               </label>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
-                  {/* Address Field */}
-
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Door Number"
-                    type="doorNo"
-                    name="doorNo"
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    value={values.doorNo}
+              </Grid>
+              {/* Address Field */}
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Door Number"
+                type="doorNo"
+                name="doorNo"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.doorNo}
+                onChange={handleChange}
+              />
+              {errors.doorNo ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.doorNo}
+                </div>
+              ) : (
+                ""
+              )}
+              </Grid>
+              {/* Address Field */}
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Street"
+                type="street"
+                name="street"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.street}
+                onChange={handleChange}
+              />
+              {errors.address ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.address}
+                </div>
+              ) : (
+                ""
+              )}
+              </Grid>
+              {/* Address Field */}
+              <Grid item xs={12}>
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Area</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={values.area}
+                    label="area"
+                    name="area"
                     onChange={handleChange}
-                  />
-                  {errors.doorNo ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.doorNo}
-                    </div>
-                  ) : (
-                    ""
-                  )}
+                  >
+                    {area.length > 0 &&
+                      area.map((val, idx) => (
+                        <MenuItem key={idx} value={val.areaName}>
+                          {val.areaName}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              {errors.area ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.area}
                 </div>
-
-                <div style={{ margin: "10px", width: "100%" }}>
-                  {/* Address Field */}
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Street"
-                    type="street"
-                    name="street"
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    value={values.street}
-                    onChange={handleChange}
-                  />
-                  {errors.address ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.address}
-                    </div>
-                  ) : (
-                    ""
-                  )}
+              ) : (
+                ""
+              )}
+              </Grid>
+              {/* Address Field */}
+              <Grid item xs={12}>
+              <TextField
+                id="outlined-multiline-flexible"
+                label="Pin Code"
+                type="pin"
+                name="pin"
+                fullWidth
+                multiline
+                maxRows={4}
+                value={values.pin}
+                onChange={handleChange}
+              />
+              {errors.pin ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.pin}
                 </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
-                  {/* Address Field */}
-                  <Box>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Area
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={values.area}
-                        label="area"
-                        name="area"
-                        onChange={handleChange}
-                      >
-                        {area.length > 0 && area.map((val, idx) => (
-                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                  {errors.area ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.area}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-
-                <div style={{ margin: "10px", width: "100%" }}>
-                  {/* Address Field */}
-                  <TextField
-                    id="outlined-multiline-flexible"
-                    label="Pin Code"
-                    type="pin"
-                    name="pin"
-                    fullWidth
-                    multiline
-                    maxRows={4}
-                    value={values.pin}
-                    onChange={handleChange}
-                  />
-                  {errors.pin ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.pin}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-              </div>
-              <br />
-              <br />
-              <Button variant="contained" sx={{ width: "100%" }} type="submit">
+              ) : (
+                ""
+              )}
+              </Grid>
+              <Grid item xs={12}>
+              <Button variant="contained" sx={{ width: "100%",marginBottom:"10px" }} type="submit">
                 Add
               </Button>
+              <br />
+              <br />
+              </Grid>
+              </Grid>
             </form>
           </Box>
         </Fade>

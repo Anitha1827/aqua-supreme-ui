@@ -4,7 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { Button, TextField } from "@mui/material";
+import { Button, Grid, TextField } from "@mui/material";
 // Date picker
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -38,29 +38,36 @@ const validataionSchema = yup.object({
   pin: yup.string().required("Please Enter pin Number"),
 });
 
-const style = (isSmallScreen) => ({
+const modalStyle = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+const paperStyle = {
   position: "absolute",
-  top: isSmallScreen ? "10%" : "50%",
-  left: "50%",
-  transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -40%)",
-  width: "50%",
+  width: "90%",
+  maxWidth: 500,
+  maxHeight: "95vh",
   bgcolor: "background.paper",
-  border: "2px solid #000",
-  boxShadow: 24,
-  padding: 4,
-});
+  // border: "2px solid #000",
+  boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+  p: 4,
+  outline: "none",
+  borderRadius: "10px",
+};
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Select dropdown
   const [product, setProduct] = useState("");
   const [prodList, setProdList] = useState([]);
-   //for area list
-   const [area, setArea] = useState({});
-   // Get area list
-   let getAreaList = async () => {
-     let resp = await getArea();
-     setArea(resp.getArea);
-   };
+  //for area list
+  const [area, setArea] = useState({});
+  // Get area list
+  let getAreaList = async () => {
+    let resp = await getArea();
+    setArea(resp.getArea);
+  };
 
   const handleSelect = (event) => {
     setProduct(event.target.value);
@@ -135,21 +142,16 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
             timeout: 500,
           },
         }}
+        style={modalStyle}
       >
         <Fade in={open} className="bg-gray text-black">
-          <Box sx={style}>
+          <Box sx={paperStyle}>
             <form
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}
             >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     id="outlined-basic"
                     label="Name"
@@ -167,8 +169,8 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-                <div style={{ margin: "10px", width: "100%" }}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                   <TextField
                     id="outlined-basic"
                     label="Phone Number"
@@ -186,19 +188,9 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-              </div>
-              <br />
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
                         label="Installation Date"
@@ -219,8 +211,8 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-                <div style={{ margin: "10px", width: "100%" }}>
+                </Grid>
+                <Grid item xs={12} sm={6}>
                   <Box>
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
@@ -245,26 +237,11 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                       </Select>
                     </FormControl>
                   </Box>
-                </div>
-              </div>
-              <br />
-              <label
-                style={{
-                  display: "flex",
-                  justifyContent: "space-around",
-                  color: "gray",
-                }}
-              >
-                Address
-              </label>
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
+                </Grid>
+                <Grid item xs={12}>
+                  <label>Address</label>
+                </Grid>
+                <Grid item xs={12}>
                   <TextField
                     id="outlined-basic"
                     label="Door Number"
@@ -282,8 +259,8 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-                <div style={{ margin: "10px", width: "100%" }}>
+                </Grid>
+                <Grid item xs={12}>
                   <TextField
                     id="outlined-basic"
                     label="Street"
@@ -301,18 +278,9 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-              </div>
-
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-evenly",
-                }}
-              >
-                <div style={{ margin: "10px", width: "100%" }}>
-                <Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box>
                     <FormControl fullWidth>
                       <InputLabel id="demo-simple-select-label">
                         Area
@@ -325,9 +293,12 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                         name="area"
                         onChange={handleChange}
                       >
-                        {area.length > 0 && area.map((val, idx) => (
-                          <MenuItem key={idx} value={val.areaName}>{val.areaName}</MenuItem>
-                        ))}
+                        {area.length > 0 &&
+                          area.map((val, idx) => (
+                            <MenuItem key={idx} value={val.areaName}>
+                              {val.areaName}
+                            </MenuItem>
+                          ))}
                       </Select>
                     </FormControl>
                   </Box>
@@ -338,8 +309,9 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-                <div style={{ margin: "10px", width: "100%" }}>
+                </Grid>
+
+                <Grid item xs={12}>
                   <TextField
                     id="outlined-basic"
                     label="Pin Code"
@@ -357,12 +329,17 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   ) : (
                     ""
                   )}
-                </div>
-              </div>
-
-              <Button variant="contained" sx={{ width: "100%" }} type="submit">
-                Add
-              </Button>
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    variant="contained"
+                    sx={{ width: "100%" }}
+                    type="submit"
+                  >
+                    Add
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
           </Box>
         </Fade>
