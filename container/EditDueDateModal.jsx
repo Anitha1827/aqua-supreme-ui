@@ -27,7 +27,8 @@ const style = {
 };
 
 const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
-  const [duedate, setDuedate] = useState();
+  console.log("line30", editdata);
+  const [duedate, setDuedate] = useState(editdata.duedate);
   // Snackbar
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
@@ -38,7 +39,7 @@ const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let data = { duedate };
+    let data = { date:duedate };
     data["id"] = editdata._id;
     data["isReassigned"] = true;
     let resp = await editDuedate(data);
