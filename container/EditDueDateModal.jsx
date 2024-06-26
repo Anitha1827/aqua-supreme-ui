@@ -27,7 +27,6 @@ const style = {
 };
 
 const EditDueDateModal = ({ open, setOpen, editdata, setReminder }) => {
-  console.log("line30", editdata);
   const [duedate, setDuedate] = useState(editdata.duedate);
   // Snackbar
   const [message, setMessage] = useState(false);
