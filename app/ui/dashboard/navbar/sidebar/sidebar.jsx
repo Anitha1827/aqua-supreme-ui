@@ -221,7 +221,7 @@ const Sidebar = () => {
   }, []);
 
   return (
-    <>
+    <div className="sidebarparent">
       <button className={styles.hamburger} onClick={toggleSidebar}>
         <FaBars />
       </button>
@@ -229,6 +229,7 @@ const Sidebar = () => {
         className={`${styles.overlay} ${isOpen ? styles.open : ""}`}
         onClick={toggleSidebar}
       ></div>
+      
       <div className={`${styles.container} ${isOpen ? styles.open : ""}`}>
         <div className={styles.user}>
           <h4>Aqua Supreme Pure</h4>
@@ -253,7 +254,7 @@ const Sidebar = () => {
               ))}
         </ul>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -106,6 +106,7 @@
     .container {
       position: fixed;
       top: 0;
+      bottom:0;
       left: 0;
       width: 250px;
       height: calc(100vh - 40px); 
@@ -115,10 +116,12 @@
       transition: transform 0.3s ease;
       z-index: 1000;
       overflow-y: auto;
+      height: 100vh;
     }
   
     .container.open {
       transform: translateX(0);
+      height: 100%;
     }
   
     .user {
