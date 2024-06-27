@@ -88,7 +88,8 @@ const LeadCreation = () => {
 
   // code optimization for table row
   const Table = ({ val, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{val.name}</td>
       <td>{val.phone}</td>
@@ -126,7 +127,8 @@ const LeadCreation = () => {
           </Button>
         </div>
       </td>
-    </tr>;
+    </tr>
+    );
   };
   return (
     <div className={styles.container}>

@@ -32,8 +32,8 @@ const ProductPage = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
 
     let resp = await getAllProduct();
@@ -59,39 +59,34 @@ const ProductPage = () => {
   };
 
   //code optimization for table row
-  const Table = ({prod, idx}) => {
-    <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{prod.productname}</td>
-                  <td>{prod.productmodel}</td>
-                  <td>
-                    <div
-                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                    >
-                      {/* Edit button */}
-                      <Button
-                        onClick={() => handleEdit(prod)}
-                        title="Edit Data"
-                      >
-                        <FaRegEdit sx={{ fontSize: "20px" }} />
-                      </Button>
+  const Table = ({ prod, idx }) => {
+    return(
+      <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{prod.productname}</td>
+      <td>{prod.productmodel}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          {/* Edit button */}
+          <Button onClick={() => handleEdit(prod)} title="Edit Data">
+            <FaRegEdit sx={{ fontSize: "20px" }} />
+          </Button>
 
-                      {/* Delete button */}
-                      <Button
-                        aria-label="delete"
-                        // size="large"
-                        className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDelete(prod)}
-                        title="Delete"
-                      >
-                        <DeleteIcon
-                          sx={{ fontSize: "20px", color: "crimson" }}
-                        />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-  }
+          {/* Delete button */}
+          <Button
+            aria-label="delete"
+            // size="large"
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDelete(prod)}
+            title="Delete"
+          >
+            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+          </Button>
+        </div>
+      </td>
+    </tr>
+    );
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -121,16 +116,16 @@ const ProductPage = () => {
         </thead>
         <tbody>
           {product.length > 0 && search.length <= 0
-            ? product.slice(startIndex, startIndex + 10).map((prod, idx) => (
-                <Table prod={prod} idx={idx} key={idx}/>
-              ))
+            ? product
+                .slice(startIndex, startIndex + 10)
+                .map((prod, idx) => <Table prod={prod} idx={idx} key={idx} />)
             : product.map(
                 (prod, idx) =>
                   (prod.productname
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     prod.productmodel.includes(search)) && (
-                      <Table prod={prod} idx={idx} key={idx}/>
+                    <Table prod={prod} idx={idx} key={idx} />
                   )
               )}
         </tbody>

@@ -72,7 +72,8 @@ const ServiceCalls = () => {
   };
   //code optimization for table row
   const Table = ({ item, idx }) => {
-    <tr
+    return(
+      <tr
       key={idx}
       className={`${
         item.serviceAssignTo && item.serviceAssignTo.length > 0
@@ -130,7 +131,8 @@ const ServiceCalls = () => {
           )}
         </div>
       </td>
-    </tr>;
+    </tr>
+    );
   };
   return (
     <div className={styles.container}>

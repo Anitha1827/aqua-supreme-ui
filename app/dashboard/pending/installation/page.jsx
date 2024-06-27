@@ -39,7 +39,8 @@ const InstallationPendingPage = () => {
   }, []);
 
   const Table = ({ data, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{data.customerName}</td>
       <td>{data.customerPhone}</td>
@@ -61,7 +62,8 @@ const InstallationPendingPage = () => {
           </button>
         </div>
       </td>
-    </tr>;
+    </tr>
+    );
   };
   return (
     <div className={styles.container}>

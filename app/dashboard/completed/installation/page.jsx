@@ -38,7 +38,8 @@ const InstallationCompletedPage = () => {
 
   //code optimization for table row
   const Table = ({ data, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{data.customerName}</td>
       <td>{data.customerPhone}</td>
@@ -50,7 +51,8 @@ const InstallationCompletedPage = () => {
       <td>
         <button className={styles.compbutton}>Completed</button>
       </td>
-    </tr>;
+    </tr>
+    )
   };
 
   return (

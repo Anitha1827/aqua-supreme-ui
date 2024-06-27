@@ -56,7 +56,8 @@ const UserPage = () => {
   };
   //code optimization for table row
   const Table = ({ item, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{item.name ? item.name : "test"}</td>
       <td>{item.phone}</td>
@@ -82,7 +83,8 @@ const UserPage = () => {
           </Button>
         </div>
       </td>
-    </tr>;
+    </tr>
+    );
   };
   return (
     <>

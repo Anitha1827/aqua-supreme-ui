@@ -59,7 +59,7 @@ const Spares = () => {
   const handleOpen = () => setOpen(true);
   //optimization code for table row
   const Table = ({ sprs, idx }) => {
-    <tr key={idx}>
+    return(<tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{sprs.spareName}</td>
       <td>{sprs.spareNumber}</td>
@@ -83,7 +83,7 @@ const Spares = () => {
           </Button>
         </div>
       </td>
-    </tr>;
+    </tr>);
   };
   return (
     <div className={styles.container}>

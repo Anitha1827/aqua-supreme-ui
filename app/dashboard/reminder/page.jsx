@@ -62,7 +62,7 @@ const ServiceReminder = () => {
 
   //code optimization for table row
   const Table = ({ remind, idx }) => {
-    <tr key={idx}>
+    return(<tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{remind.customerName}</td>
       <td>{remind.customerPhone}</td>
@@ -79,7 +79,7 @@ const ServiceReminder = () => {
         </Button>
       </td>
       <td>{remind.serviceCount}</td>
-    </tr>;
+    </tr>);
   };
   return (
     <div className={styles.container}>

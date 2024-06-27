@@ -37,26 +37,27 @@ const ServicePendingPage = () => {
 
   //code optimization for table row
   const Table = ({ data, idx }) => {
-    <tr key={idx}>
-      <td>{startIndex + idx + 1}</td>
-      <td>{data.customerName}</td>
-      <td>{data.customerPhone}</td>
-      <td>{data.updatedAt}</td>
-      <td>{data.serviceAssignTo}</td>
-      <td>
-        <button className={styles.pendbutton}>Pending</button>
-      </td>
-      <td>
-        <div className={styles.buttons}>
-          <button
-            className={styles.addbutton}
-            onClick={() => router.push(`/dashboard/service/${data._id}`)}
-          >
-            Update
-          </button>
-        </div>
-      </td>
-    </tr>;
+   return( <tr key={idx}>
+    <td>{startIndex + idx + 1}</td>
+    <td>{data.customerName}</td>
+    <td>{data.customerPhone}</td>
+    <td>{data.updatedAt}</td>
+    <td>{data.serviceAssignTo}</td>
+    <td>
+      <button className={styles.pendbutton}>Pending</button>
+    </td>
+    <td>
+      <div className={styles.buttons}>
+        <button
+          className={styles.addbutton}
+          onClick={() => router.push(`/dashboard/service/${data._id}`)}
+        >
+          Update
+        </button>
+      </div>
+    </td>
+  </tr>
+  );
   };
   return (
     <div className={styles.container}>

@@ -39,7 +39,8 @@ const ServiceCompletedPage = () => {
 
   //code optimization for table row
   const Table = ({ item, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{item.customerName}</td>
       <td>{item.customerPhone}</td>
@@ -49,7 +50,8 @@ const ServiceCompletedPage = () => {
       <td>
         <button className={styles.compbutton}>Completed</button>
       </td>
-    </tr>;
+    </tr>
+    );
   };
   return (
     <div className={styles.container}>

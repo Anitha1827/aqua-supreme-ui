@@ -58,7 +58,8 @@ const AreaPage = () => {
 
   //code optimization for table row
   const Table = ({ val, idx }) => {
-    <tr key={idx}>
+    return(
+      <tr key={idx}>
       <td>{idx + 1}</td>
       <td>{val.areaName}</td>
       <td>
@@ -82,6 +83,7 @@ const AreaPage = () => {
         </div>
       </td>
     </tr>;
+    )
   };
 
   return (
