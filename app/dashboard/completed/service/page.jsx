@@ -22,7 +22,7 @@ const ServiceCompletedPage = () => {
     let res = await findingUser(token);
     let response = await getServiceCompleted();
     let data = response.getAllServiceDetails;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getAllServiceDetails.filter(
         (val) =>
           val.isInstallationAssignTo &&
@@ -36,7 +36,21 @@ const ServiceCompletedPage = () => {
   useEffect(() => {
     getCompletedData();
   }, []);
-  console.log("responsedata23", data);
+
+  //code optimization for table row
+  const Table = ({ item, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{item.customerName}</td>
+      <td>{item.customerPhone}</td>
+      <td>{item.createdAt}</td>
+      <td>{item.updatedAt}</td>
+      <td>{item.serviceAssignTo}</td>
+      <td>
+        <button className={styles.compbutton}>Completed</button>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -64,38 +78,16 @@ const ServiceCompletedPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.slice(startIndex, startIndex + 10).map((item, idx) => (
-                <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{item.customerName}</td>
-                  <td>{item.customerPhone}</td>
-                  <td>{item.createdAt}</td>
-                  <td>{item.updatedAt}</td>
-                  <td>{item.serviceAssignTo}</td>
-                  <td>
-                    <button className={styles.compbutton}>Completed</button>
-                  </td>
-                </tr>
-              ))
+            ? data
+                .slice(startIndex, startIndex + 10)
+                .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
             : data.map(
                 (item, idx) =>
                   (item.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     item.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{item.customerName}</td>
-                      <td>{item.customerPhone}</td>
-                      <td>{item.createdAt}</td>
-                      <td>
-                        {item.serviceDate.split("").slice(0, 10).join("")}
-                      </td>
-                      <td>{item.serviceAssignTo}</td>
-                      <td>
-                        <button className={styles.compbutton}>Completed</button>
-                      </td>
-                    </tr>
+                    <Table item={item} idx={idx} key={idx} />
                   )
               )}
           <tr></tr>

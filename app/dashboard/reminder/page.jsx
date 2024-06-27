@@ -50,8 +50,7 @@ const ServiceReminder = () => {
     let resp = await getServiceReminderCustomer();
     let data = resp.data.filter(
       (val) =>
-        val.duedate && val.duedate.length > 0
-        && val.duedateReassignedCount <= 3
+        val.duedate && val.duedate.length > 0 && val.duedateReassignedCount <= 3
     );
     // Sort the customers array
     const sortedCustomers = sortByDueDate(data);
@@ -60,6 +59,28 @@ const ServiceReminder = () => {
   useEffect(() => {
     getservicereminder();
   }, []);
+
+  //code optimization for table row
+  const Table = ({ remind, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{remind.customerName}</td>
+      <td>{remind.customerPhone}</td>
+      <td>{remind.lastServicedAt}</td>
+      <td>
+        {remind.duedate ? remind.duedate.split("").slice(0, 10).join("") : ""}
+        <Button
+          onClick={() => handleOpen(remind)}
+          className={`${styles.button} ${styles.view}`}
+          title="Edit"
+          color="primary"
+        >
+          <FaRegEdit sx={{ fontSize: "20px" }} />
+        </Button>
+      </td>
+      <td>{remind.serviceCount}</td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -91,26 +112,7 @@ const ServiceReminder = () => {
               ? reminder
                   .slice(startIndex, startIndex + 10)
                   .map((remind, idx) => (
-                    <tr key={idx}>
-                      <td>{startIndex + idx + 1}</td>
-                      <td>{remind.customerName}</td>
-                      <td>{remind.customerPhone}</td>
-                      <td>{remind.lastServicedAt}</td>
-                      <td>
-                        {remind.duedate
-                          ? remind.duedate.split("").slice(0, 10).join("")
-                          : ""}
-                        <Button
-                          onClick={() => handleOpen(remind)}
-                          className={`${styles.button} ${styles.view}`}
-                          title="Edit"
-                          color="primary"
-                        >
-                          <FaRegEdit sx={{ fontSize: "20px" }} />
-                        </Button>
-                      </td>
-                      <td>{remind.serviceCount}</td>
-                    </tr>
+                    <Table remind={remind} idx={idx} key={idx} />
                   ))
               : reminder.map(
                   (remind, idx) =>
@@ -118,26 +120,7 @@ const ServiceReminder = () => {
                       .toLowerCase()
                       .includes(search.toLowerCase()) ||
                       remind.customerPhone.includes(search)) && (
-                      <tr key={idx}>
-                        <td>{idx + 1}</td>
-                        <td>{remind.customerName}</td>
-                        <td>{remind.customerPhone}</td>
-                        <td>{remind.lastServicedAt}</td>
-                        <td>
-                          {remind.duedate
-                            ? remind.duedate.split("").slice(0, 10).join("")
-                            : ""}
-                          <Button
-                            onClick={() => handleOpen(remind)}
-                            className={`${styles.button} ${styles.view}`}
-                            title="Edit"
-                            color="primary"
-                          >
-                            <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>
-                        </td>
-                        <td>{remind.serviceCount}</td>
-                      </tr>
+                      <Table remind={remind} idx={idx} key={idx} />
                     )
                 ))}
         </tbody>

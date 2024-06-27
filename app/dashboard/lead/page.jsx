@@ -85,6 +85,49 @@ const LeadCreation = () => {
   useEffect(() => {
     getLeadData();
   }, []);
+
+  // code optimization for table row
+  const Table = ({ val, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{val.name}</td>
+      <td>{val.phone}</td>
+
+      <span className={styles.tabletd} title={val.feedback}>
+        <td>{val.feedback}</td>
+      </span>
+
+      <td>{val.createdAt}</td>
+      <td>{val.handleBy}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          {/* Edit button */}
+          <Button onClick={() => handleEdit(val)} title="Edit Data">
+            <FaRegEdit sx={{ fontSize: "20px" }} />
+          </Button>
+
+          {/* Convert to customer */}
+          <Button
+            onClick={() => handleConvert(val)}
+            title="Convert to customer"
+          >
+            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+          </Button>
+
+          {/* Delete button */}
+          <Button
+            aria-label="delete"
+            // size="large"
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDelete(val)}
+            title="Delete"
+          >
+            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+          </Button>
+        </div>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -96,7 +139,7 @@ const LeadCreation = () => {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-          <Box sx={{ minWidth: 200 }} >
+          <Box sx={{ minWidth: 200 }}>
             <FormControl fullWidth>
               <InputLabel id="demo-simple-select-label">Filter</InputLabel>
               <Select
@@ -137,110 +180,20 @@ const LeadCreation = () => {
         <tbody>
           {lead.length > 0 &&
             (search.length <= 0
-              ? lead.slice(startIndex, startIndex + 10).map(
-                  (val, idx) =>
-                    (filter == "all" || val.handleBy === filter) && (
-                      <tr key={idx}>
-                        <td>{startIndex + idx + 1}</td>
-                        <td>{val.name}</td>
-                        <td>{val.phone}</td>
-                       
-                          <span className={styles.tabletd} title={val.feedback}>
-                          <td>
-                            {val.feedback}
-                            </td>
-                          </span>
-                       
-                         <td>{val.createdAt}</td>
-                       <td>{val.handleBy}</td>
-                        <td>
-                          <div
-                            className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                          >
-                            {/* Edit button */}
-                            <Button
-                              onClick={() => handleEdit(val)}
-                              title="Edit Data"
-                            >
-                              <FaRegEdit sx={{ fontSize: "20px" }} />
-                            </Button>
-
-                            {/* Convert to customer */}
-                            <Button
-                              onClick={() => handleConvert(val)}
-                              title="Convert to customer"
-                            >
-                              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                            </Button>
-
-                            {/* Delete button */}
-                            <Button
-                              aria-label="delete"
-                              // size="large"
-                              className={`${styles.button} ${styles.delete}`}
-                              onClick={() => handleDelete(val)}
-                              title="Delete"
-                            >
-                              <DeleteIcon
-                                sx={{ fontSize: "20px", color: "crimson" }}
-                              />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                )
+              ? lead
+                  .slice(startIndex, startIndex + 10)
+                  .map(
+                    (val, idx) =>
+                      (filter == "all" || val.handleBy === filter) && (
+                        <Table val={val} idx={idx} key={idx} />
+                      )
+                  )
               : lead.map(
                   (val, idx) =>
                     (val.name.toLowerCase().includes(search.toLowerCase()) ||
                       val.phone.includes(search)) &&
                     (filter == "all" || val.handleBy === filter) && (
-                      <tr key={idx}>
-                        <td>{idx + 1}</td>
-                        <td>{val.name}</td>
-                        <td>{val.phone}</td>
-                        <td>
-                          <span className={styles.tabletd} title={val.feedback}>
-                            {val.feedback}
-                          </span>
-                        </td>
-                        <td>{val.createdAt}</td>
-                       <td>{val.handleBy}</td>
-                        <td>
-                          <div
-                            className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                          >
-                            {/* Edit button */}
-                            <Button
-                              onClick={() => handleEdit(val)}
-                              title="Edit Data"
-                            >
-                              <FaRegEdit sx={{ fontSize: "20px" }} />
-                            </Button>
-
-                            {/* Convert to customer */}
-                            <Button
-                              onClick={() => handleConvert(val._id)}
-                              title="Convert to customer"
-                            >
-                              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                            </Button>
-
-                            {/* Delete button */}
-                            <Button
-                              aria-label="delete"
-                              // size="large"
-                              className={`${styles.button} ${styles.delete}`}
-                              onClick={() => handleDelete(val)}
-                              title="Delete"
-                            >
-                              <DeleteIcon
-                                sx={{ fontSize: "20px", color: "crimson" }}
-                              />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                      <Table val={val} idx={idx} key={idx} />
                     )
                 ))}
         </tbody>

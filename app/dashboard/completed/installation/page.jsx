@@ -22,7 +22,7 @@ const InstallationCompletedPage = () => {
     let res = await findingUser(token);
     let response = await installationCompleted();
     let data = response.getdata;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getdata.filter(
         (val) =>
           val.isInstallationAssignTo &&
@@ -35,6 +35,23 @@ const InstallationCompletedPage = () => {
   useEffect(() => {
     getCompletedData();
   }, []);
+
+  //code optimization for table row
+  const Table = ({ data, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{data.customerName}</td>
+      <td>{data.customerPhone}</td>
+      <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
+      <td>
+        {data.duedate ? data.duedate.split("").slice(0, 10).join("") : ""}
+      </td>
+      <td>{data.isInstallationAssignTo}</td>
+      <td>
+        <button className={styles.compbutton}>Completed</button>
+      </td>
+    </tr>;
+  };
 
   return (
     <div className={styles.container}>
@@ -63,44 +80,16 @@ const InstallationCompletedPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
-                <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{data.customerName}</td>
-                  <td>{data.customerPhone}</td>
-                  <td>{data.lastServicedAt.split("").slice(0, 10).join("")}</td>
-                  <td>{data.duedate
-                          ? data.duedate.split("").slice(0, 10).join("")
-                          : ""}</td>
-                  <td>{data.isInstallationAssignTo}</td>
-                  <td>
-                    <button className={styles.compbutton}>Completed</button>
-                  </td>
-                </tr>
-              ))
+            ? data
+                .slice(startIndex, startIndex + 10)
+                .map((data, idx) => <Table data={data} idx={idx} key={idx} />)
             : data.map(
                 (data, idx) =>
                   (data.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     data.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{data.customerName}</td>
-                      <td>{data.customerPhone}</td>
-                      <td>
-                        {data.lastServicedAt.split("").slice(0, 10).join("")}
-                      </td>
-                      <td>
-                        {data.duedate
-                          ? data.duedate.split("").slice(0, 10).join("")
-                          : ""}
-                      </td>
-                      <td>{data.isInstallationAssignTo}</td>
-                      <td>
-                        <button className={styles.compbutton}>Completed</button>
-                      </td>
-                    </tr>
+                    <Table data={data} idx={idx} key={idx} />
                   )
               )}
         </tbody>

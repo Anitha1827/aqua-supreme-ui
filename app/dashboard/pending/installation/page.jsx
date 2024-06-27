@@ -23,7 +23,7 @@ const InstallationPendingPage = () => {
     let res = await findingUser(token);
     let response = await installationPending();
     let data = response.getpendingdata;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getpendingdata.filter(
         (val) =>
           val.isInstallationAssignTo &&
@@ -38,6 +38,31 @@ const InstallationPendingPage = () => {
     getPendingData();
   }, []);
 
+  const Table = ({ data, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{data.customerName}</td>
+      <td>{data.customerPhone}</td>
+      <td>{data.createdAt}</td>
+      <td>
+        {data.duedate ? data.duedate.split("").slice(0, 10).join("") : ""}
+      </td>
+      <td>{data.isInstallationAssignTo}</td>
+      <td>
+        <button className={styles.pendbutton}>Pending</button>
+      </td>
+      <td>
+        <div className={styles.buttons}>
+          <button
+            className={styles.addbutton}
+            onClick={() => router.push(`/dashboard/installations/${data._id}`)}
+          >
+            Update
+          </button>
+        </div>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -67,64 +92,16 @@ const InstallationPendingPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
-                <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{data.customerName}</td>
-                  <td>{data.customerPhone}</td>
-                  <td>{data.createdAt}</td>
-                  <td>{data.duedate ? data.duedate.split("").slice(0, 10).join(""):""}</td>
-                  <td>{data.isInstallationAssignTo}</td>
-                  <td>
-                    <button className={styles.pendbutton}>Pending</button>
-                  </td>
-                  <td>
-                    <div className={styles.buttons}>
-                      <button
-                        className={styles.addbutton}
-                        onClick={() =>
-                          router.push(`/dashboard/installations/${data._id}`)
-                        }
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+            ? data
+                .slice(startIndex, startIndex + 10)
+                .map((data, idx) => <Table data={data} idx={idx} key={idx} />)
             : data.map(
                 (data, idx) =>
                   (data.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     data.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{data.customerName}</td>
-                      <td>{data.customerPhone}</td>
-                      <td>
-                        {data.lastServicedAt ? data.lastServicedAt.split("").slice(0, 10).join("") : ""}
-                      </td>
-                      <td>{data.duedate}</td>
-                      <td>{data.isInstallationAssignTo}</td>
-                      <td>
-                        <button className={styles.pendbutton}>Pending</button>
-                      </td>
-                      <td>
-                        <div className={styles.buttons}>
-                          <button
-                            className={styles.addbutton}
-                            onClick={() =>
-                              router.push(
-                                `/dashboard/installations/${data._id}`
-                              )
-                            }
-                          >
-                            Update
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    <Table data={data} idx={idx} key={idx} />
                   )
               )}
         </tbody>

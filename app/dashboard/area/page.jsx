@@ -21,21 +21,21 @@ const AreaPage = () => {
   const [edit, setEdit] = useState(false);
   //   backend data storage
   const [area, setArea] = useState([]);
-  const [editdata, setEditData] = useState({})
+  const [editdata, setEditData] = useState({});
 
-//   Edit function
-    const handleEdit = async(val) => {
-        setEditData(val)
-        setEdit(true)
-    };
-    //   Delete functionalities
-  const handleDelete = async(val) => {
+  //   Edit function
+  const handleEdit = async (val) => {
+    setEditData(val);
+    setEdit(true);
+  };
+  //   Delete functionalities
+  const handleDelete = async (val) => {
     let resp = await deleteArea(val._id);
     console.log("deletedArea", resp);
     getAreadata();
-};
+  };
 
-//fetching data 
+  //fetching data
   const getAreadata = async () => {
     let token = localStorage.getItem("token");
     if (!token) {
@@ -43,20 +43,46 @@ const AreaPage = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
     let resp = await getArea();
     setArea(resp.getArea);
   };
-  
+
   useEffect(() => {
     getAreadata();
   }, []);
 
   const handleOpen = () => setOpen(true);
 
+  //code optimization for table row
+  const Table = ({ val, idx }) => {
+    <tr key={idx}>
+      <td>{idx + 1}</td>
+      <td>{val.areaName}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          <Button
+            onClick={() => handleEdit(val)}
+            className={`${styles.button} ${styles.view}`}
+            title="Edit"
+            color="primary"
+          >
+            <FaRegEdit sx={{ fontSize: "20px" }} />
+          </Button>
 
+          <Button
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDelete(val)}
+            title="Delete"
+          >
+            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+          </Button>
+        </div>
+      </td>
+    </tr>;
+  };
 
   return (
     <div className={styles.container}>
@@ -89,66 +115,15 @@ const AreaPage = () => {
         </thead>
         <tbody>
           {area.length > 0 && search.length <= 0
-           ? area.slice(startIndex, startIndex + 10).map((val, idx) => (
-              <tr key={idx}>
-                <td>{startIndex + idx + 1}</td>
-                <td>{val.areaName}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    <Button
-                        onClick={() => handleEdit(val)}
-                      className={`${styles.button} ${styles.view}`}
-                      title="Edit"
-                      color="primary"
-                    >
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
-
-                    <Button
-                      className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDelete(val)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          :
-          area.map((val, idx) => (val.areaName
-            .toLowerCase()
-            .includes(search.toLowerCase())) && (
-            <tr key={idx}>
-              <td>{idx + 1}</td>
-              <td>{val.areaName}</td>
-              <td>
-                <div
-                  className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                >
-                  <Button
-                      onClick={() => handleEdit(val)}
-                    className={`${styles.button} ${styles.view}`}
-                    title="Edit"
-                    color="primary"
-                  >
-                    <FaRegEdit sx={{ fontSize: "20px" }} />
-                  </Button>
-
-                  <Button
-                    className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(val)}
-                    title="Delete"
-                  >
-                    <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))
-          }
+            ? area
+                .slice(startIndex, startIndex + 10)
+                .map((val, idx) => <Table val={val} idx={idx} key={idx} />)
+            : area.map(
+                (val, idx) =>
+                  val.areaName.toLowerCase().includes(search.toLowerCase()) && (
+                    <Table val={val} idx={idx} key={idx} />
+                  )
+              )}
         </tbody>
       </table>
       <Pagination

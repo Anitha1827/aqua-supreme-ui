@@ -23,11 +23,9 @@ const ServicePendingPage = () => {
     let res = await findingUser(token);
     let response = await getServicePendingData();
     let data = response.getAllServiceDetails;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getAllServiceDetails.filter(
-        (val) =>
-          val.serviceAssignTo &&
-          val.serviceAssignTo == res.user.name
+        (val) => val.serviceAssignTo && val.serviceAssignTo == res.user.name
       );
     }
     setData(data);
@@ -37,6 +35,29 @@ const ServicePendingPage = () => {
     getPendingDetails();
   }, []);
 
+  //code optimization for table row
+  const Table = ({ data, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{data.customerName}</td>
+      <td>{data.customerPhone}</td>
+      <td>{data.updatedAt}</td>
+      <td>{data.serviceAssignTo}</td>
+      <td>
+        <button className={styles.pendbutton}>Pending</button>
+      </td>
+      <td>
+        <div className={styles.buttons}>
+          <button
+            className={styles.addbutton}
+            onClick={() => router.push(`/dashboard/service/${data._id}`)}
+          >
+            Update
+          </button>
+        </div>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -64,61 +85,16 @@ const ServicePendingPage = () => {
         </thead>
         <tbody>
           {data && search.length <= 0
-            ? data.slice(startIndex, startIndex + 10).map((data, idx) => (
-                <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{data.customerName}</td>
-                  <td>{data.customerPhone}</td>
-                  <td>{data.updatedAt}</td>
-                  <td>{data.serviceAssignTo}</td>
-                  <td>
-                    <button className={styles.pendbutton}>Pending</button>
-                  </td>
-                  <td>
-                    <div className={styles.buttons}>
-                      <button
-                        className={styles.addbutton}
-                        onClick={() =>
-                          router.push(`/dashboard/service/${data._id}`)
-                        }
-                      >
-                        Update
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+            ? data
+                .slice(startIndex, startIndex + 10)
+                .map((data, idx) => <Table data={data} idx={idx} key={idx} />)
             : data.map(
                 (data, idx) =>
                   (data.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     data.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{data.customerName}</td>
-                      <td>{data.customerPhone}</td>
-                      <td>{data.createdAt}</td>
-                      <td>
-                        {data.serviceDate.split("").slice(0, 10).join("")}
-                      </td>
-                      <td>{data.serviceAssignTo}</td>
-                      <td>
-                        <button className={styles.pendbutton}>Pending</button>
-                      </td>
-                      <td>
-                        <div className={styles.buttons}>
-                          <button
-                            className={styles.addbutton}
-                            onClick={() =>
-                              router.push(`/dashboard/service/${data._id}`)
-                            }
-                          >
-                            Update
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
+                    <Table data={data} idx={idx} key={idx} />
                   )
               )}
         </tbody>

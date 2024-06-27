@@ -40,8 +40,8 @@ const Dashboard = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("dashboard/installations");
     }
     let response = await getAllCustomer();
     setCustomer(response.getAllCustomerDetails);
@@ -60,6 +60,53 @@ const Dashboard = () => {
     let res = await deleteCustomer(item._id);
     console.log(res);
     getCustomerDetails();
+  };
+  const Table = ({ item, idx }) => {
+    return (
+      <tr key={idx}>
+        <td>{startIndex + idx + 1}</td>
+        <td>{item.customerName}</td>
+        <td>{item.customerPhone}</td>
+        <td>
+          {item.lastServicedAt
+            ? item.lastServicedAt.split("").splice(0, 10).join("")
+            : ""}
+        </td>
+        <td>
+          {item.duedate ? item.duedate.split("").slice(0, 10).join("") : ""}
+        </td>
+        <td>
+          <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+            <Button
+              onClick={() => handleEdit(item)}
+              className={`${styles.button} ${styles.view}`}
+              title="Edit"
+              color="primary"
+            >
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
+
+            {/* Details */}
+            <Button
+              title="Customer Details"
+              onClick={() =>
+                router.push(`/dashboard/customerdetails/${item._id}`)
+              }
+            >
+              <VisibilityIcon sx={{ fontSize: "20px" }} />
+            </Button>
+
+            <Button
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => handleDelete(item)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </Button>
+          </div>
+        </td>
+      </tr>
+    );
   };
   return (
     <div className={styles.container}>
@@ -96,55 +143,7 @@ const Dashboard = () => {
         <tbody>
           {customer.length > 0 && search.length <= 0
             ? customer.slice(startIndex, startIndex + 10).map((item, idx) => (
-                <tr key={idx}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{item.customerName}</td>
-                  <td>{item.customerPhone}</td>
-                  <td>
-                    {item.lastServicedAt
-                      ? item.lastServicedAt.split("").splice(0, 10).join("")
-                      : ""}
-                  </td>
-                  <td>
-                    {item.duedate
-                      ? item.duedate.split("").slice(0, 10).join("")
-                      : ""}
-                  </td>
-                  <td>
-                    <div
-                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                    >
-                      <Button
-                        onClick={() => handleEdit(item)}
-                        className={`${styles.button} ${styles.view}`}
-                        title="Edit"
-                        color="primary"
-                      >
-                        <FaRegEdit sx={{ fontSize: "20px" }} />
-                      </Button>
-
-                      {/* Details */}
-                      <Button
-                        title="Customer Details"
-                        onClick={() =>
-                          router.push(`/dashboard/customerdetails/${item._id}`)
-                        }
-                      >
-                        <VisibilityIcon sx={{ fontSize: "20px" }} />
-                      </Button>
-
-                      <Button
-                        className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDelete(item)}
-                        title="Delete"
-                      >
-                        <DeleteIcon
-                          sx={{ fontSize: "20px", color: "crimson" }}
-                        />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
+               <Table item={item} idx={idx} key={idx} />
               ))
             : customer.map(
                 (item, idx) =>
@@ -152,57 +151,7 @@ const Dashboard = () => {
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     item.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{item.customerName}</td>
-                      <td>{item.customerPhone}</td>
-                      <td>
-                        {item.lastServicedAt
-                          ? item.lastServicedAt.split("").splice(0, 10).join("")
-                          : ""}
-                      </td>
-                      <td>
-                        {item.duedate
-                          ? item.duedate.split("").slice(0, 10).join("")
-                          : ""}
-                      </td>
-                      <td>
-                        <div
-                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                        >
-                          <Button
-                            onClick={() => handleEdit(item)}
-                            className={`${styles.button} ${styles.view}`}
-                            title="Edit"
-                            color="primary"
-                          >
-                            <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>
-
-                          {/* Details */}
-                          <Button
-                            title="Customer Details"
-                            onClick={() =>
-                              router.push(
-                                `/dashboard/customerdetails/${item._id}`
-                              )
-                            }
-                          >
-                            <VisibilityIcon sx={{ fontSize: "20px" }} />
-                          </Button>
-
-                          <Button
-                            className={`${styles.button} ${styles.delete}`}
-                            onClick={() => handleDelete(item)}
-                            title="Delete"
-                          >
-                            <DeleteIcon
-                              sx={{ fontSize: "20px", color: "crimson" }}
-                            />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
+                      <Table item={item} idx={idx} key={idx} />
                   )
               )}
         </tbody>
@@ -231,5 +180,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

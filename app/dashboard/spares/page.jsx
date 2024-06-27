@@ -32,8 +32,8 @@ const Spares = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
 
     let resp = await getSpare();
@@ -57,7 +57,34 @@ const Spares = () => {
   }, []);
 
   const handleOpen = () => setOpen(true);
+  //optimization code for table row
+  const Table = ({ sprs, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{sprs.spareName}</td>
+      <td>{sprs.spareNumber}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          <Button
+            onClick={() => handleEdit(sprs)}
+            className={`${styles.button} ${styles.view}`}
+            title="Edit"
+            color="primary"
+          >
+            <FaRegEdit sx={{ fontSize: "20px" }} />
+          </Button>
 
+          <Button
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDelete(sprs)}
+            title="Delete"
+          >
+            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+          </Button>
+        </div>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -90,69 +117,18 @@ const Spares = () => {
         </thead>
         <tbody>
           {spares.length > 0 && search.length <= 0
-           ? spares.slice(startIndex, startIndex + 10).map((sprs, idx) => (
-              <tr key={idx}>
-                <td>{startIndex + idx + 1}</td>
-                <td>{sprs.spareName}</td>
-                <td>{sprs.spareNumber}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    <Button
-                      onClick={() => handleEdit(sprs)}
-                      className={`${styles.button} ${styles.view}`}
-                      title="Edit"
-                      color="primary"
-                    >
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
-
-                    <Button
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(sprs)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-            :
-            spares.map((sprs, idx) => (sprs.spareName
-              .toLowerCase()
-              .includes(search.toLowerCase()) ||
-              sprs.spareNumber.includes(search)) && (
-              <tr key={idx}>
-                <td>{idx + 1}</td>
-                <td>{sprs.spareName}</td>
-                <td>{sprs.spareNumber}</td>
-                <td>
-                  <div
-                    className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                  >
-                    <Button
-                      onClick={() => handleEdit(sprs)}
-                      className={`${styles.button} ${styles.view}`}
-                      title="Edit"
-                      color="primary"
-                    >
-                      <FaRegEdit sx={{ fontSize: "20px" }} />
-                    </Button>
-
-                    <Button
-                      className={`${styles.button} ${styles.delete}`}
-                      onClick={() => handleDelete(sprs)}
-                      title="Delete"
-                    >
-                      <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-                    </Button>
-                  </div>
-                </td>
-              </tr>
-            ))
-          }
+            ? spares
+                .slice(startIndex, startIndex + 10)
+                .map((sprs, idx) => <Table sprs={sprs} idx={idx} key={idx} />)
+            : spares.map(
+                (sprs, idx) =>
+                  (sprs.spareName
+                    .toLowerCase()
+                    .includes(search.toLowerCase()) ||
+                    sprs.spareNumber.includes(search)) && (
+                    <Table sprs={sprs} idx={idx} key={idx} />
+                  )
+              )}
         </tbody>
       </table>
       <Pagination

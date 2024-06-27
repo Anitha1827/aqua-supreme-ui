@@ -65,7 +65,7 @@ const Installations = () => {
     let response = await getInstallationDetails();
     console.log("page23", response);
     let data = response.getAllCustomerDetails;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getAllCustomerDetails.filter(
         (val) =>
           val.isInstallationAssignTo &&
@@ -82,6 +82,69 @@ const Installations = () => {
     getInstallation();
   };
 
+  //code Optimization for table row
+  const Table = ({ inst, idx }) => {
+    <tr
+      key={idx}
+      className={`${
+        inst.isInstallationAssignTo && inst.isInstallationAssignTo.length > 0
+          ? "Assigned"
+          : "notAssigned"
+      }`}
+    >
+      <td>{startIndex + idx + 1}</td>
+      <td>{inst.customerName}</td>
+      <td>{inst.customerPhone}</td>
+      <td>{inst.createdAt}</td>
+      <td>
+        {inst.duedate ? inst.duedate.split("").slice(0, 10).join("") : ""}
+      </td>
+      <td>
+        {inst.isInstallationAssignTo
+          ? inst.isInstallationAssignTo
+          : "NotAssigned"}
+      </td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          {/* Edit button */}
+          {usertype !== "Service Engineer" && (
+            <Button onClick={() => handleEdit(inst)} title="Edit Data">
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
+          )}
+          {/* Assign person button */}
+          {usertype !== "Service Engineer" && (
+            <Button
+              onClick={() => handleAssign(inst._id)}
+              title="Assign technician"
+            >
+              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+            </Button>
+          )}
+          {/* status update button */}
+          <Button
+            onClick={() => router.push(`/dashboard/installations/${inst._id}`)}
+            title="Update Status"
+          >
+            <TaskAltIcon sx={{ fontSize: "20px" }} />
+          </Button>
+          {/* Delete button */}
+          {usertype !== "Service Engineer" && (
+            <Button
+              aria-label="delete"
+              // size="large"
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => handleDelete(inst)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </Button>
+          )}
+        </div>
+      </td>
+    </tr>;
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -95,9 +158,11 @@ const Installations = () => {
           />
         </div>
 
-      {usertype !== "Service Engineer" &&  <Button onClick={handleOpen} variant="contained">
-          Add
-        </Button>}
+        {usertype !== "Service Engineer" && (
+          <Button onClick={handleOpen} variant="contained">
+            Add
+          </Button>
+        )}
       </div>
       <table className={styles.table}>
         <thead>
@@ -113,143 +178,16 @@ const Installations = () => {
         </thead>
         <tbody>
           {install.length > 0 && search.length <= 0
-            ? install.slice(startIndex, startIndex + 10).map((inst, idx) => (
-                <tr
-                  key={idx}
-                  className={`${
-                    inst.isInstallationAssignTo &&
-                    inst.isInstallationAssignTo.length > 0
-                      ? "Assigned"
-                      : "notAssigned"
-                  }`}
-                >
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{inst.customerName}</td>
-                  <td>{inst.customerPhone}</td>
-                  <td>{inst.createdAt}</td>
-                  <td>
-                    {inst.duedate
-                      ? inst.duedate.split("").slice(0, 10).join("")
-                      : ""}
-                  </td>
-                  <td>
-                    {inst.isInstallationAssignTo
-                      ? inst.isInstallationAssignTo
-                      : "NotAssigned"}
-                  </td>
-                  <td>
-                    <div
-                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                    >
-                      {/* Edit button */}
-                      {usertype !== "Service Engineer" && 
-                      <Button
-                        onClick={() => handleEdit(inst)}
-                        title="Edit Data"
-                      >
-                        <FaRegEdit sx={{ fontSize: "20px" }} />
-                      </Button>
-                        }
-                      {/* Assign person button */}
-                      { usertype !== "Service Engineer" && 
-                      <Button
-                        onClick={() => handleAssign(inst._id)}
-                        title="Assign technician"
-                      >
-                        <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                      </Button>
-                      }
-                      {/* status update button */}
-                      <Button
-                        onClick={() =>
-                          router.push(`/dashboard/installations/${inst._id}`)
-                        }
-                        title="Update Status"
-                      >
-                        <TaskAltIcon sx={{ fontSize: "20px" }} />
-                      </Button>
-                      {/* Delete button */}
-                      { usertype !== "Service Engineer" && <Button
-                        aria-label="delete"
-                        // size="large"
-                        className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDelete(inst)}
-                        title="Delete"
-                      >
-                        <DeleteIcon
-                          sx={{ fontSize: "20px", color: "crimson" }}
-                        />
-                      </Button>}
-                    </div>
-                  </td>
-                </tr>
-              ))
+            ? install
+                .slice(startIndex, startIndex + 10)
+                .map((inst, idx) => <Table inst={inst} idx={idx} key={idx} />)
             : install.map(
                 (inst, idx) =>
                   (inst.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     inst.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{inst.customerName}</td>
-                      <td>{inst.customerPhone}</td>
-                      <td>{inst.duedate}</td>
-                      <td>
-                        {inst.lastServicedAt
-                          ? inst.lastServicedAt.split("").slice(0, 10).join("")
-                          : "24-05-2024"}
-                      </td>
-                      <td>
-                        {inst.isInstallationAssignTo
-                          ? inst.isInstallationAssignTo
-                          : "NotAssigned"}
-                      </td>
-                      <td>
-                        <div
-                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                        >
-                          {/* Edit button */}
-                          {usertype !== "Service Engineer" && <Button
-                            onClick={() => handleEdit(inst)}
-                            title="Edit Data"
-                          >
-                            <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>}
-                          {/* Assign person button */}
-                          {usertype !== "Service Engineer" &&  <Button
-                            onClick={() => handleAssign(inst._id)}
-                            title="Assign technician"
-                          >
-                            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                          </Button>}
-
-                          {/* status update button */}
-                          <Button
-                            onClick={() =>
-                              router.push(
-                                `/dashboard/installations/${inst._id}`
-                              )
-                            }
-                            title="Update Status"
-                          >
-                            <TaskAltIcon sx={{ fontSize: "20px" }} />
-                          </Button>
-                          {/* Delete button */}
-                         {usertype !== "Service Engineer" &&  <Button
-                            aria-label="delete"
-                            // size="large"
-                            className={`${styles.button} ${styles.delete}`}
-                            onClick={() => handleDelete(inst)}
-                            title="Delete"
-                          >
-                            <DeleteIcon
-                              sx={{ fontSize: "20px", color: "crimson" }}
-                            />
-                          </Button>}
-                        </div>
-                      </td>
-                    </tr>
+                    <Table inst={inst} idx={idx} key={idx} />
                   )
               )}
         </tbody>

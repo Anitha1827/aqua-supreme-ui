@@ -58,37 +58,9 @@ const ProductPage = () => {
     getProduct();
   };
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.top}>
-        <div className={styles.searchcontainer}>
-          <SearchIcon className={styles.searchicon} />
-          <input
-            className={styles.searchfield}
-            placeholder="Search..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
-
-        <Button onClick={handleOpen} variant="contained">
-          Add
-        </Button>
-      </div>
-
-      <table className={styles.table}>
-        <thead>
-          <tr style={{ fontWeight: "bold" }}>
-            <td>Sl.No</td>
-            <td>Name</td>
-            <td>Modal</td>
-            <td>Action</td>
-          </tr>
-        </thead>
-        <tbody>
-          {product.length > 0 && search.length <= 0
-            ? product.slice(startIndex, startIndex + 10).map((prod, idx) => (
-                <tr key={idx}>
+  //code optimization for table row
+  const Table = ({prod, idx}) => {
+    <tr key={idx}>
                   <td>{startIndex + idx + 1}</td>
                   <td>{prod.productname}</td>
                   <td>{prod.productmodel}</td>
@@ -119,6 +91,38 @@ const ProductPage = () => {
                     </div>
                   </td>
                 </tr>
+  }
+  return (
+    <div className={styles.container}>
+      <div className={styles.top}>
+        <div className={styles.searchcontainer}>
+          <SearchIcon className={styles.searchicon} />
+          <input
+            className={styles.searchfield}
+            placeholder="Search..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+
+        <Button onClick={handleOpen} variant="contained">
+          Add
+        </Button>
+      </div>
+
+      <table className={styles.table}>
+        <thead>
+          <tr style={{ fontWeight: "bold" }}>
+            <td>Sl.No</td>
+            <td>Name</td>
+            <td>Modal</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          {product.length > 0 && search.length <= 0
+            ? product.slice(startIndex, startIndex + 10).map((prod, idx) => (
+                <Table prod={prod} idx={idx} key={idx}/>
               ))
             : product.map(
                 (prod, idx) =>
@@ -126,37 +130,7 @@ const ProductPage = () => {
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     prod.productmodel.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{prod.productname}</td>
-                      <td>{prod.productmodel}</td>
-                      <td>
-                        <div
-                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                        >
-                          {/* Edit button */}
-                          <Button
-                            onClick={() => handleEdit(prod)}
-                            title="Edit Data"
-                          >
-                            <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>
-
-                          {/* Delete button */}
-                          <Button
-                            aria-label="delete"
-                            // size="large"
-                            className={`${styles.button} ${styles.delete}`}
-                            onClick={() => handleDelete(prod)}
-                            title="Delete"
-                          >
-                            <DeleteIcon
-                              sx={{ fontSize: "20px", color: "crimson" }}
-                            />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
+                      <Table prod={prod} idx={idx} key={idx}/>
                   )
               )}
         </tbody>

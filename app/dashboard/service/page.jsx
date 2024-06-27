@@ -54,11 +54,9 @@ const ServiceCalls = () => {
     }
     console.log("line39", response.getAllServiceDetails);
     let data = response.getAllServiceDetails;
-    if(res.type === "serviceEngineer"){
+    if (res.type === "serviceEngineer") {
       data = response.getAllServiceDetails.filter(
-        (val) =>
-          val.serviceAssignTo &&
-          val.serviceAssignTo == res.user.name
+        (val) => val.serviceAssignTo && val.serviceAssignTo == res.user.name
       );
     }
     setService(data);
@@ -72,7 +70,68 @@ const ServiceCalls = () => {
     console.log(res);
     getservicemodal();
   };
+  //code optimization for table row
+  const Table = ({ item, idx }) => {
+    <tr
+      key={idx}
+      className={`${
+        item.serviceAssignTo && item.serviceAssignTo.length > 0
+          ? "Assigned"
+          : "notAssigned"
+      }`}
+    >
+      <td>{startIndex + idx + 1}</td>
+      <td>{item.customerName}</td>
+      <td>{item.customerPhone}</td>
+      <td>{item.createdAt}</td>
+      <td>
+        {item.serviceDate
+          ? item.serviceDate.split("").slice(0, 10).join("")
+          : ""}
+      </td>
+      <td>{item.serviceAssignTo ? item.serviceAssignTo : "NotAssigned"}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          {usertype !== "Service Engineer" && (
+            <Button
+              onClick={() => handleEdit(item)}
+              className={`${styles.button} ${styles.view}`}
+              title="Edit"
+              color="primary"
+            >
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
+          )}
+          {/* Assign person button */}
+          {usertype !== "Service Engineer" && (
+            <Button
+              onClick={() => handleAssign(item._id)}
+              title="Assign technician"
+            >
+              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+            </Button>
+          )}
 
+          {/* status update button */}
+          <Button
+            onClick={() => router.push(`/dashboard/service/${item._id}`)}
+            title="Status Update"
+          >
+            <TaskAltIcon sx={{ fontSize: "20px" }} />
+          </Button>
+          {usertype !== "Service Engineer" && (
+            <button
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => handleDelete(item)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </button>
+          )}
+        </div>
+      </td>
+    </tr>;
+  };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
@@ -85,13 +144,15 @@ const ServiceCalls = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {usertype !== "Service Engineer" && <Button
-          onClick={handleOpen}
-          variant="contained"
-          className={styles.addbutton}
-        >
-          Add
-        </Button>}
+        {usertype !== "Service Engineer" && (
+          <Button
+            onClick={handleOpen}
+            variant="contained"
+            className={styles.addbutton}
+          >
+            Add
+          </Button>
+        )}
       </div>
       <table className={styles.table}>
         <thead>
@@ -107,123 +168,16 @@ const ServiceCalls = () => {
         </thead>
         <tbody>
           {service.length > 0 && search.length <= 0
-            ? service.slice(startIndex, startIndex + 10).map((item, idx) => (
-                <tr key={idx}  className={`${
-                  item.serviceAssignTo &&
-                  item.serviceAssignTo.length > 0
-                    ? "Assigned"
-                    : "notAssigned"
-                }`}>
-                  <td>{startIndex + idx + 1}</td>
-                  <td>{item.customerName}</td>
-                  <td>{item.customerPhone}</td>
-                  <td>{item.createdAt}</td>
-                  <td>
-                    {item.serviceDate
-                      ? item.serviceDate.split("").slice(0, 10).join("")
-                      : ""}
-                  </td>
-                  <td>{item.serviceAssignTo ? item.serviceAssignTo : "NotAssigned"}</td>
-                  <td>
-                    <div
-                      className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                    >
-                     {usertype !== "Service Engineer" && <Button
-                        onClick={() => handleEdit(item)}
-                        className={`${styles.button} ${styles.view}`}
-                        title="Edit"
-                        color="primary"
-                      >
-                        <FaRegEdit sx={{ fontSize: "20px" }} />
-                      </Button>}
-                      {/* Assign person button */}
-                      {usertype !== "Service Engineer" && <Button
-                        onClick={() => handleAssign(item._id)}
-                        title="Assign technician"
-                      >
-                        <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                      </Button>}
-
-                      {/* status update button */}
-                      <Button
-                        onClick={() =>
-                          router.push(`/dashboard/service/${item._id}`)
-                        }
-                        title="Status Update"
-                      >
-                        <TaskAltIcon sx={{ fontSize: "20px" }} />
-                      </Button>
-                     {usertype !== "Service Engineer" && <button
-                        className={`${styles.button} ${styles.delete}`}
-                        onClick={() => handleDelete(item)}
-                        title="Delete"
-                      >
-                        <DeleteIcon
-                          sx={{ fontSize: "20px", color: "crimson" }}
-                        />
-                      </button>}
-                    </div>
-                  </td>
-                </tr>
-              ))
+            ? service
+                .slice(startIndex, startIndex + 10)
+                .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
             : service.map(
                 (item, idx) =>
                   (item.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     item.customerPhone.includes(search)) && (
-                    <tr key={idx}>
-                      <td>{idx + 1}</td>
-                      <td>{item.customerName}</td>
-                      <td>{item.customerPhone}</td>
-                      <td>{item.createdAt}</td>
-                      <td>
-                        {item.serviceDate
-                          ? item.serviceDate.split("").slice(0, 10).join("")
-                          : ""}
-                      </td>
-                      <td>{item.serviceAssignTo ? item.serviceAssignTo : "NotAssigned"}</td>
-                      <td>
-                        <div
-                          className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                        >
-                          {usertype !== "Service Engineer" && <Button
-                            onClick={() => handleEdit(item)}
-                            className={`${styles.button} ${styles.view}`}
-                            title="Edit"
-                            color="primary"
-                          >
-                            <FaRegEdit sx={{ fontSize: "20px" }} />
-                          </Button>}
-                          {/* Assign person button */}
-                          {usertype !== "Service Engineer" && <Button
-                            onClick={() => handleAssign(item._id)}
-                            title="Assign technician"
-                          >
-                            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-                          </Button>}
-
-                          {/* status update button */}
-                          <Button
-                            onClick={() =>
-                              router.push(`/dashboard/service/${item._id}`)
-                            }
-                            title="Status Update"
-                          >
-                            <TaskAltIcon sx={{ fontSize: "20px" }} />
-                          </Button>
-                          {usertype !== "Service Engineer" && <button
-                            className={`${styles.button} ${styles.delete}`}
-                            onClick={() => handleDelete(item)}
-                            title="Delete"
-                          >
-                            <DeleteIcon
-                              sx={{ fontSize: "20px", color: "crimson" }}
-                            />
-                          </button>}
-                        </div>
-                      </td>
-                    </tr>
+                    <Table item={item} idx={idx} key={idx} />
                   )
               )}
         </tbody>

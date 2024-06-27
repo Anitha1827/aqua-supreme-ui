@@ -16,8 +16,8 @@ const UserPage = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
   const handleOpen = () => setOpen(true);
-   // Pagination setup
-   const [startIndex, setStartIndex] = useState(0);
+  // Pagination setup
+  const [startIndex, setStartIndex] = useState(0);
 
   const handleEdit = (item) => {
     setEdit(true);
@@ -36,8 +36,8 @@ const UserPage = () => {
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
 
     let response = await getNewUser();
@@ -53,6 +53,36 @@ const UserPage = () => {
     let res = await deleteUser(item._id);
     console.log(res);
     getusesr();
+  };
+  //code optimization for table row
+  const Table = ({ item, idx }) => {
+    <tr key={idx}>
+      <td>{startIndex + idx + 1}</td>
+      <td>{item.name ? item.name : "test"}</td>
+      <td>{item.phone}</td>
+      <td>{item.email}</td>
+      <td>
+        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+          <Button
+            onClick={() => handleEdit(item)}
+            variant="contained"
+            className={`${styles.buttons} ${styles.view}`}
+            title="Edit"
+          >
+            <FaRegEdit sx={{ fontSize: "20px" }} />
+          </Button>
+
+          <Button
+            className={`${styles.button} ${styles.delete}`}
+            onClick={() => handleDelete(item)}
+            title="Delete"
+            variant="contained"
+          >
+            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+          </Button>
+        </div>
+      </td>
+    </tr>;
   };
   return (
     <>
@@ -84,83 +114,25 @@ const UserPage = () => {
           </thead>
           <tbody>
             {tech.length > 0 && search.length <= 0
-              ? tech.slice(startIndex, startIndex + 10).map((item, idx) => (
-                  <tr key={idx}>
-                    <td>{startIndex + idx + 1}</td>
-                    <td>{item.name ? item.name : "test"}</td>
-                    <td>{item.phone}</td>
-                    <td>{item.email}</td>
-                    <td>
-                      <div
-                        className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                      >
-                        <Button
-                          onClick={() => handleEdit(item)}
-                          variant="contained"
-                          className={`${styles.buttons} ${styles.view}`}
-                          title="Edit"
-                        >
-                          <FaRegEdit sx={{ fontSize: "20px" }} />
-                        </Button>
-
-                        <Button
-                          className={`${styles.button} ${styles.delete}`}
-                          onClick={() => handleDelete(item)}
-                          title="Delete"
-                          variant="contained"
-                        >
-                          <DeleteIcon
-                            sx={{ fontSize: "20px", color: "crimson" }}
-                          />
-                        </Button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+              ? tech
+                  .slice(startIndex, startIndex + 10)
+                  .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
               : tech.map(
                   (item, idx) =>
                     (item.name
                       .toLowerCase()
                       .includes(search.toLocaleLowerCase()) ||
                       item.phone.includes(search)) && (
-                      <tr key={idx}>
-                        <td>{idx + 1}</td>
-                        <td>{item.name ? item.name : "test"}</td>
-                        <td>{item.phone}</td>
-                        <td>{item.email}</td>
-                        <td>
-                          <div
-                            className={`${styles.buttons} ${styles.button} ${styles.view}`}
-                          >
-                            <Button
-                              onClick={() => handleEdit(item)}
-                              variant="contained"
-                              className={`${styles.buttons} ${styles.view}`}
-                              title="Edit"
-                            >
-                              <FaRegEdit sx={{ fontSize: "20px" }} />
-                            </Button>
-
-                            <Button
-                              className={`${styles.button} ${styles.delete}`}
-                              onClick={() => handleDelete(item)}
-                              title="Delete"
-                              variant="contained"
-                            >
-                              <DeleteIcon
-                                sx={{ fontSize: "20px", color: "crimson" }}
-                              />
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
+                      <Table item={item} idx={idx} key={idx} />
                     )
                 )}
           </tbody>
         </table>
-        <Pagination startIndex={startIndex}
-        maxlength={tech.length}
-        setStartIndex={setStartIndex} />
+        <Pagination
+          startIndex={startIndex}
+          maxlength={tech.length}
+          setStartIndex={setStartIndex}
+        />
 
         {/* Adding user model */}
         <AddUserModel open={open} setOpen={setOpen} setTech={setTech} />
