@@ -82,7 +82,7 @@ const AreaPage = () => {
           </Button>
         </div>
       </td>
-    </tr>;
+    </tr>
     )
   };
 
