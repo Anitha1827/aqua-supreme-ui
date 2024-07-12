@@ -142,21 +142,21 @@ const LeadCreation = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
           <Box sx={{ minWidth: 200 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Filter</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={filter}
-                label="filter"
-                onChange={(e) => setFilter(e.target.value)}
-              >
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="owner">Owner</MenuItem>
-                <MenuItem value="all">All</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+              <FormControl fullWidth>
+                <InputLabel id="filter-select-label">Filter</InputLabel>
+                <Select
+                  labelId="filter-select-label"
+                  id="filter-select"
+                  value={filter}
+                  label="Filter"
+                  onChange={(e) => setFilter(e.target.value)}
+                >
+                  <MenuItem value="admin">Admin</MenuItem>
+                  <MenuItem value="owner">Owner</MenuItem>
+                  <MenuItem value="all">All</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
         </div>
 
         <Button
@@ -175,7 +175,7 @@ const LeadCreation = () => {
             <td>Phone Number</td>
             <td>Remarks</td>
             <td>Created At</td>
-            <td>HandleBy</td>
+            <td>Handle By</td>
             <td>Action</td>
           </tr>
         </thead>
