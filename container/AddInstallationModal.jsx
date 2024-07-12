@@ -48,7 +48,7 @@ const paperStyle = {
   position: "absolute",
   width: "90%",
   maxWidth: 500,
-  maxHeight: "95vh",
+  maxHeight: "110vh",
   bgcolor: "background.paper",
   // border: "2px solid #000",
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",

@@ -101,9 +101,9 @@ const ServiceReminder = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
-            <td>last service Date</td>
-            <td>dueDate</td>
-            <td>service Count</td>
+            <td>Last Service Date</td>
+            <td>DueDate</td>
+            <td>Service Count</td>
           </tr>
         </thead>
         <tbody>

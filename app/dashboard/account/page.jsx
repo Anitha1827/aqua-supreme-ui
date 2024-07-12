@@ -119,6 +119,7 @@ const Settings = () => {
                   flexDirection: "row",
                   alignItems: "center",
                   flexWrap: "wrap",
+                  justifyContent: "space-between",
                 }}
               >
                 <div className="form-field"

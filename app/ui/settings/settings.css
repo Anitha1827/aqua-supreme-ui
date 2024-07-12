@@ -1,161 +1,160 @@
 .container{
-    padding: 20px;
+  padding: 20px;
 }
 .container h3{
-    padding: 10px;
+  padding: 10px;
 }
 .cardContent{
-    display: flex;
-    justify-content: space-evenly;
-    margin: 15px;
+  display: flex;
+  justify-content: space-evenly;
+  margin: 15px;
 
 }
 
 .bgcolor{
-    background-color: #f3e5f5;
-    padding: 20px;
-    margin: 30px 0 0 0;
-    border-radius: 10px;
-    border:1px solid #9c27b0
+  background-color: #f3e5f5;
+  padding: 20px;
+  margin: 30px 0 0 0;
+  border-radius: 10px;
+  border:1px solid #9c27b0
 }
 .Input{
-    width: 100%;
-    background-color: aliceblue;
-    color: black;
-    border-radius: 10px;
+  width: 100%;
+  background-color: aliceblue;
+  color: black;
+  border-radius: 10px;
 }
 
 /* Profile Setting Styles */
 /* styles.css */
 .card {
-    max-width: 300px;
-    border: none;
-    background: transparent;
-    box-shadow: none;
+  max-width: 300px;
+  border: none;
+  background: transparent;
+  box-shadow: none;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.card-header .avatar {
+  border-radius: 50%;
+}
+
+.card-header .user-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.card-header .user-info .name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  margin: 0;
+}
+
+.card-header .user-info .username {
+  font-size: 0.875rem;
+  color: #7d7d7d;
+  margin: 0;
+}
+
+.card-body {
+  padding: 0.5rem 1rem 0;
+}
+
+.card-body p {
+  font-size: 0.875rem;
+  color: #7d7d7d;
+}
+
+.card-footer {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.card-footer .stat {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.card-footer .stat .value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #4a4a4a;
+}
+
+.card-footer .stat .label {
+  font-size: 0.875rem;
+  color: #7d7d7d;
+}
+
+.button {
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.button.primary {
+  background-color: #0070f3;
+  color: white;
+  border: none;
+}
+
+.button.bordered {
+  background: transparent;
+  color: #4a4a4a;
+  border: 1px solid #e0e0e0;
+}
+
+/* Tab styles */
+
+.tabcontainer{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.settingstab{
+  padding: 10px;
+  margin: 10px;
+  cursor: pointer;
+}
+.button{
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px;
+  float: right;
+  margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
   }
-  
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    padding: 1rem;
-  }
-  
-  .card-header .avatar {
-    border-radius: 50%;
-  }
-  
-  .card-header .user-info {
-    display: flex;
+
+  .form-container {
     flex-direction: column;
-    justify-content: center;
-    gap: 0.5rem;
   }
-  
-  .card-header .user-info .name {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #4a4a4a;
-    margin: 0;
+
+  .form-field {
+    width: 100%;
+    margin: 10px 0;
   }
-  
-  .card-header .user-info .username {
-    font-size: 0.875rem;
-    color: #7d7d7d;
-    margin: 0;
-  }
-  
-  .card-body {
-    padding: 0.5rem 1rem 0;
-  }
-  
-  .card-body p {
-    font-size: 0.875rem;
-    color: #7d7d7d;
-  }
-  
-  .card-footer {
-    display: flex;
-    gap: 1rem;
-    padding: 1rem;
-  }
-  
-  .card-footer .stat {
-    display: flex;
-    gap: 0.5rem;
-  }
-  
-  .card-footer .stat .value {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: #4a4a4a;
-  }
-  
-  .card-footer .stat .label {
-    font-size: 0.875rem;
-    color: #7d7d7d;
-  }
-  
+
   .button {
-    border-radius: 9999px;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    cursor: pointer;
+    width: 100%;
+    margin-top: 20px;
   }
-  
-  .button.primary {
-    background-color: #0070f3;
-    color: white;
-    border: none;
-  }
-  
-  .button.bordered {
-    background: transparent;
-    color: #4a4a4a;
-    border: 1px solid #e0e0e0;
-  }
+}
 
-  /* Tab styles */
-
-  .tabcontainer{
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-  }
-
-  .settingstab{
-    padding: 10px;
-    margin: 10px;
-    cursor: pointer;
-  }
-  .button{
-    cursor: pointer;
-    border-radius: 10px;
-    padding: 10px;
-    float: right;
-    margin: 10px;
-  }
-  
-  @media (max-width: 768px) {
-    .container {
-      padding: 10px;
-    }
-  
-    .form-container {
-      flex-direction: column;
-    }
-  
-    .form-field {
-      width: 100%;
-      margin: 10px 0;
-    }
-  
-    .button {
-      width: 100%;
-      margin-top: 20px;
-    }
-  }
-  
-  .tabcontainer {
-    margin-bottom: 20px;
-  }
-  
+.tabcontainer {
+  margin-bottom: 20px;
+}
