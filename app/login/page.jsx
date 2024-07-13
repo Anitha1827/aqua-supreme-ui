@@ -71,7 +71,7 @@ const LoginPage = () => {
           name="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
+          placeholder="Password"
         />
         <button onClick={handlelogin}>Login</button>
       </form>

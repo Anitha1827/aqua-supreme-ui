@@ -1,10 +1,13 @@
-.container{
+.container {
     width: 100%;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-}
+    background-image: url('/background.jpg');
+    background-size: cover;
+    background-position: center;
+  }
 
 .form{
     background-color: var(--bgSoft);
@@ -17,23 +20,33 @@
     justify-content: center;
     gap: 30px;
     align-items: center;
+    background-image: url('/photo.avif');
+    background-size: cover;
+    background-position: center;
 }
 
 .form input{
     width: 100%;
-    padding: 30px;
-    border: 2px solid #2e374a;
+    padding: 25px;
+    border: 1px solid #b7b7b7;
     border-radius: 5px;
     background-color: var(--bg);
     color: var(--text);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 15px;
 }
 
 .form button{
     width: 100%;
-    padding: 30px;
-    background-color: teal;
-    color: var(--text);
+    padding: 25px;
+    background-color:#2e374a;
+    color: White;
     cursor: pointer;
     border: none;
     border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 20px;
+}
+.form button:hover{
+    background-color:  #3e4a63;
 }
