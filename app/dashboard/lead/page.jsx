@@ -19,6 +19,7 @@ import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
@@ -37,6 +38,8 @@ const LeadCreation = () => {
 
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // skeleton useState
+  const[loading, setLoading] = useState(true)
 
   let router = useRouter();
 
@@ -80,6 +83,7 @@ const LeadCreation = () => {
     let resp = await getLead();
     console.log("leads22", resp.getlead);
     setLead(resp.getlead);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -180,7 +184,7 @@ const LeadCreation = () => {
           </tr>
         </thead>
         <tbody>
-          {lead.length > 0 &&
+        {!loading && lead.length > 0 &&
             (search.length <= 0
               ? lead
                   .slice(startIndex, startIndex + 10)
@@ -200,6 +204,7 @@ const LeadCreation = () => {
                 ))}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={lead.length}

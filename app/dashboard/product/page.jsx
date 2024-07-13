@@ -11,6 +11,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditProductModel from "@/container/EditProductModel";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const ProductPage = () => {
   const [search, setSearch] = useState("");
@@ -22,6 +23,8 @@ const ProductPage = () => {
   const [editdata, setEditData] = useState({});
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  //skeleton useState
+  const[loading, setLoading] = useState(true)
   let router = useRouter();
 
   // Get Products
@@ -39,6 +42,7 @@ const ProductPage = () => {
     let resp = await getAllProduct();
     console.log("produPage17", resp.getproduct);
     setProduct(resp.getproduct);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -100,7 +104,8 @@ const ProductPage = () => {
           />
         </div>
 
-        <Button onClick={handleOpen} variant="contained">
+        <Button onClick={handleOpen}  variant="contained"
+          className={styles.addbutton}>
           Add
         </Button>
       </div>
@@ -115,7 +120,7 @@ const ProductPage = () => {
           </tr>
         </thead>
         <tbody>
-          {product.length > 0 && search.length <= 0
+        {!loading && product.length > 0 && search.length <= 0
             ? product
                 .slice(startIndex, startIndex + 10)
                 .map((prod, idx) => <Table prod={prod} idx={idx} key={idx} />)
@@ -130,6 +135,7 @@ const ProductPage = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={product.length}

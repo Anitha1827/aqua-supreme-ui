@@ -18,6 +18,7 @@ import { IoPersonAddOutline } from "react-icons/io5";
 import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AssignInstallationModal from "@/container/AssignInstallationModal";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const Installations = () => {
   let router = useRouter();
@@ -30,6 +31,8 @@ const Installations = () => {
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // Skeleton useState
+  const [loading, setLoading] = useState(true);
   // user type
   const [usertype, setUserType] = useState("Service Engineer");
 
@@ -73,6 +76,7 @@ const Installations = () => {
       );
     }
     setInstall(data);
+    setLoading(false)
   };
 
   // Delete Functionalities
@@ -161,7 +165,8 @@ const Installations = () => {
         </div>
 
         {usertype !== "Service Engineer" && (
-          <Button onClick={handleOpen} variant="contained">
+          <Button onClick={handleOpen}  variant="contained"
+          className={styles.addbutton}>
             Add
           </Button>
         )}
@@ -179,7 +184,7 @@ const Installations = () => {
           </tr>
         </thead>
         <tbody>
-          {install.length > 0 && search.length <= 0
+         {!loading && install.length > 0 && search.length <= 0
             ? install
                 .slice(startIndex, startIndex + 10)
                 .map((inst, idx) => <Table inst={inst} idx={idx} key={idx} />)
@@ -194,6 +199,7 @@ const Installations = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={install.length}

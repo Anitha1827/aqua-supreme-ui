@@ -10,6 +10,7 @@ import EditUserModal from "@/container/EditUserModal";
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const UserPage = () => {
   let router = useRouter();
@@ -18,6 +19,7 @@ const UserPage = () => {
   const handleOpen = () => setOpen(true);
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  const[loading, setLoading] = useState(true)
 
   const handleEdit = (item) => {
     setEdit(true);
@@ -43,6 +45,7 @@ const UserPage = () => {
     let response = await getNewUser();
     console.log("res", response);
     setTech(response.getuser);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -96,7 +99,8 @@ const UserPage = () => {
             />
           </div>
 
-          <Button onClick={handleOpen} variant="contained">
+          <Button onClick={handleOpen}  variant="contained"
+          className={styles.addbutton}>
             Add
           </Button>
         </div>
@@ -111,7 +115,7 @@ const UserPage = () => {
             </tr>
           </thead>
           <tbody>
-            {tech.length > 0 && search.length <= 0
+          {!loading && tech.length > 0 && search.length <= 0
               ? tech
                   .slice(startIndex, startIndex + 10)
                   .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
@@ -126,6 +130,7 @@ const UserPage = () => {
                 )}
           </tbody>
         </table>
+        {loading && <SkeletonLoader/>}
         <Pagination
           startIndex={startIndex}
           maxlength={tech.length}

@@ -10,6 +10,7 @@ import AddSparesModal from "@/container/AddSparesModal";
 import { deleteSpare, findingUser, getSpare } from "@/service";
 import EditSparesModal from "@/container/EditSparesModal";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const Spares = () => {
   let router = useRouter();
@@ -23,6 +24,8 @@ const Spares = () => {
   const [spares, setSpares] = useState([]);
   //   edited data state
   const [editdata, setEditData] = useState({});
+  // sketelon useState
+  const[loading, setLoading] = useState(true)
 
   // Get Spare data
   const getSparedata = async () => {
@@ -38,6 +41,7 @@ const Spares = () => {
 
     let resp = await getSpare();
     setSpares(resp.getSpare);
+    setLoading(false)
   };
 
   //   edit function
@@ -116,7 +120,7 @@ const Spares = () => {
           </tr>
         </thead>
         <tbody>
-          {spares.length > 0 && search.length <= 0
+        {!loading && spares.length > 0 && search.length <= 0
             ? spares
                 .slice(startIndex, startIndex + 10)
                 .map((sprs, idx) => <Table sprs={sprs} idx={idx} key={idx} />)
@@ -131,6 +135,7 @@ const Spares = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={spares.length}

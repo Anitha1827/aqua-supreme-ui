@@ -13,10 +13,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { FaRegEdit } from "react-icons/fa";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  // Skeleton useState
+  const [loading, setLoading] = useState(true);
   const handleOpen = () => setOpen(true);
   let router = useRouter();
 
@@ -45,6 +48,7 @@ const Dashboard = () => {
     }
     let response = await getAllCustomer();
     setCustomer(response.getAllCustomerDetails);
+    setLoading(false)
   };
   useEffect(() => {
     let token = localStorage.getItem("token");
@@ -141,7 +145,7 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-          {customer.length > 0 && search.length <= 0
+         {!loading && customer.length > 0 && search.length <= 0
             ? customer.slice(startIndex, startIndex + 10).map((item, idx) => (
                <Table item={item} idx={idx} key={idx} />
               ))
@@ -156,6 +160,7 @@ const Dashboard = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={customer.length}

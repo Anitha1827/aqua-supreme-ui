@@ -13,7 +13,7 @@ margin-top: 20px;
 .addbutton{
     padding: 10px;
     background-color: #5d57c9;
-    color: var(--text);
+    color: var(--bgSoft);
     border: none;
     border-radius: 10px;
     cursor: pointer;

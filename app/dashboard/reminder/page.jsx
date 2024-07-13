@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import EditDueDateModal from "@/container/EditDueDateModal";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const ServiceReminder = () => {
   let router = useRouter();
@@ -17,6 +18,8 @@ const ServiceReminder = () => {
   const [editdata, setEditdata] = useState({});
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // Skeleton useState
+  const [loading, setLoading] = useState(true);
 
   const handleOpen = (remind) => {
     setEditdata(remind);
@@ -55,6 +58,7 @@ const ServiceReminder = () => {
     // Sort the customers array
     const sortedCustomers = sortByDueDate(data);
     setReminder(sortedCustomers);
+    setLoading(false)
   };
   useEffect(() => {
     getservicereminder();
@@ -107,7 +111,7 @@ const ServiceReminder = () => {
           </tr>
         </thead>
         <tbody>
-          {reminder.length > 0 &&
+        {!loading && reminder.length > 0 &&
             (search.length <= 0
               ? reminder
                   .slice(startIndex, startIndex + 10)
@@ -125,6 +129,7 @@ const ServiceReminder = () => {
                 ))}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={reminder.length}

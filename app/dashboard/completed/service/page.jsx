@@ -5,6 +5,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { findingUser, getServiceCompleted } from "@/service";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const ServiceCompletedPage = () => {
   let router = useRouter();
@@ -12,6 +13,8 @@ const ServiceCompletedPage = () => {
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // Skeleton useState
+  const [loading, setLoading] = useState(true);
 
   let getCompletedData = async () => {
     let token = localStorage.getItem("token");
@@ -31,6 +34,7 @@ const ServiceCompletedPage = () => {
     }
     setData(data);
     console.log("completedpage14", response.getAllServiceDetails);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -72,14 +76,14 @@ const ServiceCompletedPage = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Contact</td>
-            <td>CreatedAt</td>
-            <td>CompletedAt</td>
+            <td>Created At</td>
+            <td>Completed At</td>
             <td>Service Engineer</td>
             <td>Status</td>
           </tr>
         </thead>
         <tbody>
-          {data && search.length <= 0
+         {!loading  && data && search.length <= 0
             ? data
                 .slice(startIndex, startIndex + 10)
                 .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
@@ -95,6 +99,7 @@ const ServiceCompletedPage = () => {
           <tr></tr>
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={data.length}

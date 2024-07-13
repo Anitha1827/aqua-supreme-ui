@@ -5,12 +5,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { findingUser, installationPending } from "@/service";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const InstallationPendingPage = () => {
   const [data, setData] = useState([]);
   const [search, setSearch] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  //skeleton usestate
+  const [loading, setLoading] = useState(true)
 
   let router = useRouter();
 
@@ -32,6 +35,7 @@ const InstallationPendingPage = () => {
     }
     console.log("pending15", response.getpendingdata);
     setData(data);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -93,7 +97,7 @@ const InstallationPendingPage = () => {
           </tr>
         </thead>
         <tbody>
-          {data && search.length <= 0
+        {!loading && data && search.length <= 0
             ? data
                 .slice(startIndex, startIndex + 10)
                 .map((data, idx) => <Table data={data} idx={idx} key={idx} />)
@@ -108,6 +112,7 @@ const InstallationPendingPage = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={data.length}

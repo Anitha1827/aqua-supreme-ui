@@ -13,6 +13,7 @@ import TaskAltIcon from "@mui/icons-material/TaskAlt";
 import AssignServiceModal from "@/container/AssignServiceModal";
 import { FaRegEdit } from "react-icons/fa";
 import DeleteIcon from "@mui/icons-material/Delete";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const ServiceCalls = () => {
   const router = useRouter();
@@ -26,6 +27,9 @@ const ServiceCalls = () => {
   const [id, setId] = useState("");
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
+  // Skeleton useState
+  const [loading, setLoading] = useState(true);
+
   // user type
   const [usertype, setUserType] = useState("Service Engineer");
 
@@ -60,6 +64,7 @@ const ServiceCalls = () => {
       );
     }
     setService(data);
+    setLoading(false)
   };
   useEffect(() => {
     if(assign === false){
@@ -172,7 +177,7 @@ const ServiceCalls = () => {
           </tr>
         </thead>
         <tbody>
-          {service.length > 0 && search.length <= 0
+        {!loading && service.length > 0 && search.length <= 0
             ? service
                 .slice(startIndex, startIndex + 10)
                 .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
@@ -187,6 +192,7 @@ const ServiceCalls = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={service.length}

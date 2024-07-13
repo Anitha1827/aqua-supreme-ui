@@ -10,6 +10,7 @@ import AddAreaModal from "@/container/AddAreaModal";
 import { deleteArea, findingUser, getArea } from "@/service";
 import EditAreaModal from "@/container/EditAreaModal";
 import { useRouter } from "next/navigation";
+import SkeletonLoader from "@/container/SkeletonLoader";
 
 const AreaPage = () => {
   let router = useRouter();
@@ -22,6 +23,8 @@ const AreaPage = () => {
   //   backend data storage
   const [area, setArea] = useState([]);
   const [editdata, setEditData] = useState({});
+  // Skeleton usestate
+  const[loading, setLoading] = useState(true)
 
   //   Edit function
   const handleEdit = async (val) => {
@@ -48,6 +51,7 @@ const AreaPage = () => {
     }
     let resp = await getArea();
     setArea(resp.getArea);
+    setLoading(false)
   };
 
   useEffect(() => {
@@ -116,7 +120,7 @@ const AreaPage = () => {
           </tr>
         </thead>
         <tbody>
-          {area.length > 0 && search.length <= 0
+         {!loading && area.length > 0 && search.length <= 0
             ? area
                 .slice(startIndex, startIndex + 10)
                 .map((val, idx) => <Table val={val} idx={idx} key={idx} />)
@@ -128,6 +132,7 @@ const AreaPage = () => {
               )}
         </tbody>
       </table>
+      {loading && <SkeletonLoader/>}
       <Pagination
         startIndex={startIndex}
         maxlength={area.length}
