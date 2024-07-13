@@ -75,27 +75,6 @@ const menuItems = [
     ],
   },
   {
-    title: "Product",
-    list: [
-      {
-        title: "Product",
-        path: "/dashboard/product",
-        icon: <FaAppStoreIos />,
-      },
-    ],
-  },
-  {
-    title: "Spares",
-    list: [
-      {
-        title: "Spares",
-        path: "/dashboard/spares",
-        icon: <FaAppStoreIos />,
-      },
-    ],
-  },
-
-  {
     title: "Service Engineers",
     list: [
       {
@@ -106,21 +85,31 @@ const menuItems = [
     ],
   },
   {
-    title: "Leads",
+    title: "Tools",
     list: [
       {
-        title: "Lead",
-        path: "/dashboard/lead",
+        title: "Product",
+        path: "/dashboard/product",
+        icon: <FaAppStoreIos />,
+      },
+      {
+        title: "Spares",
+        path: "/dashboard/spares",
+        icon: <FaAppStoreIos />,
+      },
+      {
+        title: "Area",
+        path: "/dashboard/area",
         icon: <MdAnalytics />,
       },
     ],
   },
   {
-    title: "Area",
+    title: "Leads",
     list: [
       {
-        title: "Area",
-        path: "/dashboard/area",
+        title: "Lead",
+        path: "/dashboard/lead",
         icon: <MdAnalytics />,
       },
     ],

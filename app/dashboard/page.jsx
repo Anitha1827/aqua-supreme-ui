@@ -135,7 +135,7 @@ const Dashboard = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
-            <td>Service/InstalledAt</td>
+            <td>Service/Installed At</td>
             <td>Due Date</td>
             <td>Action</td>
           </tr>

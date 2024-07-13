@@ -62,8 +62,11 @@ const ServiceCalls = () => {
     setService(data);
   };
   useEffect(() => {
-    getservicemodal();
-  }, []);
+    if(assign === false){
+      getservicemodal();
+    }
+
+  }, [assign]);
 
   const handleDelete = async (item) => {
     let res = await deleteService(item._id);
