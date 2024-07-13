@@ -64,20 +64,16 @@ const UserPage = () => {
       <td>{item.email}</td>
       <td>
         <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
-          <Button
-            onClick={() => handleEdit(item)}
-            variant="contained"
-            className={`${styles.buttons} ${styles.view}`}
-            title="Edit"
-          >
+        <Button onClick={() => handleEdit(prod)} title="Edit Data">
             <FaRegEdit sx={{ fontSize: "20px" }} />
           </Button>
 
           <Button
+            aria-label="delete"
+            // size="large"
             className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(item)}
+            onClick={() => handleDelete(prod)}
             title="Delete"
-            variant="contained"
           >
             <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
           </Button>
