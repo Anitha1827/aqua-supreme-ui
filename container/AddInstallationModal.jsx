@@ -4,7 +4,7 @@ import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 // Date picker
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -17,8 +17,8 @@ import * as yup from "yup";
 import { useFormik } from "formik";
 import {
   addNewInstallation,
+  getAllCustomer,
   getAllProduct,
-  getArea,
   getInstallationDetails,
 } from "@/service";
 import AlertMessage from "./AlertMessage";
@@ -29,13 +29,7 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
 const validataionSchema = yup.object({
-  name: yup.string().required("Please Enter Name"),
-  phone: yup.string().required("please Enter Phone Number"),
   date: yup.string().required("Please Select Installation date"),
-  doorNo: yup.string().required("Please Enter Door Number"),
-  street: yup.string().required("Please Enter street"),
-  area: yup.string().required("Please Select Area"),
-  pin: yup.string().required("Please Enter pin Number"),
 });
 
 const modalStyle = {
@@ -61,13 +55,6 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Select dropdown
   const [product, setProduct] = useState("");
   const [prodList, setProdList] = useState([]);
-  //for area list
-  const [area, setArea] = useState({});
-  // Get area list
-  let getAreaList = async () => {
-    let resp = await getArea();
-    setArea(resp.getArea);
-  };
 
   const handleSelect = (event) => {
     setProduct(event.target.value);
@@ -80,24 +67,22 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
+  //to select installation customer from customer list
+  const [id, setId] = useState();
+  // Dropdown for name
+  const [custname, setCustName] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
-      name: "",
-      phone: "",
       date: new Date(),
-      doorNo: "",
-      street: "",
-      area: "",
-      pin: "",
     },
     validationSchema: validataionSchema,
     onSubmit: async (data) => {
-      let { doorNo, street, area, pin } = data;
-      data["address"] = { doorNo, street, area, pin };
       data["product"] = product;
+      data["id"] = id;
       let res = await addNewInstallation(data);
-      console.log("modal52", res);
       //checking an response message for successfully installation added
       // if not show alert
       if (res.message !== "Customer Added Successfully!") {
@@ -118,6 +103,12 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
     setInstall(response.getAllCustomerDetails);
   };
 
+  //to select cutomer details in Name field 
+  const getCustomerData = async () => {
+    let resp = await getAllCustomer();
+    setCustName(resp.getAllCustomerDetails);
+     setLoading(false);
+  }
   // fetching product
   let getProduct = async () => {
     let resp = await getAllProduct();
@@ -126,7 +117,7 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   };
   useEffect(() => {
     getProduct();
-    getAreaList();
+    getCustomerData()
   }, []);
   return (
     <div>
@@ -151,44 +142,33 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
               onSubmit={handleSubmit}
             >
               <Grid container spacing={2}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="outlined-basic"
+              <Grid item xs={12} sm={6}>
+              <Box sx={{ minWidth: 150 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Name</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={id}
                     label="Name"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="name"
                     name="name"
-                    value={values.name}
-                    onChange={handleChange}
-                  />
-                  {errors.name ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.name}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Phone Number"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="phone"
-                    name="phone"
-                    value={values.phone}
-                    onChange={handleChange}
-                  />
-                  {errors.phone ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.phone}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
+                    onChange={(e) => {
+                      setId(e.target.value);
+                    }}
+                  >
+                    {!loading &&
+                      custname.map((item, idx) => (
+                        <MenuItem key={idx} value={item._id}>
+                          {item.customerName}
+                          <span style={{ color: "gray", fontSize: "8px" }}>
+                            ( {item.customerPhone})
+                          </span>
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+              </Box>
+              </Grid>
                 <Grid item xs={12} sm={6}>
                   <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
                     <DemoContainer components={["DatePicker"]}>
@@ -237,98 +217,6 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                       </Select>
                     </FormControl>
                   </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <label>Address</label>
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Door Number"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="doorNo"
-                    name="doorNo"
-                    value={values.doorNo}
-                    onChange={handleChange}
-                  />
-                  {errors.doorNo ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.doorNo}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Street"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="street"
-                    name="street"
-                    value={values.street}
-                    onChange={handleChange}
-                  />
-                  {errors.street ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.street}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12}>
-                  <Box>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Area
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={values.area}
-                        label="area"
-                        name="area"
-                        onChange={handleChange}
-                      >
-                        {area.length > 0 &&
-                          area.map((val, idx) => (
-                            <MenuItem key={idx} value={val.areaName}>
-                              {val.areaName}
-                            </MenuItem>
-                          ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                  {errors.area ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.area}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-
-                <Grid item xs={12}>
-                  <TextField
-                    id="outlined-basic"
-                    label="Pin Code"
-                    variant="outlined"
-                    sx={{ width: "100%" }}
-                    type="pin"
-                    name="pin"
-                    value={values.pin}
-                    onChange={handleChange}
-                  />
-                  {errors.pin ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.pin}
-                    </div>
-                  ) : (
-                    ""
-                  )}
                 </Grid>
                 <Grid item xs={12}>
                   <Button
