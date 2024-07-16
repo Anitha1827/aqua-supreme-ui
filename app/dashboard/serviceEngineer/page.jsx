@@ -67,7 +67,7 @@ const UserPage = () => {
       <td>{item.email}</td>
       <td>
         <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
-        <Button onClick={() => handleEdit(prod)} title="Edit Data">
+        <Button onClick={() => handleEdit(item)} title="Edit Data">
             <FaRegEdit sx={{ fontSize: "20px" }} />
           </Button>
 
@@ -75,7 +75,7 @@ const UserPage = () => {
             aria-label="delete"
             // size="large"
             className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(prod)}
+            onClick={() => handleDelete(item)}
             title="Delete"
           >
             <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
