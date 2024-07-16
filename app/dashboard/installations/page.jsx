@@ -43,14 +43,17 @@ const Installations = () => {
   };
 
   const handleOpen = () => setOpen(true);
+
   const handleAssign = (id) => {
     setAssign(true);
     setId(id);
   };
 
   useEffect(() => {
+    if(assign === false){
     getInstallation();
-  }, []);
+    }
+  }, [assign]);
 
   const getInstallation = async () => {
     let token = localStorage.getItem("token");
