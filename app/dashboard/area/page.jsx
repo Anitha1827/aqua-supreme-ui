@@ -25,7 +25,6 @@ const Transition = forwardRef(function Transition(props, ref) {
 });
 
 
-
 const AreaPage = () => {
   let router = useRouter();
   const [search, setSearch] = useState("");
