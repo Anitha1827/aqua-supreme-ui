@@ -98,3 +98,41 @@ margin-top: 20px;
   .searchicon {
     color: #aaa;
   }
+  /* call styles */
+  .phoneLink {
+    color: blue;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 2px;
+  }
+  
+  .phoneLink:hover {
+    text-decoration: underline;
+  }
+
+  /* filter style */
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+  }
+  
+  .filterSelect {
+    background-color: #f1f3f4; 
+    border-radius: 4px;
+    height: 40px; 
+    border-radius: 10px;
+  }
+  
+  .addbutton {
+    background-color: #1976d2;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-transform: none;
+  }
+  
+  .addbutton:hover {
+    background-color: #155a9b;
+  }

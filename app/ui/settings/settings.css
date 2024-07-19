@@ -1,28 +1,5 @@
-.container{
-  padding: 20px;
-}
-.container h3{
+h3 {
   padding: 10px;
-}
-.cardContent{
-  display: flex;
-  justify-content: space-evenly;
-  margin: 15px;
-
-}
-
-.bgcolor{
-  background-color: #f3e5f5;
-  padding: 20px;
-  margin: 30px 0 0 0;
-  border-radius: 10px;
-  border:1px solid #9c27b0
-}
-.Input{
-  width: 100%;
-  background-color: aliceblue;
-  color: black;
-  border-radius: 10px;
 }
 
 /* Profile Setting Styles */
@@ -100,10 +77,11 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   cursor: pointer;
+  border-radius: 10px;
+  font-weight: bold;
 }
 
 .button.primary {
-  background-color: #0070f3;
   color: white;
   border: none;
 }
@@ -115,24 +93,32 @@
 }
 
 /* Tab styles */
-
-.tabcontainer{
+.tabcontainer {
   display: flex;
   flex-direction: column;
   padding: 10px;
 }
 
-.settingstab{
+.settingstab {
   padding: 10px;
   margin: 10px;
-  cursor: pointer;
-}
-.button{
   cursor: pointer;
   border-radius: 10px;
-  padding: 10px;
+  border: none;
+  font-weight: bold;
+}
+.button {
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+  padding: 20px;
   float: right;
-  margin: 10px;
+  margin: 20px;
+  width: 20%;
+}
+.button:hover {
+  background-color: #2e374a;
+  color: #e0e0e0;
 }
 
 @media (max-width: 768px) {
@@ -153,8 +139,4 @@
     width: 100%;
     margin-top: 20px;
   }
-}
-
-.tabcontainer {
-  margin-bottom: 20px;
 }

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
@@ -11,7 +11,7 @@ import { useFormik } from "formik";
 import { addArea, getArea } from "@/service";
 import AlertMessage from "./AlertMessage";
 
-const validataionSchema = yup.object({
+const validationSchema = yup.object({
   areaName: yup.string().required("Please Enter Area!"),
 });
 
@@ -20,14 +20,12 @@ const style = (isSmallScreen) => ({
   top: isSmallScreen ? "10%" : "50%",
   left: "50%",
   transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -50%)",
-  width: 400,
+  width: isSmallScreen ? "90%" : 400,
   bgcolor: "background.paper",
-  // border: "2px solid #000",
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
-  // boxShadow: 24,
   p: 4,
-  overflow: "auto",
-  height: "40vh",
+  overflowY: "auto",
+  maxHeight: "80vh",
   borderRadius: "10px",
 });
 
@@ -36,6 +34,7 @@ const AddAreaModal = ({ open, setOpen, setArea }) => {
   const [message, setMessage] = useState(false);
   const [type, setType] = useState("");
   const [content, setContent] = useState("");
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
 
   const handleClose = () => setOpen(false);
 
@@ -43,7 +42,7 @@ const AddAreaModal = ({ open, setOpen, setArea }) => {
     initialValues: {
       areaName: "",
     },
-    validationSchema: validataionSchema,
+    validationSchema: validationSchema,
     onSubmit: async (data) => {
       let res = await addArea(data);
       console.log("modal46", res);
@@ -67,6 +66,17 @@ const AddAreaModal = ({ open, setOpen, setArea }) => {
     let resp = await getArea();
     setArea(resp.getArea);
   };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 600);
+    };
+
+    handleResize(); // Check initial size
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       <Modal
@@ -83,7 +93,7 @@ const AddAreaModal = ({ open, setOpen, setArea }) => {
         }}
       >
         <Fade in={open} className="bg-gray text-black">
-          <Box sx={style}>
+          <Box sx={style(isSmallScreen)}>
             <form
               className="flex flex-col gap-2 w-full justify-center"
               onSubmit={handleSubmit}

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/app/ui/dashboard/users/users.module.css";
@@ -11,6 +11,20 @@ import { deleteArea, findingUser, getArea } from "@/service";
 import EditAreaModal from "@/container/EditAreaModal";
 import { useRouter } from "next/navigation";
 import SkeletonLoader from "@/container/SkeletonLoader";
+//alert Dialog
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import AlertMessage from "@/container/AlertMessage";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
+
+
 
 const AreaPage = () => {
   let router = useRouter();
@@ -25,6 +39,18 @@ const AreaPage = () => {
   const [editdata, setEditData] = useState({});
   // Skeleton usestate
   const[loading, setLoading] = useState(true)
+  
+  //for Dialog
+  const [alert, setAlert] = useState(false);
+
+  const handledeleteClose = () => {
+    setAlert(false);
+  };
+
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
   //   Edit function
   const handleEdit = async (val) => {
@@ -34,6 +60,16 @@ const AreaPage = () => {
   //   Delete functionalities
   const handleDelete = async (val) => {
     let resp = await deleteArea(val._id);
+    if (resp.message !== "AreaName Deleted successfully!") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    setMessage(true);
+    setContent("AreaName Deleted successfully!");
+    setType("success");
+    handledeleteClose();
     console.log("deletedArea", resp);
     getAreadata();
   };
@@ -79,11 +115,37 @@ const AreaPage = () => {
 
           <Button
             className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(val)}
+            onClick={() => setAlert(true)}
             title="Delete"
           >
             <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
           </Button>
+            {/* Delete alert Dialog */}
+            <Dialog
+            open={alert}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handledeleteClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-slide-description"
+          >
+            <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Are you sure you want to delete this customer?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handledeleteClose}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(val)}
+                autoFocus
+                color="error"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
       </td>
     </tr>
@@ -150,6 +212,13 @@ const AreaPage = () => {
           setArea={setArea}
         />
       )}
+      {/* snackbar */}
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

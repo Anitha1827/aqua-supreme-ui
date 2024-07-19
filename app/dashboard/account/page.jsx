@@ -54,23 +54,23 @@ const Settings = () => {
     },
   });
 
-  async function finduser(){
+  async function finduser() {
     let token = localStorage.getItem("token");
     if (!token) {
       router.push("/login");
       return null;
     }
     let res = await findingUser(token);
-    if(res.type === "serviceEngineer"){
-      return router.push("/dashboard/installations")
+    if (res.type === "serviceEngineer") {
+      return router.push("/dashboard/installations");
     }
-  } 
-  useEffect(()=>{
-    finduser()
-  },[])
+  }
+  useEffect(() => {
+    finduser();
+  }, []);
 
   return (
-    <div className="container">
+    <div>
       {/* <h3>User Name</h3> */}
       {/* user details displing in this card */}
       {/* <Card sx={{ minWidth: 275 }}>
@@ -103,112 +103,94 @@ const Settings = () => {
         </CardContent>
       </Card> */}
       {/* Tab content */}
-      <div>
-        <Tabs aria-label="Options" className="tabcontainer">
-          <Tab
-            key="Account Setting"
-            title="Account Setting"
-            className="settingstab"
-          >
-            <Card>
-              <h3 sx={{ p: 5 }}>Change Password</h3>
-              <form
-                onSubmit={handleSubmit}
+      <Tabs aria-label="Options" className="tabcontainer">
+        <Tab
+          key="Account Setting"
+          title="Account Setting"
+          className="settingstab"
+        >
+          <Card>
+            <h3>Change Password</h3>
+            <form onSubmit={handleSubmit}>
+              <div
+                className="form-field"
                 style={{
                   display: "flex",
                   flexDirection: "row",
                   alignItems: "center",
                   flexWrap: "wrap",
-                  justifyContent: "space-between",
+                  justifyContent: "center",
                 }}
               >
-                <div className="form-field"
-                 style={{
+                <TextField
+                  sx={{ m: 2 }}
+                  id="outlined-basic"
+                  label="Old Password"
+                  name="oldPassword"
+                  variant="outlined"
+                  value={values.oldPassword}
+                  onChange={handleChange}
+                />
+                {errors.oldPassword ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.oldPassword}
+                  </div>
+                ) : (
+                  ""
+                )}
+                <TextField
+                  sx={{ m: 2 }}
+                  id="outlined-basic"
+                  label="New Password"
+                  variant="outlined"
+                  name="newPassword"
+                  value={values.newPassword}
+                  onChange={handleChange}
+                />
+                {errors.newPassword ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {" "}
+                    {errors.newPassword}
+                  </div>
+                ) : (
+                  ""
+                )}
+              </div>
+              <div
+                className="form-field"
+                style={{
                   display: "flex",
-                  flexDirection: "column",
+                  flexDirection: "row",
                   alignItems: "center",
-                  flex: 1,
-                  minWidth: "200px",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
                 }}
-                >
-                  <TextField
-                    sx={{ m: 2 }}
-                    id="outlined-basic"
-                    label="Old Password"
-                    name="oldPassword"
-                    variant="outlined"
-                    value={values.oldPassword}
-                    onChange={handleChange}
-                  />
-                  {errors.oldPassword ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.oldPassword}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="form-field"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    flex: 1,
-                    minWidth: "200px",
-                  }}
-                >
-                  <TextField
-                     sx={{ m: 2 }}
-                    id="outlined-basic"
-                    label="New Password"
-                    variant="outlined"
-                    name="newPassword"
-                    value={values.newPassword}
-                    onChange={handleChange}
-                  />
-                  {errors.newPassword ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {" "}
-                      {errors.newPassword}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
-                <div className="form-field"
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    flex: 1,
-                    minWidth: "200px",
-                  }}
-                >
-                  <TextField
-                    sx={{ m: 2 }}
-                    id="outlined-basic"
-                    label="Confirm Password"
-                    variant="outlined"
-                    name="confirmPass"
-                    value={values.confirmPass}
-                    onChange={handleChange}
-                  />
-                  {errors.confirmPass ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.confirmPass}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </div>
+              >
+                <TextField
+                  sx={{ m: 2 }}
+                  id="outlined-basic"
+                  label="Confirm Password"
+                  variant="outlined"
+                  name="confirmPass"
+                  value={values.confirmPass}
+                  onChange={handleChange}
+                />
+                {errors.confirmPass ? (
+                  <div style={{ color: "crimson", padding: "5px" }}>
+                    {errors.confirmPass}
+                  </div>
+                ) : (
+                  ""
+                )}
 
-                <Button className="button" type="submit">
+                <Button   sx={{ m: 2 }} className="button" type="submit">
                   Change Password
                 </Button>
-              </form>
-            </Card>
-          </Tab>
-          {/* <Tab
+              </div>
+            </form>
+          </Card>
+        </Tab>
+        {/* <Tab
             key="Session Details"
             title="Session Details"
             style={{ padding: "10px", margin: "10px", cursor: "pointer" }}
@@ -234,8 +216,8 @@ const Settings = () => {
               </CardContent>
             </Card>
           </Tab> */}
-        </Tabs>
-      </div>
+      </Tabs>
+
       <AlertMessage
         open={message}
         setOpen={setMessage}

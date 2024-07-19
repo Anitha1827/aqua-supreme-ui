@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "@/app/ui/dashboard/users/users.module.css";
@@ -11,6 +11,18 @@ import { deleteSpare, findingUser, getSpare } from "@/service";
 import EditSparesModal from "@/container/EditSparesModal";
 import { useRouter } from "next/navigation";
 import SkeletonLoader from "@/container/SkeletonLoader";
+//alert Dialog
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import AlertMessage from "@/container/AlertMessage";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Spares = () => {
   let router = useRouter();
@@ -25,7 +37,19 @@ const Spares = () => {
   //   edited data state
   const [editdata, setEditData] = useState({});
   // sketelon useState
-  const[loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
+
+  //for Dialog
+  const [alert, setAlert] = useState(false);
+
+  const handledeleteClose = () => {
+    setAlert(false);
+  };
+
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
   // Get Spare data
   const getSparedata = async () => {
@@ -41,7 +65,7 @@ const Spares = () => {
 
     let resp = await getSpare();
     setSpares(resp.getSpare);
-    setLoading(false)
+    setLoading(false);
   };
 
   //   edit function
@@ -53,6 +77,16 @@ const Spares = () => {
   //   Delete functionalities
   const handleDelete = async (sprs) => {
     let res = await deleteSpare(sprs._id);
+    if (res.message !== "Deleted spares details Successfully!") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    setMessage(true);
+    setContent("Deleted spares details Successfully!");
+    setType("success");
+    handledeleteClose();
     console.log("line28", res);
     getSparedata();
   };
@@ -63,31 +97,59 @@ const Spares = () => {
   const handleOpen = () => setOpen(true);
   //optimization code for table row
   const Table = ({ sprs, idx }) => {
-    return(<tr key={idx}>
-      <td>{startIndex + idx + 1}</td>
-      <td>{sprs.spareName}</td>
-      <td>{sprs.spareNumber}</td>
-      <td>
-        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
-          <Button
-            onClick={() => handleEdit(sprs)}
-            className={`${styles.button} ${styles.view}`}
-            title="Edit"
-            color="primary"
-          >
-            <FaRegEdit sx={{ fontSize: "20px" }} />
-          </Button>
+    return (
+      <tr key={idx}>
+        <td>{startIndex + idx + 1}</td>
+        <td>{sprs.spareName}</td>
+        <td>{sprs.spareNumber}</td>
+        <td>
+          <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+            <Button
+              onClick={() => handleEdit(sprs)}
+              className={`${styles.button} ${styles.view}`}
+              title="Edit"
+              color="primary"
+            >
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
 
-          <Button
-            className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(sprs)}
-            title="Delete"
+            <Button
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => setAlert(true)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </Button>
+          </div>
+          {/* Delete alert Dialog */}
+          <Dialog
+            open={alert}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handledeleteClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-slide-description"
           >
-            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-          </Button>
-        </div>
-      </td>
-    </tr>);
+            <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Are you sure you want to delete this customer?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handledeleteClose}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(sprs)}
+                autoFocus
+                color="error"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </td>
+      </tr>
+    );
   };
   return (
     <div className={styles.container}>
@@ -106,8 +168,17 @@ const Spares = () => {
           onClick={handleOpen}
           variant="contained"
           className={styles.addbutton}
+          style={{
+            textTransform: "uppercase",
+            padding: "15px",
+            background: "#5d57c9",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer"
+          }}
         >
-          Add
+          <b>Add</b>
         </Button>
       </div>
       <table className={styles.table}>
@@ -120,7 +191,7 @@ const Spares = () => {
           </tr>
         </thead>
         <tbody>
-        {!loading && spares.length > 0 && search.length <= 0
+          {!loading && spares.length > 0 && search.length <= 0
             ? spares
                 .slice(startIndex, startIndex + 10)
                 .map((sprs, idx) => <Table sprs={sprs} idx={idx} key={idx} />)
@@ -135,7 +206,7 @@ const Spares = () => {
               )}
         </tbody>
       </table>
-      {loading && <SkeletonLoader/>}
+      {loading && <SkeletonLoader />}
       <Pagination
         startIndex={startIndex}
         maxlength={spares.length}
@@ -153,6 +224,13 @@ const Spares = () => {
           setSpares={setSpares}
         />
       )}
+       {/* snackbar */}
+       <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

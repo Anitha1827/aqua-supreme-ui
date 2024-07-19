@@ -38,23 +38,37 @@ const modalStyle = {
   justifyContent: "center",
 };
 
-const paperStyle = {
+const paperStyle = (isSmallScreen) => ({
   position: "absolute",
-  width: "90%",
-  maxWidth: 500,
-  maxHeight: "110vh",
+  top: isSmallScreen ? "5%" : "50%",
+  left: "50%",
+  transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -50%)",
+  width: isSmallScreen ? "90%" : 400,
+  maxHeight: "95vh",
   bgcolor: "background.paper",
-  // border: "2px solid #000",
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   p: 4,
   outline: "none",
   borderRadius: "10px",
-};
+  overflowY: "auto",
+});
 
 const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Select dropdown
   const [product, setProduct] = useState("");
   const [prodList, setProdList] = useState([]);
+  // modal responsive scroll
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth < 600);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleSelect = (event) => {
     setProduct(event.target.value);
@@ -72,7 +86,6 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   // Dropdown for name
   const [custname, setCustName] = useState([]);
   const [loading, setLoading] = useState(true);
-
 
   let { values, handleChange, handleSubmit, errors } = useFormik({
     initialValues: {
@@ -103,12 +116,12 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
     setInstall(response.getAllCustomerDetails);
   };
 
-  //to select cutomer details in Name field 
+  //to select cutomer details in Name field
   const getCustomerData = async () => {
     let resp = await getAllCustomer();
     setCustName(resp.getAllCustomerDetails);
-     setLoading(false);
-  }
+    setLoading(false);
+  };
   // fetching product
   let getProduct = async () => {
     let resp = await getAllProduct();
@@ -117,7 +130,7 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
   };
   useEffect(() => {
     getProduct();
-    getCustomerData()
+    getCustomerData();
   }, []);
   return (
     <div>
@@ -136,13 +149,16 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
         style={modalStyle}
       >
         <Fade in={open} className="bg-gray text-black">
-          <Box sx={paperStyle}>
+          <Box sx={paperStyle(isSmallScreen)}>
             <form
-              className="flex flex-col gap-2 w-full justify-center"
+              style={{
+                display: "flex",
+                gap: "20px",
+                flexDirection: "column",
+                justifyContent: "center",
+              }}
               onSubmit={handleSubmit}
             >
-              <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
               <Box sx={{ minWidth: 150 }}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-label">Name</InputLabel>
@@ -168,65 +184,61 @@ const AddInstallationModal = ({ open, setOpen, setInstall }) => {
                   </Select>
                 </FormControl>
               </Box>
-              </Grid>
-                <Grid item xs={12} sm={6}>
-                  <LocalizationProvider dateAdapter={AdapterDayjs} fullWidth>
-                    <DemoContainer components={["DatePicker"]}>
-                      <DatePicker
-                        label="Installation Date"
-                        name="date"
-                        value={dayjs(values.date)}
-                        onChange={(date) => {
-                          handleChange({
-                            target: { name: "date", value: date.format() },
-                          });
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                  {errors.date ? (
-                    <div style={{ color: "crimson", padding: "5px" }}>
-                      {errors.date}
-                    </div>
-                  ) : (
-                    ""
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Box>
-                    <FormControl fullWidth>
-                      <InputLabel id="demo-simple-select-label">
-                        Product
-                      </InputLabel>
-                      <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={product}
-                        label="product"
-                        name="product"
-                        onChange={handleSelect}
-                      >
-                        {prodList.map((val, idx) => (
-                          <MenuItem
-                            key={idx}
-                            value={`${val.productname} - ${val.productmodel}`}
-                          >
-                            {val.productname} - {val.productmodel}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Box>
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    variant="contained"
-                    sx={{ width: "100%" }}
-                    type="submit"
+
+              <LocalizationProvider dateAdapter={AdapterDayjs}  >
+                <DemoContainer components={["DatePicker"]} >
+                  <DatePicker 
+                  sx={{ minWidth: 150 }}
+                    label="Installation Date"
+                    name="date"
+                    value={dayjs(values.date)}
+                    onChange={(date) => {
+                      handleChange({
+                        target: { name: "date", value: date.format() },
+                      });
+                    }}
+                  />
+                </DemoContainer>
+              </LocalizationProvider>
+              {errors.date ? (
+                <div style={{ color: "crimson", padding: "5px" }}>
+                  {errors.date}
+                </div>
+              ) : (
+                ""
+              )}
+
+              <Box>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Product</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={product}
+                    label="product"
+                    name="product"
+                    onChange={handleSelect}
                   >
-                    Add
-                  </Button>
-                </Grid>
+                    {prodList.map((val, idx) => (
+                      <MenuItem
+                        key={idx}
+                        value={`${val.productname} - ${val.productmodel}`}
+                      >
+                        {val.productname} - {val.productmodel}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Box>
+
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  sx={{ width: "100%" }}
+                  type="submit"
+                >
+                  Add
+                </Button>
               </Grid>
             </form>
           </Box>

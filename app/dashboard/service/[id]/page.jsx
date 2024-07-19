@@ -78,10 +78,8 @@ const ServiceStatus = () => {
     };
     await updateServiceStatus(id, formdata);
     let data = {address:addressDetail, id}
-    console.log("dataline81", data)
     await updateAddress(data);
     router.push("/dashboard/service");
-    console.log("formdata55", formdata);
   };
 
   // location

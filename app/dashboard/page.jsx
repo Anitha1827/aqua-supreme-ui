@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import Pagination from "../ui/dashboard/pagination/pagination";
@@ -14,10 +14,34 @@ import { FaRegEdit } from "react-icons/fa";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { useRouter } from "next/navigation";
 import SkeletonLoader from "@/container/SkeletonLoader";
+//alert Dialog
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import AlertMessage from "@/container/AlertMessage";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
   const [edit, setEdit] = useState(false);
+  //for Dialog
+  const [alert, setAlert] = useState(false);
+
+  const handleClose = () => {
+    setAlert(false);
+  };
+
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
+
   // Skeleton useState
   const [loading, setLoading] = useState(true);
   const handleOpen = () => setOpen(true);
@@ -48,7 +72,7 @@ const Dashboard = () => {
     }
     let response = await getAllCustomer();
     setCustomer(response.getAllCustomerDetails);
-    setLoading(false)
+    setLoading(false);
   };
   useEffect(() => {
     let token = localStorage.getItem("token");
@@ -62,8 +86,18 @@ const Dashboard = () => {
   // Delete functionalities
   const handleDelete = async (item) => {
     let res = await deleteCustomer(item._id);
+    if (res.message !== "Deleted Customer details succesfully!") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    setMessage(true);
+    setContent("Deleted Customer details succesfully!");
+    setType("success");
     console.log(res);
     getCustomerDetails();
+    handleClose();
   };
   const Table = ({ item, idx }) => {
     return (
@@ -102,11 +136,37 @@ const Dashboard = () => {
 
             <Button
               className={`${styles.button} ${styles.delete}`}
-              onClick={() => handleDelete(item)}
+              onClick={() => setAlert(true)}
               title="Delete"
             >
               <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
             </Button>
+            {/* Delete alert Dialog */}
+            <Dialog
+              open={alert}
+              TransitionComponent={Transition}
+              keepMounted
+              onClose={handleClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-slide-description"
+            >
+              <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-slide-description">
+                  Are you sure you want to delete this customer?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button
+                  onClick={() => handleDelete(item)}
+                  autoFocus
+                  color="error"
+                >
+                  Delete
+                </Button>
+              </DialogActions>
+            </Dialog>
           </div>
         </td>
       </tr>
@@ -145,22 +205,22 @@ const Dashboard = () => {
           </tr>
         </thead>
         <tbody>
-         {!loading && customer.length > 0 && search.length <= 0
-            ? customer.slice(startIndex, startIndex + 10).map((item, idx) => (
-               <Table item={item} idx={idx} key={idx} />
-              ))
+          {!loading && customer.length > 0 && search.length <= 0
+            ? customer
+                .slice(startIndex, startIndex + 10)
+                .map((item, idx) => <Table item={item} idx={idx} key={idx} />)
             : customer.map(
                 (item, idx) =>
                   (item.customerName
                     .toLowerCase()
                     .includes(search.toLowerCase()) ||
                     item.customerPhone.includes(search)) && (
-                      <Table item={item} idx={idx} key={idx} />
+                    <Table item={item} idx={idx} key={idx} />
                   )
               )}
         </tbody>
       </table>
-      {loading && <SkeletonLoader/>}
+      {loading && <SkeletonLoader />}
       <Pagination
         startIndex={startIndex}
         maxlength={customer.length}
@@ -182,6 +242,13 @@ const Dashboard = () => {
           setCustomer={setCustomer}
         />
       )}
+      {/* snackbar */}
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };

@@ -20,7 +20,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SkeletonLoader from "@/container/SkeletonLoader";
-
+// call icon
+import CallIcon from '@mui/icons-material/Call';
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
   // this is adding customer modal
@@ -96,7 +97,7 @@ const LeadCreation = () => {
       <tr key={idx}>
       <td>{startIndex + idx + 1}</td>
       <td>{val.name}</td>
-      <td>{val.phone}</td>
+      <td> <a className={styles.phoneLink} href={`tel:${val.phone}`}><CallIcon/></a> {val.phone} </td>
 
       <span className={styles.tabletd} title={val.feedback}>
         <td>{val.feedback}</td>
@@ -137,40 +138,40 @@ const LeadCreation = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <div className={styles.searchcontainer}>
-          <SearchIcon className={styles.searchicon} />
-          <input
-            placeholder="Search..."
-            className={styles.searchfield}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-          <Box sx={{ minWidth: 200 }}>
-              <FormControl fullWidth>
-                <InputLabel id="filter-select-label">Filter</InputLabel>
-                <Select
-                  labelId="filter-select-label"
-                  id="filter-select"
-                  value={filter}
-                  label="Filter"
-                  onChange={(e) => setFilter(e.target.value)}
-                >
-                  <MenuItem value="admin">Admin</MenuItem>
-                  <MenuItem value="owner">Owner</MenuItem>
-                  <MenuItem value="all">All</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-        </div>
-
-        <Button
-          onClick={handleOpen}
-          variant="contained"
-          className={styles.addbutton}
-        >
-          Add
-        </Button>
+      <div className={styles.searchcontainer}>
+        <SearchIcon className={styles.searchicon} />
+        <input
+          placeholder="Search..."
+          className={styles.searchfield}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <Box sx={{ minWidth: 120, marginLeft: 1 }}>
+          <FormControl fullWidth variant="outlined" size="small">
+            <InputLabel id="filter-select-label"><small color="blue">Filter</small></InputLabel>
+            <Select
+              labelId="filter-select-label"
+              id="filter-select"
+              value={filter}
+              label="Filter"
+              onChange={(e) => setFilter(e.target.value)}
+              className={styles.filterSelect}
+            >
+              <MenuItem value="admin">Admin</MenuItem>
+              <MenuItem value="owner">Owner</MenuItem>
+              <MenuItem value="all">All</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
       </div>
+      <Button
+        onClick={handleOpen}
+        variant="contained"
+        className={styles.addbutton}
+      >
+        Add
+      </Button>
+    </div>
       <table className={styles.table}>
         <thead>
           <tr style={{ fontWeight: "bold" }}>

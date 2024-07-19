@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import styles from "@/app/ui/dashboard/users/users.module.css";
 import SearchIcon from "@mui/icons-material/Search";
 import { Button } from "@mui/material";
@@ -12,6 +12,18 @@ import EditProductModel from "@/container/EditProductModel";
 import Pagination from "@/app/ui/dashboard/pagination/pagination";
 import { useRouter } from "next/navigation";
 import SkeletonLoader from "@/container/SkeletonLoader";
+//alert Dialog
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Slide from "@mui/material/Slide";
+import AlertMessage from "@/container/AlertMessage";
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});
 
 const ProductPage = () => {
   const [search, setSearch] = useState("");
@@ -24,8 +36,20 @@ const ProductPage = () => {
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
   //skeleton useState
-  const[loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
   let router = useRouter();
+
+  //for Dialog
+  const [alert, setAlert] = useState(false);
+
+  const handledeleteClose = () => {
+    setAlert(false);
+  };
+
+  // Snackbar
+  const [message, setMessage] = useState(false);
+  const [type, setType] = useState("");
+  const [content, setContent] = useState("");
 
   // Get Products
   let getProduct = async () => {
@@ -42,7 +66,7 @@ const ProductPage = () => {
     let resp = await getAllProduct();
     console.log("produPage17", resp.getproduct);
     setProduct(resp.getproduct);
-    setLoading(false)
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -58,37 +82,73 @@ const ProductPage = () => {
   // Delete functionalities
   let handleDelete = async (prod) => {
     let res = await deleteProduct(prod._id);
+    if (res.message !== "Product Deleted Successfully !") {
+      setMessage(true);
+      setContent("try again later");
+      setType("error");
+      return null;
+    }
+    setMessage(true);
+    setContent("Product Deleted Successfully !");
+    setType("success");
+    handledeleteClose();
     console.log("deletefun32", res);
     getProduct();
   };
 
   //code optimization for table row
   const Table = ({ prod, idx }) => {
-    return(
+    return (
       <tr key={idx}>
-      <td>{startIndex + idx + 1}</td>
-      <td>{prod.productname}</td>
-      <td>{prod.productmodel}</td>
-      <td>
-        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
-          {/* Edit button */}
-          <Button onClick={() => handleEdit(prod)} title="Edit Data">
-            <FaRegEdit sx={{ fontSize: "20px" }} />
-          </Button>
+        <td>{startIndex + idx + 1}</td>
+        <td>{prod.productname}</td>
+        <td>{prod.productmodel}</td>
+        <td>
+          <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+            {/* Edit button */}
+            <Button onClick={() => handleEdit(prod)} title="Edit Data">
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
 
-          {/* Delete button */}
-          <Button
-            aria-label="delete"
-            // size="large"
-            className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(prod)}
-            title="Delete"
+            {/* Delete button */}
+            <Button
+              aria-label="delete"
+              // size="large"
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => setAlert(true)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </Button>
+          </div>
+          {/* Delete alert Dialog */}
+          <Dialog
+            open={alert}
+            TransitionComponent={Transition}
+            keepMounted
+            onClose={handledeleteClose}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-slide-description"
           >
-            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-          </Button>
-        </div>
-      </td>
-    </tr>
+            <DialogTitle id="alert-dialog-title">{"Delete"}</DialogTitle>
+            <DialogContent>
+              <DialogContentText id="alert-dialog-slide-description">
+                Are you sure you want to delete this customer?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handledeleteClose}>Cancel</Button>
+              <Button
+                onClick={() => handleDelete(prod)}
+                autoFocus
+                color="error"
+              >
+                Delete
+              </Button>
+            </DialogActions>
+          </Dialog>
+        </td>
+      </tr>
     );
   };
   return (
@@ -104,8 +164,21 @@ const ProductPage = () => {
           />
         </div>
 
-        <Button onClick={handleOpen}  variant="contained"
-          className={styles.addbutton}>
+        <Button
+          onClick={handleOpen}
+          variant="contained"
+          className={styles.addbutton}
+          style={{
+            textTransform: "uppercase",
+            padding: "10px",
+            background: "#5d57c9",
+            color: "white",
+            border: "none",
+            borderRadius: "10px",
+            cursor: "pointer",
+            fontWeight: "bold",
+          }}
+        >
           Add
         </Button>
       </div>
@@ -120,7 +193,7 @@ const ProductPage = () => {
           </tr>
         </thead>
         <tbody>
-        {!loading && product.length > 0 && search.length <= 0
+          {!loading && product.length > 0 && search.length <= 0
             ? product
                 .slice(startIndex, startIndex + 10)
                 .map((prod, idx) => <Table prod={prod} idx={idx} key={idx} />)
@@ -135,7 +208,7 @@ const ProductPage = () => {
               )}
         </tbody>
       </table>
-      {loading && <SkeletonLoader/>}
+      {loading && <SkeletonLoader />}
       <Pagination
         startIndex={startIndex}
         maxlength={product.length}
@@ -154,6 +227,13 @@ const ProductPage = () => {
           setProduct={setProduct}
         />
       )}
+      {/* snackbar */}
+      <AlertMessage
+        open={message}
+        setOpen={setMessage}
+        message={content}
+        messageType={type}
+      />
     </div>
   );
 };
