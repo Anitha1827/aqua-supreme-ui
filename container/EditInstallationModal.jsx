@@ -243,7 +243,7 @@ export default function EditInstallationModal({
                     name="date"
                     value={dayjs(date)}
                     onChange={(e) => {
-                      setDate(e);
+                      setDate(e.format());
                     }}
                   />
                 </DemoContainer>

@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 :root {
     --bg: #b7bac1 ;
     --bgSoft:white;

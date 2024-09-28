@@ -41,7 +41,8 @@ export default function EditServiceModal({
 
   useEffect(() => {
     setPhone(editdata.customerPhone);
-    setDate(editdata.serviceDate);
+    let formatedDate = editdata.serviceDate.split("/")
+    setDate(`${formatedDate[1]}/${formatedDate[0]}/${formatedDate[2]}`);
   }, [editdata]);
 
   //   Modal
@@ -61,6 +62,13 @@ export default function EditServiceModal({
       setType("error");
       return null;
     }
+    if (!date) {
+      setMessage(true);
+      setContent("Please select date");
+      setType("error");
+      return null;
+    }
+    
     let data = { phone };
     data["id"] = editdata._id;
     data["date"] = date;
@@ -71,22 +79,24 @@ export default function EditServiceModal({
       setType("error");
       return null;
     }
-    if (editdata.data !== date) {
+    console.log("81",editdata, date)
+    // if (editdata.data !== date) {
       let val = { date, id:editdata.customerId };
-      let res = await editDuedate(val);
-      if (res.message !== "Service due date Updated Successfully!") {
+      let res1 = await editDuedate(val);
+      if (res1.message !== "Service due date Updated Successfully!") {
         setMessage(true);
         setContent("try again later");
         setType("error");
         return null;
       }
-    }
+    // }
     handleClose();
     setMessage(true);
     setContent("Service Edited successfully!");
     setType("success");
     getservice();
   };
+  console.log("98",date)
   return (
     <div>
       <Modal
@@ -129,6 +139,7 @@ export default function EditServiceModal({
                     onChange={(e) => {
                       setDate(e.format());
                     }}
+                    // inputFormat = "DD/MM/YYYY"
                   />
                 </DemoContainer>
               </LocalizationProvider>

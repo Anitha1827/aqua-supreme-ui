@@ -20,8 +20,12 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import SkeletonLoader from "@/container/SkeletonLoader";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css
 // call icon
-import CallIcon from '@mui/icons-material/Call';
+import CallIcon from "@mui/icons-material/Call";
+import { DateRangePicker } from "react-date-range";
+
 const LeadCreation = () => {
   const [search, setSearch] = useState("");
   // this is adding customer modal
@@ -40,11 +44,24 @@ const LeadCreation = () => {
   // Pagination setup
   const [startIndex, setStartIndex] = useState(0);
   // skeleton useState
-  const[loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   let router = useRouter();
 
   const handleOpen = () => setOpen(true);
+
+  //  date picker
+  const [dateRangeValue, setDateRangeValue] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+  });
+  const handleSelect = (ranges) => {
+    const { selection } = ranges;
+    setDateRangeValue({
+      startDate: selection.startDate,
+      endDate: selection.endDate,
+    });
+  };
 
   const handleEdit = async (val) => {
     setEdit(true);
@@ -84,7 +101,7 @@ const LeadCreation = () => {
     let resp = await getLead();
     console.log("leads22", resp.getlead);
     setLead(resp.getlead);
-    setLoading(false)
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -93,85 +110,111 @@ const LeadCreation = () => {
 
   // code optimization for table row
   const Table = ({ val, idx }) => {
-    return(
+    return (
       <tr key={idx}>
-      <td>{startIndex + idx + 1}</td>
-      <td>{val.name}</td>
-      <td> <a className={styles.phoneLink} href={`tel:${val.phone}`}><CallIcon/></a> {val.phone} </td>
+        <td>{startIndex + idx + 1}</td>
+        <td>{val.name}</td>
+        <td>
+          {" "}
+          <a className={styles.phoneLink} href={`tel:${val.phone}`}>
+            <CallIcon />
+          </a>{" "}
+          {val.phone}{" "}
+        </td>
 
-      <span className={styles.tabletd} title={val.feedback}>
-        <td>{val.feedback}</td>
-      </span>
+        <span className={styles.tabletd} title={val.feedback}>
+          <td>{val.feedback}</td>
+        </span>
 
-      <td>{val.createdAt}</td>
-      <td>{val.handleBy}</td>
-      <td>
-        <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
-          {/* Edit button */}
-          <Button onClick={() => handleEdit(val)} title="Edit Data">
-            <FaRegEdit sx={{ fontSize: "20px" }} />
-          </Button>
+        <td>{val.createdAt}</td>
+        <td>{val.handleBy}</td>
+        <td>
+          <div className={`${styles.buttons} ${styles.button} ${styles.view}`}>
+            {/* Edit button */}
+            <Button onClick={() => handleEdit(val)} title="Edit Data">
+              <FaRegEdit sx={{ fontSize: "20px" }} />
+            </Button>
 
-          {/* Convert to customer */}
-          <Button
-            onClick={() => handleConvert(val)}
-            title="Convert to customer"
-          >
-            <IoPersonAddOutline sx={{ fontSize: "20px" }} />
-          </Button>
+            {/* Convert to customer */}
+            <Button
+              onClick={() => handleConvert(val)}
+              title="Convert to customer"
+            >
+              <IoPersonAddOutline sx={{ fontSize: "20px" }} />
+            </Button>
 
-          {/* Delete button */}
-          <Button
-            aria-label="delete"
-            // size="large"
-            className={`${styles.button} ${styles.delete}`}
-            onClick={() => handleDelete(val)}
-            title="Delete"
-          >
-            <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
-          </Button>
-        </div>
-      </td>
-    </tr>
+            {/* Delete button */}
+            <Button
+              aria-label="delete"
+              // size="large"
+              className={`${styles.button} ${styles.delete}`}
+              onClick={() => handleDelete(val)}
+              title="Delete"
+            >
+              <DeleteIcon sx={{ fontSize: "20px", color: "crimson" }} />
+            </Button>
+          </div>
+        </td>
+      </tr>
     );
   };
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-      <div className={styles.searchcontainer}>
-        <SearchIcon className={styles.searchicon} />
-        <input
-          placeholder="Search..."
-          className={styles.searchfield}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Box sx={{ minWidth: 120, marginLeft: 1 }}>
-          <FormControl fullWidth variant="outlined" size="small">
-            <InputLabel id="filter-select-label"><small color="blue">Filter</small></InputLabel>
-            <Select
-              labelId="filter-select-label"
-              id="filter-select"
-              value={filter}
-              label="Filter"
-              onChange={(e) => setFilter(e.target.value)}
-              className={styles.filterSelect}
-            >
-              <MenuItem value="admin">Admin</MenuItem>
-              <MenuItem value="owner">Owner</MenuItem>
-              <MenuItem value="all">All</MenuItem>
-            </Select>
-          </FormControl>
-        </Box>
+        <div className={styles.searchcontainer}>
+          <SearchIcon className={styles.searchicon} />
+          <input
+            placeholder="Search..."
+            className={styles.searchfield}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Box sx={{ minWidth: 120, marginLeft: 1 }}>
+            <FormControl fullWidth variant="outlined" size="small">
+              <InputLabel id="filter-select-label">
+                <small color="blue">Filter</small>
+              </InputLabel>
+              <Select
+                labelId="filter-select-label"
+                id="filter-select"
+                value={filter}
+                label="Filter"
+                onChange={(e) => setFilter(e.target.value)}
+                className={styles.filterSelect}
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="owner">Owner</MenuItem>
+                <MenuItem value="all">All</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </div>
+        <div style={{ height: "150px", width: "400px" }}>
+          <DateRangePicker
+            ranges={[
+              {
+                startDate: dateRangeValue.startDate,
+                endDate: dateRangeValue.endDate,
+                key: "selection",
+              },
+            ]}
+            onChange={handleSelect}
+            showMonthAndYearPickers={false} // Hide month and year pickers
+            showDateDisplay={false} // Hide date display at the top
+            months={1} // Display only one month
+            weekStartsOn={1} // Start the week on Monday
+            weekdayDisplayFormat=" "
+          />
+        </div>
+
+        <Button
+          onClick={handleOpen}
+          variant="contained"
+          className={styles.addbutton}
+        >
+          Add
+        </Button>
       </div>
-      <Button
-        onClick={handleOpen}
-        variant="contained"
-        className={styles.addbutton}
-      >
-        Add
-      </Button>
-    </div>
       <table className={styles.table}>
         <thead>
           <tr style={{ fontWeight: "bold" }}>
@@ -185,7 +228,8 @@ const LeadCreation = () => {
           </tr>
         </thead>
         <tbody>
-        {!loading && lead.length > 0 &&
+          {!loading &&
+            lead.length > 0 &&
             (search.length <= 0
               ? lead
                   .slice(startIndex, startIndex + 10)
@@ -205,7 +249,7 @@ const LeadCreation = () => {
                 ))}
         </tbody>
       </table>
-      {loading && <SkeletonLoader/>}
+      {loading && <SkeletonLoader />}
       <Pagination
         startIndex={startIndex}
         maxlength={lead.length}

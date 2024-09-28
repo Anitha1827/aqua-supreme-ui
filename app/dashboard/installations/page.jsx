@@ -138,7 +138,7 @@ const Installations = () => {
         <td>{inst.customerPhone}</td>
         <td>{inst.createdAt}</td>
         <td>
-          {inst.duedate ? inst.duedate.split("").slice(0, 10).join("") : ""}
+          {inst.duedate ? inst.duedate.split("").slice(0, 10).join("").split("-").reverse().join("/") : ""}
         </td>
         <td>
           {inst.isInstallationAssignTo

@@ -19,18 +19,20 @@ const modalStyle = {
   justifyContent: "center",
 };
 
-const paperStyle = {
+const paperStyle = (isSmallScreen) => ({
   position: "absolute",
-  width: "90%",
-  maxWidth: 400,
-  maxHeight: "98vh",
+  top: isSmallScreen ? "5%" : "50%",
+  left: "50%",
+  transform: isSmallScreen ? "translate(-50%, 0)" : "translate(-50%, -50%)",
+  width: isSmallScreen ? "40%" : 400,
+  maxHeight: '95vh',
   bgcolor: "background.paper",
-  // border: "2px solid #000",
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   p: 4,
   outline: "none",
   borderRadius: "10px",
-};
+  overflowY: "auto",
+});
 
 export default function EditCustomerModal({
   edit,

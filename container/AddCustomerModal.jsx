@@ -25,6 +25,7 @@ const validationSchema = yup.object({
   street: yup.string().required("Please Enter Street"),
   area: yup.string().required("Please Select Area"),
   pin: yup.string().required("Please Enter Pin Number"),
+  // reminder:yup.string().required("Please Enter Reminder Date")
 });
 
 const modalStyle = {
@@ -56,6 +57,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
   const [content, setContent] = useState("");
   const [area, setArea] = useState({});
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [reminder, setReminder] = useState('3')
 
   useEffect(() => {
     const handleResize = () => {
@@ -84,6 +86,7 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
       street: "",
       area: "",
       pin: "",
+      // reminder:"",
     },
     validationSchema: validationSchema,
     onSubmit: async (data) => {
@@ -269,6 +272,31 @@ export default function AddCustomerModel({ open, setOpen, setCustomer }) {
                     ""
                   )}
                 </Grid>
+                <Grid item xs={12}>
+              {/* service reminder month*/}
+              <Box sx={{ minWidth: 120 }}>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Service reminder Months
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={reminder}
+                    label="reminder"
+                    name="reminder"
+                    onChange={(e) => {
+                      setReminder(e.target.value);
+                    }}
+                  >
+                    <MenuItem value="3">3</MenuItem>
+                    <MenuItem value="4">4</MenuItem>
+                    <MenuItem value="6">6</MenuItem>
+                    <MenuItem value="12">12</MenuItem>
+                  </Select>
+                </FormControl>
+              </Box>
+              </Grid>
                 <Grid item xs={12}>
                   <Button
                     variant="contained"

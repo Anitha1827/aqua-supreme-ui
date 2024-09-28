@@ -125,7 +125,7 @@ const ServiceCalls = () => {
         <td>{startIndex + idx + 1}</td>
         <td>{item.customerName}</td>
         <td>{item.customerPhone}</td>
-        <td>{item.createdAt}</td>
+        {/* <td>{item.createdAt}</td> */}
         <td>
           {item.serviceDate
             ? item.serviceDate.split("").slice(0, 10).join("")
@@ -229,7 +229,7 @@ const ServiceCalls = () => {
             <td>Sl.No</td>
             <td>Name</td>
             <td>Phone Number</td>
-            <td>Created At</td>
+            {/* <td>Created At</td> */}
             <td>Service Date</td>
             <td>Service Engineer</td>
             <td>Action</td>

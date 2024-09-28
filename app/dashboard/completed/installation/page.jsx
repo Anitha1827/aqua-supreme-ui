@@ -51,6 +51,7 @@ const InstallationCompletedPage = () => {
       <td>
         {data.duedate ? data.duedate.split("").slice(0, 10).join("") : ""}
       </td>
+      <td>{data.warranty ? data.warranty : ""}</td>
       <td>{data.isInstallationAssignTo}</td>
       <td>
         <button className={styles.compbutton}>Completed</button>
@@ -80,6 +81,7 @@ const InstallationCompletedPage = () => {
             <td>Contact</td>
             <td>Created At</td>
             <td>Completed At</td>
+            <td>Warranty Date</td>
             <td>Assigned-To</td>
             <td>Status</td>
           </tr>

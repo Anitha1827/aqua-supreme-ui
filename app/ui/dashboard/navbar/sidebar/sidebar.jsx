@@ -16,11 +16,13 @@ import { IoChatboxEllipses } from "react-icons/io5";
 import { FaBars } from "react-icons/fa";
 import { findingUser } from "@/service";
 import { useRouter } from "next/navigation";
+import { FaChevronDown } from "react-icons/fa";
 
 
 const menuItems = [
   {
     title: "Pages",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Customers",
@@ -46,6 +48,7 @@ const menuItems = [
   },
   {
     title: "Completed",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Service Completed",
@@ -61,6 +64,7 @@ const menuItems = [
   },
   {
     title: "Pending",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Service Pending",
@@ -76,6 +80,7 @@ const menuItems = [
   },
   {
     title: "Service Engineers",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Service Engineers",
@@ -85,7 +90,8 @@ const menuItems = [
     ],
   },
   {
-    title: "Tools",
+    title: "Master Data",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Product",
@@ -106,6 +112,7 @@ const menuItems = [
   },
   {
     title: "Leads",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Lead",
@@ -116,6 +123,7 @@ const menuItems = [
   },
   {
     title: "User",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Account",
@@ -128,6 +136,7 @@ const menuItems = [
 const ServiceEngineermenuItems = [
   {
     title: "Pages",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Installations",
@@ -143,6 +152,7 @@ const ServiceEngineermenuItems = [
   },
   {
     title: "Completed",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Service Completed",
@@ -158,6 +168,7 @@ const ServiceEngineermenuItems = [
   },
   {
     title: "Pending",
+    icon:<FaChevronDown />,
     list: [
       {
         title: "Service Pending",
@@ -186,6 +197,8 @@ const ServiceEngineermenuItems = [
 const Sidebar = () => {
   let router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [expanded, setExpanded] = useState({});
+
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -209,6 +222,31 @@ const Sidebar = () => {
     findUser();
   }, []);
 
+
+  const toggleExpand = (title) => {
+    setExpanded((prevState) => ({ ...prevState, [title]: !prevState[title] }));
+  };
+
+  const renderMenuItems = (items) => (
+    items.map((cat, idx) => (
+      <li key={idx} className={styles.list}>
+        <span className={styles.cat} onClick={() => toggleExpand(cat.title)}>
+          {cat.title} {cat.icon}
+        </span>
+        {expanded[cat.title] && (
+          <ul className={styles.submenu}>
+            {cat.list.map((item, index) => (
+              <li key={index}>
+                <MenuLink item={item} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  );
+
+
   return (
     <div className="sidebarparent">
       <button className={styles.hamburger} onClick={toggleSidebar}>
@@ -223,24 +261,8 @@ const Sidebar = () => {
         <div className={styles.user}>
           <h4>Aqua Supreme Pure</h4>
         </div>
-        <ul className={styles.list}>
-          {usertype == "Service Engineer"
-            ? ServiceEngineermenuItems.map((cat, idx) => (
-                <li key={idx}>
-                  <span className={styles.cat}>{cat.title}</span>
-                  {cat.list.map((item, index) => (
-                    <MenuLink item={item} key={index} />
-                  ))}
-                </li>
-              ))
-            : menuItems.map((cat, idx) => (
-                <li key={idx}>
-                  <span className={styles.cat}>{cat.title}</span>
-                  {cat.list.map((item, index) => (
-                    <MenuLink item={item} key={index} />
-                  ))}
-                </li>
-              ))}
+        <ul>
+        {usertype === "Service Engineer" ? renderMenuItems(ServiceEngineermenuItems) : renderMenuItems(menuItems)}
         </ul>
       </div>
     </div>
